@@ -1,0 +1,222 @@
+<div class="px-6 py-3 pt-6 lg:px-8 z-10 sticky w-full">
+
+  <div>
+    <nav class="flex h-9 items-center justify-between" aria-label="Global">
+      <div class="flex lg:min-w-0 lg:flex-1" aria-label="Global">
+        <a href="/index" class="-m-1.5 p-1.5">
+          <span class="sr-only">UNIPACK</span>
+          <div class="flex gap-2 items-center"><img class="h-16" src="/static/app_gen/images/unipack.png" alt="">
+            <!-- <span>UNIPACK</span> -->
+          </div>
+        </a>
+      </div>
+      <div class="flex lg:hidden">
+        <button type="button" onclick="toggleModal()"
+          class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+          <span class="sr-only">Open main menu</span>
+          <!-- Heroicon name: outline/bars-3 -->
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+      </div>
+      {% if menu is None %}
+      <div class="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-center lg:gap-x-12">
+        <a href="/product" id="product"
+          class="font-bold text-gray-900 hover:text-indigo-500 hover:border-indigo-500 border-white border-b-4 px-2 py-2 duration-200 ">Overview</a>
+
+        <a href="/features" id="features"
+          class="font-bold text-gray-900 hover:text-indigo-500 hover:border-indigo-500 border-white border-b-4 px-2 py-2 duration-200">Features</a>
+
+        <a href="/pricing" id="pricing"
+          class="font-bold text-gray-900 hover:text-indigo-500 hover:border-indigo-500 border-white border-b-4 px-2 py-2 duration-200">Pricing</a>
+
+        <a href="/company" id="company"
+          class="font-bold text-gray-900 hover:text-indigo-500 hover:border-indigo-500 border-white border-b-4 px-2 py-2 duration-200">About
+          us</a>
+      </div>
+      {% elif request.session.logined %}
+      <div class="textdown bg-gray-50 rounded-full px-10 sm:block hidden py-1">Hi , {{ request.session.username }}</div>
+
+      {% endif %}
+      <div class="hidden lg:flex gap-x-4 lg:min-w-1 lg:flex-1 lg:justify-end items-center">
+        {% if request.session.logined %}
+        <div class="group">
+          <div
+            class="cursor-pointer group  flex items-center gap-2 rounded-lg px-4  py-1.5 font-bold text-sm  leading-6 text-black bg-gray-100 duration-200   hover:bg-gray-200">
+            <div class='w-6 h-6 rounded-full overflow-hidden bg-black'>
+              <img src={{ request.session.pic }} alt="">
+            </div>{{ request.session.username }}
+          </div>
+          <div class='w-1/6 fixed py-2   right-10 hidden group-hover:block h-6 group'>
+            <div class="bg-white ring-1 shadow-md ring-gray-200 rounded-lg overflow-hidden">
+              <div class="flex items-center">
+                <div class='w-10 h-10 m-5 rounded-full overflow-hidden bg-black'>
+                  <img src={{ request.session.pic }} alt="">
+                </div>
+                <div class="text-gray-600 block">
+                  <div>{{ request.session.email }}</div>
+                  <div class="text-gray-400">@{{ request.session.username }}</div>
+                  <div><span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{{request.session.role}}</span></div>
+                </div>
+              </div>
+              <a href="/profile">
+                <div class="text-gray-600 cursor-pointer p-5 py-3 hover:bg-gray-100 duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+                 View Profile</div>
+              </a>
+              <a href="/generator">
+                <div class="text-gray-600 cursor-pointer p-5 py-3 hover:bg-gray-100 duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg> New Generation
+                </div>
+              </a>
+              <a href="/signout">
+                <div class="text-gray-600 cursor-pointer p-5 py-3 hover:bg-gray-100 duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                </svg> Sign Out
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- <a href="/signout"
+            class="inline-block rounded-lg px-3 py-1.5 text-sm  leading-6 font-bold text-white bg-red-500 shadow-sm ring-1 ring-red-900/10 hover:ring-red-900/20">Sign
+            out</a> -->
+        {% else %}
+          <form action="{% url 'login' %}" method="post" class="flex gap-3">
+            {% csrf_token %}
+          
+        <a href="{% url 'login' %}?previous={{ request.path}} " 
+          class="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20">Log
+          in</a>
+        <a href="/generator"
+          class="inline-block bg-indigo-600 text-white ring-indigo-600 rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-indigo-700 hover:bg-indigo-700">Try
+          it now</a>
+        </form>
+        {% endif %}
+      </div>
+
+
+    </nav>
+    <!-- Mobile menu, show/hide based on menu open state. -->
+    <div role="dialog" aria-modal="true">
+      <div focus="true" id="nav"  class="hidden fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
+        <div class="flex h-9 items-center justify-between">
+          <div class="">
+            <a href="/company" class="-m-1.5 p-1.5 flex gap-2 items-center font-bold">
+              <img class="h-8" src="/static/app_gen/images/unipack.png" alt="UNIPACK LOGO (BLUE BLOCK WITH CHARACTOR U I P)">
+              <span class="">UNIPACK</span>
+            </a>
+          </div>
+          <div class="flex">
+            <button type="button" onclick="toggle()"
+              class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+              <span class="sr-only">Close menu</span>
+              <!-- Heroicon name: outline/x-mark -->
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="mt-6 flow-root">
+          <div class="-my-6 divide-y divide-gray-500/10">
+            <div class="space-y-2 py-6">
+
+              <a href="/product"
+                class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:text-white-700">Overview</a>
+
+              <a href="/features"
+                class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10">Features</a>
+
+              <a href="/pricing"
+                class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10">Pricing</a>
+
+              <a href="/company"
+                class="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10">About
+                us</a>
+            </div>
+            {% if request.session.logined %}
+            <div class='w-full  py-2   right-10  group-hover:block h-6 group'>
+              <div class="bg-white   rounded-lg overflow-hidden">
+                <div class="flex items-center">
+                  <div class='w-10 h-10 m-5 rounded-full overflow-hidden bg-black'>
+                    <img src={{ request.session.pic }} alt="">
+                  </div>
+                  <div class="text-gray-600 block">
+                    <div>{{ request.session.email }}</div>
+                    <div class="text-gray-400">@{{ request.session.username }}</div>
+                    <div><span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{{request.session.role}}</span></div>
+                  </div>
+                </div>
+                <a href="/profile">
+                  <div class="text-gray-600 cursor-pointer p-5 py-3 hover:bg-gray-100 duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                   View Profile</div>
+                </a>
+                <a href="/generator">
+                  <div class="text-gray-600 cursor-pointer p-5 py-3 hover:bg-gray-100 duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg> New Generation
+                  </div>
+                </a>
+                <a href="/signout">
+                  <div class="text-gray-600 cursor-pointer p-5 py-3 hover:bg-gray-100 duration-200 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                  </svg> Sign Out
+                  </div>
+                </a>
+              </div>
+            </div>
+            {% else %}
+            <div class="py-6">
+              <a href="{% url 'login' %}?previous={{ request.path}} "
+                class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10">Log
+                in</a>
+            </div>
+            <div class="py-6">
+              <a href="/generator"
+                class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10">Try
+                it now</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<nav class='absolute -z-1'>
+  <div class="isolate ">
+    {% comment %} bg-white {% endcomment %}
+    <div class="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
+      <svg
+        class="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
+        viewBox="0 0 1155 678" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="url(#45de2b6b-92d5-4d68-a6a0-9b9b2abad533)" fill-opacity=".3"
+          d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z" />
+        <defs>
+          <linearGradient id="45de2b6b-92d5-4d68-a6a0-9b9b2abad533" x1="1155.49" x2="-78.208" y1=".177" y2="474.645"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9089FC"></stop>
+            <stop offset="1" stop-color="#FF80B5"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <script>
+      active = document.getElementById(document.location.pathname.slice(1, -1))
+      active.classList.toggle('border-indigo-500');
+      active.classList.toggle('text-indigo-500');
+
+    </script>
+
+</nav>

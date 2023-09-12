@@ -1,0 +1,41 @@
+{% extends "app_gen/components/base_profile.html" %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<div class="flex flex-col gap-5 w-full">
+  {% for i in note %}
+   <!-- card items -->
+  <a href="{{ i.noti_id }}">
+    <div
+      class=" gap-5 overflow-hidden flex bg-gradient-to-r from-green-700  from-0% via-gray-800 via-40% to-gray-800 to-90% hue-rotate-15 p-5 duration-300 rounded-xl ring-1 ring-1 ring-gray-700  hover:ring-2 hover:ring-green-700 contrast-100 hover:contrast-125 ">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16">
+        <path fill-rule="evenodd"
+          d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H7.5z"
+          clip-rule="evenodd" />
+      </svg>
+
+     
+      <div class="w-full">
+       
+        <div class="text-xl text-green-500">{{ i.notice_title }}</div>
+        <div class="text-sm h-10 overflow-hidden">{{ i.notice_detail }}</div>
+        <div class="text-sm "><u>Read more</u> {{ i.notice_date }}</div>
+      </div>
+      {% if i.pic_source != '' %}
+      <div class="w-20 h-20 rounded-xl overflow-hidden"><img src={{ i.pic_source }} alt="" srcset=""></div>
+      {% endif %}
+
+      <div class="relative "> 
+        {% if i.is_read %}
+        {% else %}
+        <span class="inline-flex items-center rounded-full -mt-64 bg-green-3
+        00 px-2 py-1 text-xs font-medium text-green-700 bg-green-300 ring-1 ring-inset  ring-green-600/20 w-6 h-6 "> </span>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+   <!-- card items -->
+
+</div>
+
+{% endblock %}

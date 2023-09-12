@@ -1,0 +1,134 @@
+{% extends "app_gen/components/base_profile.html" %}
+{% block profile %}
+<style>
+    dialog {
+        margin: 0;
+
+        width: 100wv;
+    }
+
+    [type=text] {
+        background-color: unset;
+        border: 0;
+        padding: 0;
+
+    }
+
+    [type=text]:focus {
+        border-bottom: 1px solid black;
+        border: 0;
+    }
+
+
+    .cover {
+        background: url(https://images.unsplash.com/photo-1575408264798-b50b252663e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1053&q=80);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+    }
+
+    .cover::before {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.782));
+        position: absolute;
+        z-index: -1;
+        content: '';
+        width: 100%;
+        height: 100vh;
+        transform: scale3d(1.5, 1.5, 1.5);
+    }
+</style>
+{% if request.session.status != True %}
+<!-- <span class="inline-flex items-center rounded-full  w-full bg-red-600/50 px-5 py-5 text-xs font-medium text-white ring-2 ring-offset-30 ring-red-600/20  ">Please <a href="# " class="underline px-1"> confirm your E-mail address </a> to use full options.</span> -->
+{% endif %}
+<div class="flex gap-3 bg-black p-5 rounded-3xl my-2 h-120 items-center overflow-hidden relative cover">
+
+    <div class="bg-black overflow-hidden w-28 h-28 rounded-full"><img src="{{ request.session.pic }}" alt=""></div>
+    <div>
+        <div class="flex justify-start group gap-5 items-center">
+            <!-- <div class="text-2xl bg-none name">{{ request.session.username }}</div> -->
+            <form action="">
+                <div><input type="text" value="{{ request.session.username }}" class="text-2xl ring-0 w-28" readonly>
+                </div>
+            </form>
+            <button onclick="rename()" type="button"
+                class="name opacity-0 duration-150 cursor-pointer group-hover:opacity-100 group-hover:block p-2 bg-gray-400 rounded-full ">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                </svg>
+            </button>
+            <button class="name" hidden onclick="rename()">Cancel</button>
+            <script>
+                function rename() {
+                    x = document.getElementsByClassName("name");
+                    for (let i = 0; i < x.length; i += 1) {
+                        x[i].toggleAttribute('hidden');
+                    }
+                }
+            </script>
+
+        </div>
+        <div>{{ request.session.email }}</div>
+        <div class="ring-2 w-24 text-center rounded-md ring-gray-400 my-2" >{{ request.session.role }}</div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block title %}
+<div class="mt-5">Payment history</div>
+{% endblock %}
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+<div class="grid gap-4 z-0 rounded-md border-1 bg-gray-100 p-5 text-center">
+    <div class=" border-white bg-gray-200 rounded-md text-gray-600 grid grid-cols-6  gap-4 p-5 ">
+        <div>Start Date</div>
+        <div>Due Data</div>
+        <div>Purchase Date</div>
+        <div>Total amount</div>
+        <div>Status</div>
+        <div>Actions</div>
+    </div>
+    {% for pay in history %}
+    <div class="text-gray-800  grid grid-cols-6  gap-4 border-l-4 border-yellow-300 cursor-pointer">
+        <div class="p-2">{{ pay.start_date |date:"d / m / Y"}}</div>
+        <div class="p-2">{{ pay.duedate |date:"d / m / Y"}}</div>
+
+      
+        <div class="p-2">{{ pay.purchase_date |date:"d / m / Y" }}</div>
+        <div class="p-2">{{ pay.total_amount }} ฿</div>
+        {% if pay.status %}
+        <div class="flex items-center justify-center">
+            <div class="border-2 border-green-300 bg-green-200 rounded-full px-5 py-1 text-green-600">ชำระแล้ว</div>
+        </div>
+        <div class="flex items-center justify-center">
+            <a href="/profile/payment/{{ pay.upgrade_id }}">
+                <button class="border-2 border-black bg-black rounded-md px-5 py-1 text-white duration-120 hover:px-7 hover:bg-black duration-150"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  </button>
+            </a>
+        </div>
+        {% else %}
+        <div class="flex items-center justify-center">
+            <div class="border-2 border-yellow-300 bg-yellow-200 rounded-full px-5 py-1 text-yellow-600">ยังไม่ชำระ</div>
+        </div>
+        <div class="flex items-center justify-center">
+            <a href="/profile/payment/{{ pay.upgrade_id }}"><button class="border-2 border-black bg-black rounded-md px-5 py-1 text-white duration-120 hover:px-7 hover:bg-black duration-150">Pay</button></a>
+        </div>
+
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="text-gray-800  grid ">
+        There are not have any transactions available.
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

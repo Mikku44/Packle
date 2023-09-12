@@ -1,0 +1,177 @@
+{% extends "app_gen/components/base_profile.html" %}
+{% block profile %}
+<style>
+    dialog {
+        margin: 0;
+
+        width: 100wv;
+    }
+
+    [type=text] {
+        background-color: unset;
+        border: 0;
+        padding: 0;
+
+    }
+
+    [type=text]:focus {
+        border-bottom: 1px solid black;
+        border: 0;
+    }
+
+
+    .cover {
+        background: url(https://images.unsplash.com/photo-1575408264798-b50b252663e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1053&q=80);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+    }
+
+    .cover::before {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.782));
+        position: absolute;
+        z-index: -1;
+        content: '';
+        width: 100%;
+        height: 100vh;
+        transform: scale3d(1.5, 1.5, 1.5);
+    }
+</style>
+{% if request.session.status != True %}
+<!-- <span class="inline-flex items-center rounded-full  w-full bg-red-600/50 px-5 py-5 text-xs font-medium text-white ring-2 ring-offset-30 ring-red-600/20  ">Please <a href="# " class="underline px-1"> confirm your E-mail address </a> to use full options.</span> -->
+{% endif %}
+
+
+{% endblock %}
+{% block title %}
+<div class="mt-5">ID #{{ img.gen_id }}</div>
+{% endblock %}
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+<div class=" z-0 rounded-md border-1 bg-gray-900 p-5 ring-1 ring-gray-700 shadow-md">
+    <form method="POST" action="/profile/generated/{{id}}">
+        {% csrf_token %}
+        <div class="flex justify-center relative">
+            <img class="rounded-xl w-96" src="{{ img.gen_source }}" alt="">
+            <button class="absolute right-0  bg-red-500 text-white rounded-md p-3  hover:bg-red-400 duration-150" type="submit" name="submit" value="remove">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
+              </svg>
+              </button>
+        </div>
+        
+        <div class="flex justify-between items-center">
+            <input class="mt-5 text-xl bg-gray-900 w-full" name="msg" value="{{ detail.gen_message }}">
+            <div class="flex gap-3 items-center divide-x">
+
+                <div class="flex gap-1 items-center font-bold"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-yellow-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                    </svg>
+
+                    {{ detail.gen_star }}
+                </div>
+                <a href="{{ img.gen_source }}" download="">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        <path
+                            d="M12 1.5a.75.75 0 01.75.75V7.5h-1.5V2.25A.75.75 0 0112 1.5zM11.25 7.5v5.69l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V7.5h3.75a3 3 0 013 3v9a3 3 0 01-3 3h-9a3 3 0 01-3-3v-9a3 3 0 013-3h3.75z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mt-5">
+            <div class="p-5 bg-gray-800 ring-gray-700 ring-1 rounded-xl ">
+                <div class="flex gap-2 items-center mb-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-green-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    </svg>
+                    <div class="font-bold text-gray-400 ">INFO</div>
+                </div>
+                <div class="flex gap-3 items-center text-gray-200">
+                    <div class="px-3">
+                        <div class="text-sm">ID </div>
+                        <div>#{{ img.gen_id }}</div>
+                    </div>
+                    <div class="px-3">
+                        <div class="text-sm">Date </div>
+                        <div>{{ img.gen_CreateAt }}</div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" name="isPublic" value="True" hidden>
+            <div class="p-5 bg-gray-800 ring-gray-700 ring-1 rounded-xl ">
+                <div>
+                    <div class="text-sm">Status</div>
+                    {% if detail.gen_isPublic %}
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6 text-yellow-500">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    
+                        Public
+                    </div>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6 text-yellow-500">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    <div>Private</div>
+                    {% endif %}
+                </div>
+                <div class="mt-5
+                "></div>
+                <div class="text-sm">Owner</div>
+                <div>{{ img.acc_id }}</div>
+
+
+            </div>
+        </div>
+    
+        {% if img.acc_id.id == request.session.uid %}
+        <div class="flex gap-3 justify-end">
+            <button class="mt-4  w-24 bg-gray-800 text-white rounded-md p-3 hover:bg-gray-700 duration-150" type="submit" name="submit" value="cancel">Cancel</button>
+            <button class="mt-4  w-24 bg-black text-white rounded-md p-3 hover:bg-black-200 duration-150" type="submit" name="submit" value="save">Save</button></div>
+        </div>
+      
+
+        {% endif %}
+
+    </form>
+    <div>
+        <div>Comments</div>
+        <form action="generated/{{id}}">
+            <div class="p-5 bg-gray-800 ring-gray-700 grid ring-1 mt-5 rounded-xl "><input type="text" placeholder="Type something here to comment"></div>
+        </form>
+        {% for comment in comments %}
+        <div class="p-5 bg-gray-800 ring-gray-700 ring-1 mt-5 rounded-xl ">
+            <div class="flex gap-2 items-center mb-5">
+                <div class="rounded-full w-6 h-6 bg-black overflow-hidden"><img src="{{ comment.commentator.pic }}" alt=""></div>
+                <a href="#">
+                    <div class="font-bold text-gray-400 ">{{ comment.commentator.name }}</div>
+                </a>
+            </div>
+            <div class="flex gap-3 items-center text-gray-200">
+               {{ comment.message }}
+            </div>
+            
+               
+                <div class="text-gray-300 text-sm text-end">Comment at {{ comment.date }}</div>
+          
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'app_gen/components/base.html' %} 
+{% block title %} Show data from database {% endblock %} 
+{% block content %} this is Users in system<br />
+
+{% for user in users %}
+    <div class="flex items-center justify-center gap-5 py-3">
+        <p class="rounded-full overflow-hidden bg-black  w-20 h-20"><img src={{user.pic}} alt=""></p>
+        <p>User {{user.id}} : {{user.name}}</p>
+    </div>
+    {% empty %}
+    <p>Not data available</p>
+{% endfor %}
+  
+{% endblock %}

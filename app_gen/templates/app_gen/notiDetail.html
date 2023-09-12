@@ -1,0 +1,26 @@
+{% extends "app_gen/components/base_profile.html" %}
+
+{% block title %}
+
+<div class="mt-5">{{ note.notice_title }} | Notification </div>
+
+{% endblock %}
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+<div class="grid gap-4 z-0 justify-items-center  rounded-md border-1 p-5 ">
+    
+    
+    <img class="img-responsive w-1/3 rounded-lg" src="{{ note.pic_source }}"></img>
+    <div>
+        <div>{{ note.notice_date }}</div>
+        <div>{{ note.notice_detail }}</div>
+    </div>
+    {% if empty %}
+    <div>Not Found this notification.</div>
+    {% endif %}
+   
+</div>
+
+{% endblock %}

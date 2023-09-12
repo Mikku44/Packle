@@ -1,0 +1,97 @@
+{% extends "app_gen/components/base_profile.html" %}
+{% block profile %}
+<style>
+    dialog {
+        margin: 0;
+
+        width: 100wv;
+    }
+
+    [type=text] {
+        background-color: unset;
+        border: 0;
+        padding: 0;
+
+    }
+
+    [type=text]:focus {
+        border-bottom: 1px solid black;
+        border: 0;
+    }
+
+
+    .cover {
+        background: url(https://images.unsplash.com/photo-1575408264798-b50b252663e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1053&q=80);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+    }
+
+    .cover::before {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.782));
+        position: absolute;
+        z-index: -1;
+        content: '';
+        width: 100%;
+        height: 100vh;
+        transform: scale3d(1.5, 1.5, 1.5);
+    }
+</style>
+{% if request.session.status != True %}
+<!-- <span class="inline-flex items-center rounded-full  w-full bg-red-600/50 px-5 py-5 text-xs font-medium text-white ring-2 ring-offset-30 ring-red-600/20  ">Please <a href="# " class="underline px-1"> confirm your E-mail address </a> to use full options.</span> -->
+{% endif %}
+
+
+{% endblock %}
+{% block title %}
+<div class="mt-5">Payment history</div>
+{% endblock %}
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+<div class="grid gap-4 z-0 rounded-md border-1 bg-gray-100 p-5 ">
+    <form method="POST" action="/transections/{{pay.upgrade_id}}">
+        {% csrf_token %}
+        <input type="text" name="cost" value="{{ pay.total_amount}}">
+        <div class="text-gray-800  grid grid-cols-2  gap-y-2 border-l-4 border-yellow-300 ">
+            <div class="p-3 text-gray-500 bg-gray-200">ID </div>
+            <div class="p-3 text-gray-500 bg-gray-200">{{ pay.upgrade_id}}</div>
+            <div class="p-3 ">Start Date </div>
+            <div class="p-3 ">{{ pay.status}}</div>
+            <div class="p-3 text-gray-500 bg-gray-200">Due Date</div>
+            <div class="p-3 text-gray-500 bg-gray-200">{{ pay.duedate}}</div>
+            <div class="p-3 ">Purchase Date </div>
+            <div class="p-3 ">{{ pay.purchase_date}}</div>
+            <div class="p-3 text-gray-500 bg-gray-200">Total Amount </div>
+            <div class="p-3 text-gray-500 bg-gray-200">{{ pay.total_amount}}</div>
+            <div class="p-3">Plan</div>
+            <div class="p-3"><input readonly type="text" name="plan" value="{{ plan.class_name }}"></div>
+
+        </div>
+        <div class="text-gray-800  grid grid-cols-3 items-end  gap-y-2 border-l-4 border-yellow-300 ">
+            <div></div>
+            {% if pay.status %}
+            <a href="#"
+                class="cursor-default bg-gray-200 rounded-lg p-3 mx-4  text-gray-500 text-center duration-150"><button
+                    class="cursor-default">Pay</button></a>
+            {% else %}
+
+            <input type="text" name="payment" value="ID" hidden>
+            <button type="submit" value="pay" name="submit"
+                class="bg-gray-800 rounded-lg p-3 mx-4 hover:bg-gray-900 text-white text-center duration-150">Pay</button>
+
+            {% endif %}
+            <a href="/profile/payment"
+                class="bg-blue-800 rounded-lg p-3 mx-4 hover:bg-blue-900 text-white text-center duration-150"><button>Close</button></a>
+        </div>
+    </form>
+    {% if empty %}
+    <div class="text-gray-800  grid ">
+        There are not have any transactions available.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

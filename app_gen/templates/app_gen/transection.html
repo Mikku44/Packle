@@ -1,0 +1,264 @@
+<head>
+    <title>Transections | Packle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/scrollreveal"></script>
+</head>
+
+
+{% block content %}
+{% with menu=1 %}
+{% include 'app_gen/components/navbar.html' %}
+{% endwith %}
+<div class="bg-white-100">
+    <div class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 class="sr-only">Products</h2>
+        <a href="/pricing"
+            class="flex font-bold gap-2 cursor-pointer group hover:text-gray-500 text-gray-900 duration-100">
+            <div class="w-6 group-hover:mx-2 duration-100">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                    stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+            </div>
+            <span class=""> Back </span>
+        </a>
+        {% if request.POST.payment == 'ID' %}
+        <form method="post" action="/transections/{{ id }}" class="bg-white dark:bg-gray-900">
+            {{id}}
+            <input type="text" name="payment" value="hasID" hidden>
+            <input type="text" name="plan" value="{{ request.POST.plan }}" hidden>
+
+            {% else %}
+            <form method="post" action="collect/" class="bg-white dark:bg-gray-900">
+                {% endif %}
+                {% csrf_token %}
+                <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+                    <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+
+                        <h2 class="textup mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+                            Transection for {{ request.POST.plan }} plan</h2>
+                        <p class="mb-5 textup font-light text-gray-500 sm:text-xl dark:text-gray-400">Choose a payment
+                            method to continue.</p>
+                    </div>
+                    <div class=" space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+                        <!-- col 1 -->
+                        <div>
+                            <div class="text-lg ">Total price</div>
+                            <div class="text-2xl font-semibold">THB {{ price }} ฿</div>
+                        </div>
+                        <!-- col 2 -->
+                        <div>
+                            <div class="text-lg font-semibold">Select Payment</div>
+                            <div>
+                                <div class="p-5">
+                                    <input type="radio" class="peer hidden" value="Promptpay" name="payment" id="pp">
+                                    <label class="peer-checked:ring-black ring-1 ring-offest-2 rounded-sm p-3"
+                                        for="pp">PromptPay</label>
+                                </div>
+                                <div class="p-5">
+                                    <input type="radio" class="peer hidden" value="credit" name="payment" id="cc"
+                                        checked>
+                                    <label class="peer-checked:ring-black ring-1 ring-offest-2 rounded-sm p-3"
+                                        for="cc">Credit Card</label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- col 3 -->
+                        <div class="grid grid-row-auto gap-2">
+
+                            {% csrf_token %}
+                            <div class="text-lg font-semibold" id="title">Pay with Credit Card</div>
+                            <div id="qr" class="hidden grid gap-2 ">
+                                <div
+                                    class="grid shadow-lg p-5 items-center justify-center justify-items-center rounded-md ">
+                                    <!-- loading -->
+                                    <!-- <div role="status">
+                                            <svg aria-hidden="true" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-gray-600 dark:fill-gray-300" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                            </svg>
+                                    
+                                        </div> -->
+                                    {% if price == '100.0' %}
+                                    <img src="/static/app_gen/images/qr100.png" alt="">
+                                    {% else %}
+                                    <img src="/static/app_gen/images/qr1500.png" alt="">
+                                    {% endif %}
+                                    <div>QR code {{ price }} ฿</div>
+                                </div>
+                                <button type="submit" class="text-white bg-indigo-600 cursor-pointer rounded-md p-3 "
+                                    name="submit">Save & Continue</button>
+                                <button type="submit" value="later" name="submit">Pay later</button>
+                            </div>
+                            {% if card%}
+                            {% for i in card %}
+                            <div class="grid" id="creditcard">
+                                <input type="checkbox" value="{{ i.id }}" id="{{ i.id }}" class="peer hidden">
+                                <label for="{{ i.id }}"
+                                    class="p-2 peer-checked:ring-offset-1 peer-checked:ring-1 border-1 border-gray-400 rounded-md group shadow-lg peer-checked:ring-green-400">
+                                    <div class="flex gap-2">
+                                        <img class="border-2 border-gray-200 rounded-md h-6"
+                                            src="https://www.mastercard.com/content/dam/public/brandcenter/en/ma-bc_mastercard-logo_eq.png"
+                                            alt="">
+                                        <span
+                                            class="border-2 border-gray-200 rounded-md  h-6 flex items-center justify-center">
+                                            <img class="h-3"
+                                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png"
+                                                alt="">
+                                        </span>
+
+                                    </div>
+                                    <h1 class="text-xl">{{ i.creditName | default:"Mr.Anda La-ngu" }}</h1>
+                                    <h1 class="text-md">{{ i.creditNum | default:"1234 1234 **** ****" }}</h1>
+
+
+                                </label>
+                                <!-- <label for="{{ i.id }}" class="text-xl peer-checked:text-green-300">checked</label> -->
+                            </div>
+                            {% endfor %}
+                            <div id="add"
+                                class="cursor-pointer p-2 peer-checked:ring-offset-1 flex justify-center items-center peer-checked:ring-1 border-2 text-center border-gray-100 hover:border-gray-200 rounded-md group shadow-lg peer-checked:ring-green-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                                เพิ่มบัตรเครติด
+                            </div>
+                            <button id="creditcard" type="submit"
+                                class="text-white bg-indigo-600 cursor-pointer rounded-md p-3 " name="submit"
+                                value="submit">Save & Continue</button>
+                            <button id="creditcard" type="submit" value="later" name="submit">Pay later</button>
+
+                            <div class="grid gap-2 hidden" id="formAddCard">
+                                <label for="email">Credit Name</label>
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="Cname" id="Cname"
+                                    name="Cname" placeholder="Credit Name">
+                                <label for="cardinfo">Credit card infomation</label>
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
+                                    name="cardinfo" placeholder="1234 1234 1234 1234">
+                                <div class="flex gap-3">
+                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
+                                        name="cardinfo2" placeholder="MM/YY">
+                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
+                                        name="cardinfo3" placeholder="CVC">
+                                </div>
+                                <label for="address">Address</label>
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr" placeholder="Address Line 1">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr2" placeholder="Address Line 2">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr3" placeholder="City">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr4" placeholder="State">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr5" placeholder="Post Code">
+                                <div class="flex gap-2">
+                                    <input type="checkbox" name="policy" id="policy">
+                                    <label for="policy">I have read all and accepted the <a href="#"
+                                            class="underline text-indigo-300">Privacy policies</a>.</label>
+                                </div>
+                                <button type="submit" class="text-white bg-indigo-600 cursor-pointer rounded-md p-3 "
+                                    name="submit" value="collectCard">Save & Continue</button>
+                                <button type="submit" value="later" name="submit">Pay later</button>
+                            </div>
+                            {% else %}
+                           
+
+                            <span class="grid gap-2" id="creditcard">
+                                <label for="email">Credit Name</label>
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="Cname" id="Cname"
+                                    name="Cname" placeholder="Credit Name">
+                                <label for="cardinfo">Credit card infomation</label>
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
+                                    name="cardinfo" placeholder="1234 1234 1234 1234">
+                                <div class="flex gap-3">
+                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
+                                        name="cardinfo2" placeholder="MM/YY">
+                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
+                                        name="cardinfo3" placeholder="CVC">
+                                </div>
+                                <label for="address">Address</label>
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr" placeholder="Address Line 1">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr2" placeholder="Address Line 2">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr3" placeholder="City">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr4" placeholder="State">
+                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                    name="addr5" placeholder="Post Code">
+                                <div class="flex gap-2">
+                                    <input type="checkbox" name="policy" id="policy">
+                                    <label for="policy">I have read all and accepted the <a href="#"
+                                            class="underline text-indigo-300">Privacy policies</a>.</label>
+                                </div>
+                                <button type="submit" class="text-white bg-indigo-600 cursor-pointer rounded-md p-3 "
+                                    name="submit" value="collectCard">Save & Continue</button>
+                                <button type="submit" value="later" name="submit">Pay later</button>
+                            </span>
+                            <input type="hidden" id="creditcard">
+                            {% endif %}
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+    </div>
+</div>
+<script>
+    ScrollReveal().reveal('.textup', {
+        delay: 10, distance: '10%', origin: 'bottom',
+    });
+    ScrollReveal().reveal('.textup-150', {
+        delay: 150, distance: '10%', origin: 'bottom',
+    });
+    ScrollReveal().reveal('.textup-200', {
+        delay: 200, distance: '10%', origin: 'bottom',
+    });
+
+
+    cc.addEventListener('click', function () {
+        title.innerHTML = 'Pay with Credit Card';
+
+        qr.classList.add('hidden');
+        if (document.getElementById('add') != null)
+            add.classList.remove('hidden');
+
+        for (let i = 0; i < creditcard.length; i += 1) {
+            creditcard[i].classList.remove('hidden');
+        }
+        if (document.getElementById('formAddCard') != null)
+            formAddCard.classList.add('hidden');
+    })
+    pp.addEventListener('click', function () {
+        title.innerHTML = 'Pay with Prompt Pay';
+        for (let i = 0; i < creditcard.length; i += 1) {
+            creditcard[i].classList.add('hidden');
+        }
+        if (document.getElementById('add') != null)
+            add.classList.add('hidden');
+        qr.classList.remove('hidden');
+        if (document.getElementById('formAddCard') != null)
+            formAddCard.classList.add('hidden');
+    })
+    if (document.getElementById('add') != null) {
+        add.addEventListener('click', function () {
+
+            for (let i = 0; i < creditcard.length; i += 1) {
+                creditcard[i].classList.add('hidden');
+            }
+            add.classList.add('hidden');
+            if (document.getElementById('formAddCard') != null)
+                formAddCard.classList.remove('hidden');
+        })
+    }
+</script>
+
+{% endblock %}
