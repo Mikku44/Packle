@@ -3,7 +3,9 @@ import numpy as np
 from datetime import datetime
 import os
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-headers = {"Authorization": "Bearer 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"}
+TOKEN = os.environ.get('HUG_TOKEN')
+print(TOKEN)
+headers = {"Authorization": f'{TOKEN}'}
 
 
 
@@ -43,4 +45,4 @@ def save_image(username,prompt):
     else:
         print('Could not connect to server.')
 
-save_image('anda','mango with water spread and objects with green and yellow color pattern, minimal style')
+save_image('anda','mango with water spread and objects with green and yellow color pattern, artwork style')
