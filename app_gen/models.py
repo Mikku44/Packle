@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime
 from django.utils.html import format_html
+import requests
+
 # # Create your models here.
 def ActionBtn(id):
     return format_html('<div style="display:flex;column-gap:10px;"><a href="{}/change" style="background:#79aec8;padding:10px;text-align:center;color:white;">Edit</a><a href={}/delete style="background:#79aec8;padding:10px;text-align:center;color:white;">Delete</a></div>'.format(id,id))
@@ -43,14 +45,37 @@ class User(models.Model):
         return self.userEmail
 
 
-
-
 class ImgGen(models.Model):
     gen_id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     gen_source = models.CharField(max_length=1000,null=False)
    
     acc_id = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     gen_CreateAt = models.DateTimeField()
+
+   
+    def delete(self):
+        import os
+        path = './app_gen/static/app_gen/imgGen/'+ str(self.acc_id.id)
+        dir = os.listdir(path)
+        for index in dir:
+            path = './app_gen/static/app_gen/imgGen/'+ str(self.acc_id.id) + '/' + index
+            if(len(os.listdir(path)) == 0):
+                os.rmdir(path)
+        try:
+            
+            source = "./app_gen"+self.gen_source.replace('%20',' ')
+            print(source)
+            os.remove(source)
+            
+        except:
+            pass
+        super().delete()
+        
+        # os.remove("demofile.txt")
+        # super().save()
+
+         
+         
 
     @property
     def Action(self):
@@ -85,8 +110,18 @@ class DetailImgGen(models.Model):
         verbose_name_plural = "Packaging Detail"
 
     def __str__(self):
-        return str(self.genDetail_id) + str(self.gen_message)
+        return f'ID : {str(self.genDetail_id)} , {str(self.gen_message)}'
 
+
+class Star(models.Model):
+    DetailImgGen = models.ForeignKey(DetailImgGen,on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+
+    def __str__(self):
+        return self.user.name
+    
+        
+    
 class CommentImgGen(models.Model):
 
     gen = models.ForeignKey(ImgGen,on_delete=models.CASCADE,null=True)
@@ -146,6 +181,9 @@ class Notification(models.Model):
         return ActionBtn(self.noti_id)
     def __str__(self):
         return self.notice_title
+
+    
+    
 class Follow(models.Model):
     follow_id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     source_id = models.ManyToManyField(User,related_name='source_id')
@@ -174,7 +212,15 @@ class Collection(models.Model):
     col_id = models.BigAutoField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID')
     col_name = models.CharField(max_length=100,null=False)
 
+    def __str__(self):
+        return self.col_name
+
+
 class DetailCollection(models.Model):
     col_detail_id = models.BigAutoField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID') 
     col_id = models.ForeignKey(Collection,on_delete=models.CASCADE)
     gen_id = models.ForeignKey(ImgGen,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return format_html('<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src={} style="width:100%;"></img></div>'.format(self.gen_id.gen_source))
+

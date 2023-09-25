@@ -9,8 +9,9 @@ class Statistic():
 @admin.register(User)
 class  PackmaUser(admin.ModelAdmin):
     
-    list_display = ['name',"userEmail",'classUser',"status","regAt","lastLogin","Action"]
+    list_display = ['id','name',"userEmail",'classUser',"status","regAt","lastLogin","Action"]
     search_fields = ['name']
+    ordering  = ['id']
     list_filter = ["status"]
     
 @admin.register(Class)
@@ -31,6 +32,7 @@ class PackmaDetailImgGen(admin.ModelAdmin):
     
     class Meta:
         verbose_name_plural = "Image Generation Detail"
+
         
 
 @admin.register(ImgGen)
@@ -73,7 +75,12 @@ class PackmaTransaction(admin.ModelAdmin):
     list_display = ['upgrade_id','acc_id','start_date','duedate','status','purchase_date','total_amount','Action']
     ordering = ['upgrade_id']
 
+class StarAdmin(admin.ModelAdmin):
+   pass
+
+
 
 admin.site.register(CommentImgGen)
-# admin.site.register(User,PackmaUser)
-# admin.site.register(Class,PackmaClass)
+admin.site.register(Collection)
+admin.site.register(Star,StarAdmin)
+admin.site.register(DetailCollection)

@@ -2,11 +2,12 @@
 {% block profile %}
 <style>
     dialog {
-        margin: 0;
-
-        width: 100wv;
+        position: fixed;
+        top: 30vh;
+        background-color: transparent;
     }
 
+    /*
     [type=text] {
         background-color: unset;
         border: 0;
@@ -17,7 +18,7 @@
     [type=text]:focus {
         border-bottom: 1px solid black;
         border: 0;
-    }
+    } */
 
 
     .cover {
@@ -56,24 +57,31 @@
         {% csrf_token %}
         <div class="flex justify-center relative">
             <img class="rounded-xl w-96" src="{{ img.gen_source }}" alt="">
-            <button class="absolute right-0  bg-red-500 text-white rounded-md p-3  hover:bg-red-400 duration-150" type="submit" name="submit" value="remove">
+            <button class="absolute right-0  bg-red-500 text-white rounded-md p-3  hover:bg-red-400 duration-150"
+                type="submit" name="submit" value="remove">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z" clip-rule="evenodd" />
-              </svg>
-              </button>
+                    <path fill-rule="evenodd"
+                        d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
-        
+
         <div class="flex justify-between items-center">
             <input class="mt-5 text-xl bg-gray-900 w-full" name="msg" value="{{ detail.gen_message }}">
             <div class="flex gap-3 items-center divide-x">
 
-                <div class="flex gap-1 items-center font-bold"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-yellow-500">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-                    </svg>
+                <div class="flex gap-1 items-center font-bold">
+                    <button type="button" onclick="getStar()">
+                        <svg xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor"
+                            class="w-8 h-8 text-yellow-500 hover:scale-150 duration-150">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                        </svg>
+                    </button>
 
-                    {{ detail.gen_star }}
+                    <div class="" id="starAmount">{{ star }}</div>
                 </div>
                 <a href="{{ img.gen_source }}" download="">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
@@ -116,16 +124,16 @@
                                 d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                    
+
                         Public
                     </div>
                     {% else %}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6 text-yellow-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+                        stroke="currentColor" class="w-6 h-6 text-yellow-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
                     <div>Private</div>
                     {% endif %}
                 </div>
@@ -137,41 +145,118 @@
 
             </div>
         </div>
-    
+
         {% if img.acc_id.id == request.session.uid %}
         <div class="flex gap-3 justify-end">
-            <button class="mt-4  w-24 bg-gray-800 text-white rounded-md p-3 hover:bg-gray-700 duration-150" type="submit" name="submit" value="cancel">Cancel</button>
-            <button class="mt-4  w-24 bg-black text-white rounded-md p-3 hover:bg-black-200 duration-150" type="submit" name="submit" value="save">Save</button></div>
+            <button class="mt-4  w-24 bg-gray-800 text-white rounded-md p-3 hover:bg-gray-700 duration-150"
+                type="submit" name="submit" value="cancel">Cancel</button>
+            <button class="mt-4  w-24 bg-black text-white rounded-md p-3 hover:bg-black-200 duration-150" type="submit"
+                name="submit" value="save">Save</button>
         </div>
-      
+</div>
 
-        {% endif %}
+
+{% endif %}
+
+</form>
+<div>
+    <div class="my-5">Comments</div>
+    <form action="/profile/generated/{{id}}" method="post">
+        {% csrf_token %}
+        <div class="flex gap-2 items-center"><input
+                class="px-2 w-full bg-gray-800 ring-gray-700 ring-1  rounded-md h-12" name="text" type="text"
+                placeholder="Type something here to comment"><button type="submit" name="submit" value="comment"
+                class="bg-blue-500 rounded-md hover:bg-blue-400 p-2 h-12 duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-8 h-8 ">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+
+            </button></div>
 
     </form>
-    <div>
-        <div>Comments</div>
-        <form action="generated/{{id}}">
-            <div class="p-5 bg-gray-800 ring-gray-700 grid ring-1 mt-5 rounded-xl "><input type="text" placeholder="Type something here to comment"></div>
-        </form>
-        {% for comment in comments %}
-        <div class="p-5 bg-gray-800 ring-gray-700 ring-1 mt-5 rounded-xl ">
-            <div class="flex gap-2 items-center mb-5">
-                <div class="rounded-full w-6 h-6 bg-black overflow-hidden"><img src="{{ comment.commentator.pic }}" alt=""></div>
-                <a href="#">
-                    <div class="font-bold text-gray-400 ">{{ comment.commentator.name }}</div>
-                </a>
-            </div>
-            <div class="flex gap-3 items-center text-gray-200">
-               {{ comment.message }}
-            </div>
-            
-               
-                <div class="text-gray-300 text-sm text-end">Comment at {{ comment.date }}</div>
-          
+    <dialog id="ask">
+        <div>
+
+            <form class=" text-white p-10  shadow-md rounded-md  bg-black/80" action="/profile/generated/{{id}}"
+                method="post">
+                {% csrf_token %}
+                <div class="text-center text-red-500 flex gap-2 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+
+                    Alert
+
+                </div>
+                <input type="hidden" class="text-black" name="cmid" id="del">
+                <div class="py-5">Are you sure ,you want to delete this comment?</div>
+                <button class="bg-red-500 p-2 rounded-sm" type="submit" name="submit" value="del">Sure , Delete</button>
+                <button class=" p-2" type="button" onclick="closeprevent()">Not</button>
+            </form>
         </div>
-        {% endfor %}
+    </dialog>
+    {% for comment in comments %}
+    <div class="p-5 bg-gray-800 ring-gray-700 ring-1 mt-5 rounded-xl ">
+        <div class="flex gap-2 items-center mb-5">
+
+            <div class="rounded-full w-6 h-6 bg-black overflow-hidden"><img class="h-full object-cover" src="{{ comment.commentator.pic }}" alt="">
+            </div>
+            <a href="profile/visit/{{ comment.commentator.id }}">
+                <div class="font-bold text-gray-400 ">{{ comment.commentator.name }}</div>
+            </a>
+            <div class="text-right w-full text-sm">
+                {% if comment.commentator.id == request.session.uid %}
+                <button onclick="prevent('{{comment.id}}')" class="hover:text-white/50">Delete</button>
+                {% endif %}
+
+            </div>
+
+        </div>
+        <div class="flex gap-3 items-center text-gray-200">
+            {{ comment.message }}
+        </div>
+
+
+        <div class="text-gray-300 text-sm text-end">Comment at {{ comment.date }}</div>
+
     </div>
+    {% endfor %}
+</div>
+
 
 </div>
+
+<script>
+
+    function prevent(id) {
+
+        del.value = id;
+        ask.show();
+    }
+    function closeprevent() {
+        ask.close();
+    }
+    function getStar() {
+        star.setAttribute('fill', 'currentColor');
+        starAmount.innerHTML = Number(starAmount.innerHTML) + 1;
+        size = 0
+        id = setInterval(frame, 10);
+        function frame() {
+            if (size == 150) {
+                clearInterval(null);
+                starAmount.classList.remove('animate-ping')
+            } else {
+                size++;
+                starAmount.classList.add('animate-ping')
+
+            }
+        }
+    }
+
+</script>
 
 {% endblock %}

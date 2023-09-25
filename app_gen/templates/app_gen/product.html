@@ -85,86 +85,71 @@
   </div>
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     <div class="grid gap-4">
-      {% for item in image %}
+      {% for i in sec %}
         
-      <div>
-        <img class="h-auto max-w-full rounded-lg" src="{{ item.gen_source }}"
-          alt="" />
-      </div>
-      <!-- <div>
-        <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg"
-          alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg" alt="" />
-      </div> -->
+      <a href="/profile/generated/{{ i.gen_id }}">
+        <div class=" rounded-lg overflow-hidden group relative">
+        
+            <div class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center "><div>{{ i.gen_id }}</div><div>{{ i.acc_id.name }}</div><div>{{ i.gen_CreateAt }}</div></div>
+            <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen_source }}"
+              alt="" />
+        
+        </div>
+      </a>
+     
+     
       {% endfor %}
     </div>
+    <!-- end row 1 -->
     <div class="grid gap-4">
-      {% for item in image %}
-      <div>
-        <img class="h-auto max-w-full rounded-lg" src="{{ item.gen_source }}"
-          alt="" />
-      </div>
-      <!-- <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg" alt="" />
-      </div> -->
+      {% for i in ssec %}
+        
+      <a href="/profile/generated/{{ i.gen_id }}">
+        <div class=" rounded-lg overflow-hidden group relative">
+        
+            <div class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center "><div>{{ i.gen_id }}</div><div>{{ i.acc_id.name }}</div><div>{{ i.gen_CreateAt }}</div></div>
+            <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen_source }}"
+              alt="" />
+        
+        </div>
+      </a>
+     
+     
       {% endfor %}
     </div>
+    <!-- end row 2 -->
     <div class="grid gap-4">
-      {% for item in image %}
-      <div>
-        <img class="h-auto max-w-full rounded-lg" src="{{ item.gen_source }}"
-          alt="" />
+      {% for i in tsec %}
+        
+      <div class=" rounded-lg overflow-hidden group relative">
+        
+          <div class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center"><div>{{ i.gen_id }}</div><div>{{ i.acc_id.name }}</div><div>{{ i.gen_CreateAt }}</div></div>
+          <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen_source }}"
+            alt="" />
+        
       </div>
-      <!-- <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg" alt="" />
-      </div> -->
+     
+     
       {% endfor %}
     </div>
+    <!-- end row 3 -->
     <div class="grid gap-4">
-      {% for item in image %}
-      <div>
-        <img class="h-auto max-w-full rounded-lg" src="{{ item.gen_source }}"
-          alt="" />
-      </div>
-      <!-- <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-10.jpg" alt="" />
-      </div>
-      <div>
-        <img class="h-auto max-w-full rounded-lg"
-          src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg" alt="" />
-      </div> -->
+      {% for i in fsec %}
+        
+      <a href="/profile/generated/{{ i.gen_id }}">
+        <div class=" rounded-lg overflow-hidden group relative">
+        
+            <div class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center "><div>{{ i.gen_id }}</div><div>{{ i.acc_id.name }}</div><div>{{ i.gen_CreateAt }}</div></div>
+            <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen_source }}"
+              alt="" />
+        
+        </div>
+      </a>
+     
+     
       {% endfor %}
     </div>
+   
   </div>
 </div>
 </body>

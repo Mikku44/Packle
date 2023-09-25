@@ -37,7 +37,7 @@
           us</a>
       </div>
       {% elif request.session.logined %}
-      <div class="textdown bg-gray-50 rounded-full px-10 sm:block hidden py-1">Hi , {{ request.session.username }}</div>
+      <div class="textdown bg-gray-50 rounded-full md:hidden px-10 sm:block hidden py-1">Hi , {{ request.session.username }}</div>
 
       {% endif %}
       <div class="hidden lg:flex gap-x-4 lg:min-w-1 lg:flex-1 lg:justify-end items-center">
@@ -46,14 +46,14 @@
           <div
             class="cursor-pointer group  flex items-center gap-2 rounded-lg px-4  py-1.5 font-bold text-sm  leading-6 text-black bg-gray-100 duration-200   hover:bg-gray-200">
             <div class='w-6 h-6 rounded-full overflow-hidden bg-black'>
-              <img src={{ request.session.pic }} alt="">
+              <img class='h-full object-cover w-full' src={{ request.session.pic }} alt="">
             </div>{{ request.session.username }}
           </div>
           <div class='w-1/6 fixed py-2   right-10 hidden group-hover:block h-6 group'>
             <div class="bg-white ring-1 shadow-md ring-gray-200 rounded-lg overflow-hidden">
               <div class="flex items-center">
                 <div class='w-10 h-10 m-5 rounded-full overflow-hidden bg-black'>
-                  <img src={{ request.session.pic }} alt="">
+                  <img class='h-full object-cover w-full' src={{ request.session.pic }} alt="">
                 </div>
                 <div class="text-gray-600 block">
                   <div>{{ request.session.email }}</div>
