@@ -212,6 +212,7 @@ def collect_card(request):
 
     request.session["role"] =  str(classObj)
     return redirect('product')
+
 def transectionID(request,id):
     
     if request.method == 'POST':
@@ -255,7 +256,10 @@ def transectionID(request,id):
 def product(request):
     logined  = loginCheck(request)
     context = {}
-    image = sorted(ImgGen.objects.all(), key=lambda x: random.random())
+    # image = sorted(ImgGen.objects.all(), key=lambda x: random.random())
+
+
+    image = sorted(DetailImgGen.objects.filter(gen_isPublic=True,isRemove=False), key=lambda x: random.random())
     x = [[],[],[],[]]
     counter = 0
   
@@ -265,6 +269,9 @@ def product(request):
         x[n].append(img)
         counter  += 1
     
+    popular = DetailImgGen.objects.filter(gen_isPublic=True,isRemove=False).order_by('-gen_star').first()
+
+    print(f"Popular : {popular}")
     print(f"First : {x[0]}")
     print(f"Second : {x[1]}")
     print(f"Third : {x[2]}")
@@ -273,7 +280,7 @@ def product(request):
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3]}
+        context = {'logined':logined,'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular}
     return render(request,'app_gen/product.html',context)
 
 def faq(request):
@@ -500,7 +507,13 @@ def profileVisit(request,id):
     logined  = loginCheck(request)
    
     userInfo = User.objects.get(id=id)
+    srcUser = User.objects.get(id=request.session['uid'])
 
+    followed = Follow.objects.filter(source_id=request.session['uid'])
+    print(followed)
+    action = True
+    if(followed):
+        action = False
 
     img = ImgGen.objects.filter(acc_id=id)
     detail = DetailImgGen.objects.filter(gen__in=img,gen_isPublic=True,isRemove=False)
@@ -509,7 +522,14 @@ def profileVisit(request,id):
     for image in detail:
         print(image.gen)
         imgurl.append(image.gen)
-        
+    
+    if(request.method == 'POST'):
+        if request.POST['submit'] == 'follow':
+            fol = Follow()
+            # fol.target_id = id
+            # fol.source_id = request.session.uid
+            # fol.follow_date = datetime.now()
+
     
     
 
@@ -518,7 +538,7 @@ def profileVisit(request,id):
         username = userInfo.name
         pic = userInfo.pic
         email = userInfo.userEmail
-        context = {'logined':logined,'username':username,'email':email,'pic':pic,'gen':'bg-slate-700','img':detail}
+        context = {'logined':logined,'username':username,'email':email,'pic':pic,'gen':'bg-slate-700','img':detail,'act':action}
     else:
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/profile.html',context)

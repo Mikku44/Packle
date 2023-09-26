@@ -114,11 +114,20 @@ class DetailImgGen(models.Model):
 
 
 class Star(models.Model):
-    DetailImgGen = models.ForeignKey(DetailImgGen,on_delete=models.CASCADE,null=True)
+    DetailImgGen = models.ForeignKey(DetailImgGen,on_delete=models.CASCADE,null=False)
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
         return self.user.name
+    
+    # def create(self):
+    #     self.DetailImgGen.gen_star = 1
+    #     print('add')
+    #     self.save()
+
+    # def delete(self):
+    #     self.DetailImgGen.gen_star -= 1
+    #     super().delete()
     
         
     

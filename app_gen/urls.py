@@ -29,6 +29,7 @@ urlpatterns = [
     path('profile/bin/',views.bin,name='bin'),
     path('profile/bin/act/<id>',views.binAction,name='binAction'),
     
+    
 
     path('features/',views.features,name='features'),
     path('company/',views.company,name='company'),
