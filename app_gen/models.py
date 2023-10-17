@@ -150,6 +150,7 @@ class Illegal(models.Model):
     cop_details = models.CharField(max_length=1000,null=False)
     status  = models.BooleanField(default=False)
     gen_id = models.ForeignKey(ImgGen,on_delete=models.CASCADE,null=False)
+    report_date = models.DateTimeField(null=True)
 
     @property
     def Action(self):
@@ -195,8 +196,10 @@ class Notification(models.Model):
     
 class Follow(models.Model):
     follow_id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-    source_id = models.ManyToManyField(User,related_name='source_id')
-    target_id = models.ManyToManyField(User,related_name='target_id')
+    # source_id = models.ManyToManyField(User,related_name='source_id')
+    # target_id = models.ManyToManyField(User,related_name='target_id')
+    source_id = models.BigIntegerField(null=True, blank=True)
+    target_id = models.BigIntegerField(null=True, blank=True)
     follow_date = models.DateTimeField(null=True)
 
 
@@ -220,6 +223,7 @@ class Transaction(models.Model):
 class Collection(models.Model):
     col_id = models.BigAutoField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID')
     col_name = models.CharField(max_length=100,null=False)
+    col_user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
 
     def __str__(self):
         return self.col_name

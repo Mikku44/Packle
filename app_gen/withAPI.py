@@ -9,7 +9,7 @@ headers = {"Authorization": f'{TOKEN}'}
 
 
 
-def save_image(username,prompt):
+def save_image(user_id,prompt,filename):
     def query(payload):
         response = requests.post(API_URL, headers=headers, json=payload)
         return response
@@ -29,20 +29,20 @@ def save_image(username,prompt):
         date = date.strftime("%d%m%y")
 
         try:
-            path = os.path.join(f'./app_gen/static/app_gen/imgGen/',str(username))
+            path = os.path.join(f'./app_gen/static/app_gen/imgGen/',str(user_id))
             os.mkdir(path)
         except:
             pass
         try:
-            path = os.path.join(f'./app_gen/static/app_gen/imgGen/{str(username)}/',str(date))
+            path = os.path.join(f'./app_gen/static/app_gen/imgGen/{str(user_id)}/',str(date))
             os.mkdir(path)
         except:
             pass
 
-        filename = prompt[0:]
-        path = f'./app_gen/static/app_gen/imgGen/{username}/{date}/{filename}.png'
+
+        path = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}.png'
         plt.imsave(path,image)
     else:
         print('Could not connect to server.')
 
-save_image('anda','mango with water spread and objects with green and yellow color pattern, artwork style')
+# save_image('anda','mango with water spread and objects with green and yellow color pattern, artwork style')

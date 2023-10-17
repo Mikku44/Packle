@@ -3,12 +3,12 @@
 
 
 {% block content %}
-<div class="sticky top-0 z-[100]">
-  <div class="pt-5 w-full flex justify-center  ">
+<div class="sticky top-0 z-[10]">
+  <div class="pt-5 w-full flex justify-center ">
     <div
-      class="flex hover:border-gray-300 text-gray-500 justify-between sm:w-1/3 w-2/3 border-2 bg-gray-100  px-2 py-1 rounded-md">
+      class="flex hover:border-gray-300 text-gray-500 shadow-md justify-between sm:w-1/3 w-2/3 border-2 bg-white  px-2 py-1 rounded-md">
       <input placeholder="Find package artworks in our website" id="findPic"
-        class=" outline-0 bg-gray-100 w-full focus:border-0 px-2 " type="text">
+        class=" outline-0 bg-white w-full focus:border-0 px-2 " type="text">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="cursor-pointer w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round"
@@ -18,7 +18,7 @@
   </div>
   <div class=" w-full flex justify-center  ">
     <div id="items"
-      class="flex hidden flex-col text-gray-500 absolute justify-between sm:w-1/3 w-2/3 border-1 bg-white px-2 py-1 rounded-md shadow">
+      class="flex hidden flex-col text-gray-500 absolute justify-between sm:w-1/3 w-2/3 border-1 bg-white px-2 py-1 mt-4 rounded-md shadow">
       <!-- <div class="hover:bg-gray-100 p-2 rounded-md">items 1</div>
       <div class="hover:bg-gray-100 p-2 rounded-md">items 2</div>
       <div class="hover:bg-gray-100 p-2 rounded-md">items 3</div>
@@ -54,10 +54,10 @@
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
     <div class="grid gap-4">
       {% for i in sec %}
+      
+      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }}  package">
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}">
-
-        <div class=" rounded-lg overflow-hidden group relative">
+        <div class=" rounded-lg overflow-hidden group relative" >
           <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
@@ -83,7 +83,7 @@
     <div class="grid gap-4">
       {% for i in ssec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}">
+      <a href="/profile/generated/{{ i.gen.gen_id }}"  class="{{ i.gen.acc_id.name |cut:" " }}  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
           <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
@@ -111,7 +111,7 @@
     <div class="grid gap-4">
       {% for i in tsec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}">
+      <a href="/profile/generated/{{ i.gen.gen_id }}"  class="{{ i.gen.acc_id.name |cut:" " }}  package">
         <div class=" rounded-lg overflow-hidden group relative">
           <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -137,7 +137,7 @@
     <div class="grid gap-4">
       {% for i in fsec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}">
+      <a href="/profile/generated/{{ i.gen.gen_id }}"  class="{{ i.gen.acc_id.name |cut:" " }}  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
           <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
@@ -172,7 +172,8 @@
 
   function autoComplete() {
 
-    items.innerHTML = '';
+    if(document.getElementsByClassName('items-list') != null) 
+      items.innerHTML = 'List of data';
     if (!(findPic === document.activeElement)) {
       items.classList.add('hidden');
       items.innerHTML = '';
@@ -184,17 +185,37 @@
     input.addEventListener("input", function (e) {
       items.classList.remove('hidden');
       for (let i = 0; i < list.length; i += 1) {
-
-        if (list[i].startsWith(input.value.toLocaleLowerCase())) {
+        
+        user = list[i].toLocaleLowerCase();
+        if (user.startsWith(input.value.toLocaleLowerCase())) {
           console.log(list[i]);
-          items.innerHTML += ` <div class=" hover:bg-gray-100 p-2 rounded-md">${list[i]}</div>`;
+          items.innerHTML += ` <button class="items-list hover:bg-gray-100 p-2 rounded-md text-left" onclick=ShowPic(\'${list[i]}\')>${list[i]}</button>`;
         }
+        
       }
+      items.innerHTML += ` <button class="items-list hover:bg-gray-100 p-2 rounded-md text-left" onclick=Reset()>Reset</button>`;
     }
     );
   }
+  console.log('[\'{{ ListOfUsers|join:"\', \'"|escape }}\']');
+  showList(findPic, JSON.parse("[" + "\"{{ ListOfUsers|join:'\", \"'|escape }}\"" + "]"));
 
-  showList(findPic, ['hello', 'doraemon', 'nobita', 'haki', 'hanami']);
+  function ShowPic(key){
+    pic = document.getElementsByClassName(key);
+    pk = document.getElementsByClassName('package');
+    for(let i=0; i < pk.length - 1;i+=1){
+      pk[i].hidden = true;
+    }
+    for(let i=0; i<pic.length -1;i+=1){
+      pic[i].hidden = false;
+    }
+  }
+  function Reset(){
+    pk = document.getElementsByClassName('package');
+    for(let i=0; i < pk.length - 1;i+=1){
+      pk[i].hidden = false;
+    }
+  }
 </script>
 
 {% endblock %}

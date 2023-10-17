@@ -52,26 +52,64 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
+{% if reload %}
+<script>window.location.reload();</script>
+{% endif %}
+{% if ill %}
+<div id="ill"
+    class="bg-red-500 border-red-400 border-2 rounded-md text-red-300 p-3 w-full mb-2 flex gap-2 group  z-[80]">
+
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+    </svg>
+    แพ็คเกจนี้มีการรายงานว่ามีการละเมิดข้อบังคับของเว็บไซต์
+   
+
+    <div id="listIll" class="fixed bg-black z-[80] opacity-0 hover:opacity-80 group-hover:opacity-80 rounded-md p-4">
+        {% for item in ill %}
+        <li>{{item.cop_details}}</li>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 <div class=" z-0 rounded-md border-1 bg-gray-900 p-5 ring-1 ring-gray-700 shadow-md">
     <form method="POST" action="/profile/generated/{{id}}">
         {% csrf_token %}
         <div class="flex justify-center relative">
             <img class="rounded-xl w-96" src="{{ img.gen_source }}" alt="">
+            {% if img.acc_id.id == request.session.uid %}
             <button class="absolute right-0  bg-red-500 text-white rounded-md p-3  hover:bg-red-400 duration-150"
-                type="submit" name="submit" value="remove">
+                type="button" name="submit" value="remove" onclick="preventP()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                     <path fill-rule="evenodd"
                         d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
                         clip-rule="evenodd" />
                 </svg>
             </button>
+            {% endif %}
         </div>
 
-        <div class="flex justify-between items-center">
-            <input class="mt-5 text-xl bg-gray-900 w-full" name="msg" value="{{ detail.gen_message }}">
-            <div class="flex gap-3 items-center divide-x">
+        <div class="flex justify-between items-center sm:flex-row flex-col ">
+            <input class="mt-5 text-xl bg-gray-800 p-4 w-full rounded-md border-gray-800" name="msg" id="msg"
+                placeholder="type the image description here" value="{{ detail.gen_message }}">
+            <div class="grid grid-flow-col pt-3 gap-3 items-center px-3">
 
-                <div class="flex gap-1 items-center font-bold">
+
+                <div class="flex gap-1 items-center font-bold ">
+                    {% if stared %}
+                    <button type="button" onclick="dropStar()">
+                        <svg xmlns="http://www.w3.org/2000/svg" id="star" fill="currentColor" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor"
+                            class="w-8 h-8 text-yellow-500 hover:scale-150 duration-150">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                        </svg>
+                    </button>
+                    <input type="hidden" name="gg" value="0">
+                    <button type="submit" name="submit" id="drop" value="dropStar"></button>
+                    {% else %}
                     <button type="button" onclick="getStar()">
                         <svg xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor"
@@ -80,18 +118,40 @@
                                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
                         </svg>
                     </button>
+                    <input type="hidden" name="gg" value="0">
+                    <button type="submit" name="submit" id="addStar" value="addStar"></button>
+                    {% endif %}
 
                     <div class="" id="starAmount">{{ star }}</div>
                 </div>
-                <a href="{{ img.gen_source }}" download="">
+                <a href="{{ img.gen_source }}" download target="_blank" class="grid justify-items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                         <path
                             d="M12 1.5a.75.75 0 01.75.75V7.5h-1.5V2.25A.75.75 0 0112 1.5zM11.25 7.5v5.69l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V7.5h3.75a3 3 0 013 3v9a3 3 0 01-3 3h-9a3 3 0 01-3-3v-9a3 3 0 013-3h3.75z" />
                     </svg>
+
                 </a>
+
+                <a href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:8000{{ request.get_full_path }} "
+                    class="grid justify-items-center" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6" alt="share">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+
+                </a>
+
+                <button type="button" onclick="preventR()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5" />
+                    </svg>
+                    </butt>
             </div>
         </div>
-        <div class="grid grid-cols-2 gap-3 mt-5">
+        <div class="grid sm:grid-cols-2  gap-3 mt-5">
             <div class="p-5 bg-gray-800 ring-gray-700 ring-1 rounded-xl ">
                 <div class="flex gap-2 items-center mb-5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -112,30 +172,33 @@
                     </div>
                 </div>
             </div>
-            <input type="text" name="isPublic" value="True" hidden>
+
             <div class="p-5 bg-gray-800 ring-gray-700 ring-1 rounded-xl ">
                 <div>
                     <div class="text-sm">Status</div>
                     {% if detail.gen_isPublic %}
                     <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6 text-yellow-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+                        <label class="relative inline-flex items-center mr-5 cursor-pointer">
+                            <input type="checkbox" name="isPublic" id="isPublic" value="True" class="sr-only peer"
+                                checked>
+                            <div
+                                class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
+                            </div>
+                            <span class="px-2">Public</span>
+                        </label>
 
-                        Public
                     </div>
+
                     {% else %}
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-6 h-6 text-yellow-500">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <div>Private</div>
+                    <label class="relative inline-flex items-center mr-5 cursor-pointer">
+                        <input type="checkbox" name="isPublic" id="isPublic" value="false" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
+                        </div>
+                        <span class="px-2">Private</span>
+                    </label>
                     {% endif %}
+
                 </div>
                 <div class="mt-5
                 "></div>
@@ -147,7 +210,7 @@
         </div>
 
         {% if img.acc_id.id == request.session.uid %}
-        <div class="flex gap-3 justify-end">
+        <div id="actBtn" class="flex gap-3 justify-end hidden">
             <button class="mt-4  w-24 bg-gray-800 text-white rounded-md p-3 hover:bg-gray-700 duration-150"
                 type="submit" name="submit" value="cancel">Cancel</button>
             <button class="mt-4  w-24 bg-black text-white rounded-md p-3 hover:bg-black-200 duration-150" type="submit"
@@ -199,11 +262,89 @@
             </form>
         </div>
     </dialog>
+
+    <!-- dialog for image del  -->
+    <dialog id="askpic">
+        <div>
+
+            <form class=" text-white p-10  shadow-md rounded-md  bg-black/80" action="/profile/generated/{{id}}"
+                method="post">
+                {% csrf_token %}
+                <div class="text-center text-red-500 flex gap-2 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+
+                    Alert
+
+                </div>
+
+                <div class="py-5">Are you sure ,you want to delete this package?</div>
+                <button class="bg-red-500 p-2 rounded-sm" type="submit" name="submit" value="remove">Sure ,
+                    Delete</button>
+                <button class=" p-2" type="button" onclick="closepreventP()">Not</button>
+            </form>
+        </div>
+    </dialog>
+
+
+    <!-- report dialog -->
+
+    <dialog id="report">
+        <div>
+
+            <form class=" text-white p-10  shadow-md rounded-md  bg-black/80" action="/profile/generated/{{id}}"
+                method="post">
+                {% csrf_token %}
+                <div class="text-center text-yellow-500 flex gap-2 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3v1.5M3 21v-6m0 0l2.77-.693a9 9 0 016.208.682l.108.054a9 9 0 006.086.71l3.114-.732a48.524 48.524 0 01-.005-10.499l-3.11.732a9 9 0 01-6.085-.711l-.108-.054a9 9 0 00-6.208-.682L3 4.5M3 15V4.5">
+                        </path>
+                    </svg>
+
+                    Report
+
+                </div>
+                <input type="hidden" class="text-black" name="cmid" id="del">
+                <div class="py-5">report this packaging?</div>
+
+                <div class="grid gap-3 items-center">
+                    <div class="flex gap-2">
+                        <input name="repo" value="เนื้อหาแสดงความเกลียดชังหรือการล่วงละเมิด"
+                            class="accent-black w-6 h-6" id="repo" value="1" type="radio">
+                        <label for="repo">เนื้อหาแสดงความเกลียดชังหรือการล่วงละเมิด</label>
+                    </div>
+                    <div class="flex gap-2">
+                        <input name="repo" value="เนื้อหาเกี่ยวกับเรื่องเพศ" class="accent-black w-6 h-6" id="repo2"
+                            value="2" type="radio">
+                        <label for="repo2">เนื้อหาเกี่ยวกับเรื่องเพศ</label>
+                    </div>
+                    <div class="flex gap-2">
+                        <input name="repo" value="การกระทำที่เสี่ยงอันตรายหรือเป็นภัย" class="accent-black w-6 h-6"
+                            id="repo3" value="3" type="radio">
+                        <label for="repo3">การกระทำที่เสี่ยงอันตรายหรือเป็นภัย</label>
+                    </div>
+
+                </div>
+
+                <div class="py-4"></div>
+
+                <button class="bg-yellow-500 p-2 rounded-sm" type="submit" name="submit" value="report">Send</button>
+                <button class=" p-2" type="button" onclick="closepreventR()">Not</button>
+            </form>
+        </div>
+    </dialog>
+
     {% for comment in comments %}
     <div class="p-5 bg-gray-800 ring-gray-700 ring-1 mt-5 rounded-xl ">
         <div class="flex gap-2 items-center mb-5">
 
-            <div class="rounded-full w-6 h-6 bg-black overflow-hidden"><img class="h-full object-cover" src="{{ comment.commentator.pic }}" alt="">
+            <div class="rounded-full w-6 h-6 bg-black overflow-hidden"><img class="h-full object-cover"
+                    src="{{ comment.commentator.pic }}" alt="">
             </div>
             <a href="/profile/visit/{{ comment.commentator.id }}">
                 <div class="font-bold text-gray-400 ">{{ comment.commentator.name }}</div>
@@ -231,6 +372,21 @@
 </div>
 
 <script>
+    msg.addEventListener('change', saveChange);
+    isPublic.addEventListener('change', changePublic);
+    ill.addEventListener(
+        "mouseover", (e)=> listIllshow(e));
+    checker = isPublic.value
+
+    function saveChange() {
+        actBtn.classList.remove('hidden');
+    }
+
+    function changePublic() {
+        isPublic.value = !checker
+        checker = !checker
+        saveChange()
+    }
 
     function prevent(id) {
 
@@ -240,11 +396,31 @@
     function closeprevent() {
         ask.close();
     }
-    function getStar() {
+
+    function preventP() {
+
+
+        askpic.show();
+    }
+    function closepreventP() {
+        askpic.close();
+    }
+
+    function preventR() {
+
+
+        report.show();
+    }
+    function closepreventR() {
+        report.close();
+    }
+    async function getStar() {
         star.setAttribute('fill', 'currentColor');
         starAmount.innerHTML = Number(starAmount.innerHTML) + 1;
         size = 0
-        id = setInterval(frame, 10);
+        id = await setInterval(frame, 10);
+        addStar.click()
+
         function frame() {
             if (size == 150) {
                 clearInterval(null);
@@ -254,7 +430,34 @@
                 starAmount.classList.add('animate-ping')
 
             }
+
         }
+    }
+
+    async function dropStar() {
+        star.setAttribute('fill', 'none');
+        starAmount.innerHTML = Number(starAmount.innerHTML) - 1;
+        size = 0
+        id = await setInterval(frame, 10);
+        drop.click()
+
+        function frame() {
+            if (size == 150) {
+                clearInterval(null);
+                starAmount.classList.remove('animate-ping')
+            } else {
+                size++;
+                starAmount.classList.add('animate-ping')
+
+            }
+
+        }
+    }
+
+    function listIllshow(e){
+
+            listIll.style.left = e.clientX + 'px';
+            
     }
 
 </script>

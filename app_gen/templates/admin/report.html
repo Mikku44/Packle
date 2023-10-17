@@ -1,0 +1,78 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+
+<!-- total report -->
+
+<div class=" grid gap-5 sm:grid-flow-col bg-white ">
+
+  <div class="rounded-md p-4 my-4  hover:bg-purple-100 duration-150 shadow-md ">
+    <h3 class="text-lg">Total User</h3>
+    <div>{{users}}</div>
+  </div>
+
+  <div class="rounded-md p-4 my-4  hover:bg-purple-100 duration-150 shadow-md">
+    <h3 class="text-lg">Total Transaction</h3>
+    <div>{{trans}}</div>
+  </div>
+
+  <div class="rounded-md p-4 my-4  hover:bg-purple-100 duration-150 shadow-md">
+    <h3 class="text-lg">Total Design</h3>
+    <div>{{design}}</div>
+  </div>
+
+</div>
+
+
+<!-- data -->
+
+{{data}}
+<div></div>
+{{sum}}
+<!-- graph -->
+
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+
+<script>
+  const ctx = document.getElementById('myChart');
+  const labels = "{{data}}"
+  const data = "{{sum}}"
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [
+        'January',
+        'February',
+        'March',
+        'April'
+      ],
+      datasets: [{
+        label: 'Users',
+        data: JSON.parse("[" + "{{sum}}" + "]"),
+        borderWidth: 1,
+        tension: 0.1
+      },
+      {
+        label: 'Transactions',
+        data: JSON.parse("[" + "1,2,6,4,5,9" + "]"),
+        borderWidth: 1,
+        tension: 0.1
+      }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        },
+        x: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>

@@ -258,14 +258,17 @@ def product(request):
     context = {}
     # image = sorted(ImgGen.objects.all(), key=lambda x: random.random())
 
-
+    users = User.objects.all()
     image = sorted(DetailImgGen.objects.filter(gen_isPublic=True,isRemove=False), key=lambda x: random.random())
     x = [[],[],[],[]]
     counter = 0
-  
+    ListOfUsers = []
 
+    for user in users:
+        ListOfUsers.append(user.name.replace(" ", ""))
     for img in image:
         n = counter % 4
+        
         x[n].append(img)
         counter  += 1
     
@@ -277,10 +280,11 @@ def product(request):
     print(f"Third : {x[2]}")
     print(f"Forth : {x[3]}")
 
+    # ListOfUsers = ["asd",'ojef','alskdfj']
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular}
+        context = {'logined':logined,'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
     return render(request,'app_gen/product.html',context)
 
 def faq(request):
@@ -341,7 +345,7 @@ def generator(request):
         
         if(request.POST.get('width') is not None and request.session['genStep'] == '3'):
             request.session['prompt'] ['descript'] = request.POST.get('prompt')
-            request.session['prompt'][request.session['genStep']]  = request.POST.get('prompt'),request.POST.get('width'),request.POST.get('height'),request.POST.get('long'),request.POST.get('unit')
+            request.session['prompt'][request.session['genStep']]  = f"{request.POST.get('prompt').replace(' ', '')} {request.POST.get('width')} {request.POST.get('height')} {request.POST.get('long')} {request.POST.get('unit')}"
             print(request.session['prompt']['0'],request.session['prompt']['1'])
             print(request.session['prompt'])
         elif (request.session['genStep'] == '4'):
@@ -350,18 +354,18 @@ def generator(request):
              date = datetime.now()
              date = date.strftime("%d%m%y")
 
-             prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
-             filename = prompt[0:]
-             username = request.session['uid']
+             prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + 'for ' + request.session['prompt'] ['descript']
+             filename = prompt[16:26].replace(" ", "") + datetime.now().strftime("%H%M%S")
+             user_id = request.session['uid']
              print(filename)
-             file = f'/static/app_gen/imgGen/{username}/{date}/{filename}.png'
+             file = f'/static/app_gen/imgGen/{user_id}/{date}/{filename}.png'
              from os import system
              
-             
-             username = request.session['uid']
+             request.session['fileGen'] = file
+             user_id = request.session['uid']
              prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
-             system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+username+'\',\''+prompt+'\');os.system(\'pause\');"')
-             
+            #  system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+str(user_id)+'\',\''+str(prompt)+'\');os.system(\'pause\');"')
+             system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\');os.system(\'pause\');"')
              request.session['genStep'] = '4'
             #  del request.session['prompt']
              
@@ -402,10 +406,9 @@ def generator(request):
 def complete_gen(request):
     date = datetime.now()
     date = date.strftime("%d%m%y")
-    uid = request.session['uid']
-    prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt']['descript']
-    filename = prompt[0:].replace(' ','%20')
-    file = f'/static/app_gen/imgGen/{uid}/{date}/{filename}.png'
+    prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
+    filename = prompt[19:]
+    file =  request.session['fileGen']
     request.session['genStep'] = '0'
     if request.method == 'POST':
         
@@ -423,12 +426,12 @@ def complete_gen(request):
         detail.gen_isPublic = True
         detail.save()
 
-        
 
         return redirect('profile')
 
+    file_path = request.session['fileGen']
 
-    context= {'imgurl':'google.com','date':date,'filename':filename}
+    context= {'imgurl':'google.com','date':date,'filename':file_path}
     return render(request,'app_gen/complete.html',context)
 
 def db(request):
@@ -543,12 +546,15 @@ def profileVisit(request,id):
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/profile.html',context)
 def imageDetail(request,id):
+    userID = User.objects.get(id=request.session['uid'])
     img = ImgGen.objects.get(gen_id=id)
     detail = DetailImgGen.objects.get(gen_id=id)
     comment = CommentImgGen.objects.filter(gen_id=id).order_by('-date')
     star = Star.objects.filter(DetailImgGen=detail.genDetail_id).count()
-    print(star)
-    context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star}
+    stared = Star.objects.filter(DetailImgGen=detail.genDetail_id,user=userID)
+    ill = Illegal.objects.filter(gen_id=id,status=True)
+    print(ill)
+    context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star,'stared':stared,'reload':False,'ill':ill}
     if request.method == "POST":
         if request.POST['submit'] == "save":
             detail.gen_message = request.POST['msg']
@@ -571,10 +577,35 @@ def imageDetail(request,id):
         elif request.POST['submit'] == "del":
             comment = CommentImgGen.objects.get(id=request.POST['cmid'])
             comment.delete()
-            
-
-
-       
+        elif request.POST['submit'] == 'addStar':
+            if(stared):
+                print('notStar')
+            else:
+                print('addStar')
+                st = Star()
+                st.DetailImgGen = detail
+                st.user = userID
+                st.save()
+                # star = Star.objects.filter(DetailImgGen=detail.genDetail_id).count()
+                # context['star'] = star
+                context['reload'] = True
+        elif request.POST['submit'] == 'dropStar':
+            if(stared):
+                stared = Star.objects.get(DetailImgGen=detail.genDetail_id,user=userID)
+                stared.delete()
+                context['reload'] = True
+        elif request.POST['submit'] == 'report':
+            print('reported',request.POST['repo'])
+            normal = Illegal.objects.filter(cop_details=request.POST['repo'])
+            if(normal):
+                pass
+            else:
+                report = Illegal()
+                report.cop_details = request.POST['repo']
+                report.gen_id = img
+                report.report_date = datetime.now()
+                report.save()
+                 
     
     return render(request,'app_gen/imageDetail.html',context)
 
@@ -664,15 +695,58 @@ def notifications(request):
     return render(request,'app_gen/notification.html',context)
 
 def collections(request):
+    if(request.method == 'POST'):
+        nCol = Collection()
+        nCol.col_name = request.POST['col_name']
+        nCol.col_user = User.objects.get(id=request.session['uid'])
+        nCol.save()
+    
+    col = Collection.objects.filter(col_user=request.session['uid'])
     logined  = loginCheck(request)
     context = {}
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'coll':'bg-slate-700'}
+        context = {'logined':logined,'username':username,'pic':pic,'coll':'bg-slate-700','col':col}
     else:
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/collections.html',context)
+
+def colDetail(request,id):
+    col = Collection.objects.get(col_id=id)
+
+
+    dCol = DetailCollection.objects.filter(col_id=id)
+    pack = ImgGen.objects.filter(acc_id=request.session['uid'])
+    pack = pack.exclude(gen_id__in=dCol.values("gen_id"))
+    
+    context = {'images':dCol,'col':col,'packages':pack}
+
+    if 'submit' in request.GET:
+        if request.GET['submit'] == 'unsave':
+            print(request.GET['id'])
+            dCol = DetailCollection.objects.filter(col_id=id,gen_id=request.GET['id'])
+            dCol.delete()
+    if request.method == 'POST':
+
+        if request.POST['submit'] == 'rename':
+            col.col_name = request.POST['nameCol']
+            col.save()
+        
+        if request.POST['submit'] == 'add':
+            genID = request.POST['id'].split(',')
+            for item in genID:
+                addPack = DetailCollection()
+                addPack.col_id = Collection.objects.get(col_id=id)
+                addPack.gen_id = ImgGen.objects.get(gen_id=item)
+                addPack.save()
+
+       
+
+    return render(request,'app_gen/colDetail.html',context)
+
+def report(request):
+    return render(request,'admin/report.html')
 
 def information(request):
     logined  = loginCheck(request)

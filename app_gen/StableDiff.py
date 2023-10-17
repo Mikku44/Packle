@@ -35,7 +35,7 @@ def genImg(username,prompt):
 
     image = pipe(
     prompt=prompt,
-    num_inference_steps=10,
+    num_inference_steps=2,
     )
     plt.imshow(image.images[0])
 

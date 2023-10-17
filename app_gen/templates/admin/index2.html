@@ -1,8 +1,12 @@
-{% extends 'admin/index.html' %}
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></div>{% endblock %}
 
 {% block content %}
-sdfsdf
+{% include './report.html' %}
+
+
+
 {{ block.super }}
 {% endblock %}
-
-

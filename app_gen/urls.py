@@ -21,6 +21,7 @@ urlpatterns = [
     path('profile/generated/',views.profile,name='generated'),
     path('profile/generated/<id>',views.imageDetail,name='imageDetail'),
     path('profile/collections/',views.collections,name='collections'),
+    path('profile/collections/<id>',views.colDetail,name='detailCol'),
     path('profile/information/',views.information,name='information'),
     path('profile/notifications/',views.notifications,name='notifications'),
     path('profile/notifications/<id>',views.notiDetail,name='notiDetail'),
@@ -40,6 +41,11 @@ urlpatterns = [
 
     path('FAQ/',views.faq,name='questions'),
     path('signout/',views.logout,name='signout'),
-    # path('admin/index',views.faq,name='admin'),
+    path('signout/',views.logout,name='signout'),
+    
+    
+    path('report/',views.logout,name='report'),
+
+    # path('admin/report/',views.faq,name='admin'),
 
 ]
