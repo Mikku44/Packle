@@ -41,8 +41,36 @@ def save_image(user_id,prompt,filename):
 
 
         path = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}.png'
+        path2 = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}_mockup.png'
+
+
         plt.imsave(path,image)
+        create_mockup(path,path2)
+        
     else:
         print('Could not connect to server.')
 
 # save_image('anda','mango with water spread and objects with green and yellow color pattern, artwork style')
+
+
+def create_mockup(image,path):
+    from PIL import Image
+    import matplotlib.pyplot as plt
+
+    mask = Image.open('./app_gen/originMockup.jpg').convert('L')
+    src =Image.open(image).resize(mask.size)
+    src2 = Image.new("RGBA", src.size, 0)
+    mockup = Image.open('./app_gen/originMockup2.jpg')
+    im = Image.composite(src, src2, mask)
+
+    # plt.imshow(mockup)
+    # plt.imshow(im)
+    # plt.axis('off')
+    # plt.show()
+    mockup.paste(im,(0,0),mask=mask)
+    mockup.show()
+    mockup.save(path)
+    # return im
+
+
+# create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxabstr213552.png")

@@ -318,9 +318,6 @@ def generator(request):
     logined = loginCheck(request)
     
 
-
-
-
     if(not logined):
         return HttpResponseRedirect(reverse('login'))
     file = "hello"
@@ -332,10 +329,12 @@ def generator(request):
     print(request.session['genStep'])
     if 'genStep' not in request.session:
         request.session['genStep'] = str(0)
-        request.session['prompt'] = {'0':'mdjrny-v4-style box '}
+        request.session['prompt'] = {'0':''}
+        # request.session['prompt'] = {'0':'mdjrny-v4-style box '}
     else:
         if request.session['genStep'] == '0':
-            request.session['prompt'] = {'0':'mdjrny-v4-style box '}
+            request.session['prompt'] = {'0':' '}
+            # request.session['prompt'] = {'0':'mdjrny-v4-style box '}
 
 
     
@@ -351,26 +350,28 @@ def generator(request):
         elif (request.session['genStep'] == '4'):
          
              
-             date = datetime.now()
-             date = date.strftime("%d%m%y")
-
-             prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + 'for ' + request.session['prompt'] ['descript']
-             filename = prompt[16:26].replace(" ", "") + datetime.now().strftime("%H%M%S")
-             user_id = request.session['uid']
-             print(filename)
-             file = f'/static/app_gen/imgGen/{user_id}/{date}/{filename}.png'
-             from os import system
-             
-             request.session['fileGen'] = file
-             user_id = request.session['uid']
-             prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
+            date = datetime.now()
+            date = date.strftime("%d%m%y")
+            prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + 'for ' + request.session['prompt'] ['descript']
+            filename = prompt[16:26].replace(" ", "") + datetime.now().strftime("%H%M%S")
+            user_id = request.session['uid']
+            print(filename)
+            file = f'/static/app_gen/imgGen/{user_id}/{date}/{filename}.png'
+            from os import system
+            
+            request.session['fileGen'] = file
+            user_id = request.session['uid']
+            prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
             #  system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+str(user_id)+'\',\''+str(prompt)+'\');os.system(\'pause\');"')
-             system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\');os.system(\'pause\');"')
-             request.session['genStep'] = '4'
+            #  system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\');os.system(\'pause\');"')
+            import app_gen.withAPI as gen
+            gen.save_image(str(user_id),str(prompt),filename)
+                      
+            request.session['genStep'] = '4'
             #  del request.session['prompt']
              
-             print("done")
-             return render(request,'app_gen/imgGen.html',{'file':file})  
+            print("done")
+            return render(request,'app_gen/imgGen.html',{'file':file})  
             #  return redirect('complete')
              
     context = {'submit' :submit,'brand': brand,'min':int(imgmin)}
