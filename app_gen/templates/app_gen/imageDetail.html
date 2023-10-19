@@ -65,7 +65,7 @@
             d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
     </svg>
     แพ็คเกจนี้มีการรายงานว่ามีการละเมิดข้อบังคับของเว็บไซต์
-   
+
 
     <div id="listIll" class="fixed bg-black z-[80] opacity-0 hover:opacity-80 group-hover:opacity-80 rounded-md p-4">
         {% for item in ill %}
@@ -77,6 +77,7 @@
 <div class=" z-0 rounded-md border-1 bg-gray-900 p-5 ring-1 ring-gray-700 shadow-md">
     <form method="POST" action="/profile/generated/{{id}}">
         {% csrf_token %}
+
         <div class="flex justify-center relative">
             <img class="rounded-xl w-96" src="{{ img.gen_source }}" alt="">
             {% if img.acc_id.id == request.session.uid %}
@@ -94,6 +95,8 @@
         <div class="flex justify-between items-center sm:flex-row flex-col ">
             <input class="mt-5 text-xl bg-gray-800 p-4 w-full rounded-md border-gray-800" name="msg" id="msg"
                 placeholder="type the image description here" value="{{ detail.gen_message }}">
+            <input type="text" name="isPublic" id="isPublicText" class="text-black hidden" />
+
             <div class="grid grid-flow-col pt-3 gap-3 items-center px-3">
 
 
@@ -177,25 +180,21 @@
                 <div>
                     <div class="text-sm">Status</div>
                     {% if detail.gen_isPublic %}
-                    <div class="flex items-center gap-2">
-                        <label class="relative inline-flex items-center mr-5 cursor-pointer">
-                            <input type="checkbox" name="isPublic" id="isPublic" value="True" class="sr-only peer"
-                                checked>
-                            <div
-                                class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
-                            </div>
-                            <span class="px-2">Public</span>
-                        </label>
-
-                    </div>
-
-                    {% else %}
                     <label class="relative inline-flex items-center mr-5 cursor-pointer">
-                        <input type="checkbox" name="isPublic" id="isPublic" value="false" class="sr-only peer">
+                        <input type="checkbox" id="isPublic" value="True" onclick="changePublic()" class="sr-only peer" checked>
                         <div
                             class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
                         </div>
-                        <span class="px-2">Private</span>
+                        <span class="px-2" id="statusP">Public</span>
+                    </label>
+
+                    {% else %}
+                    <label class="relative inline-flex items-center mr-5 cursor-pointer">
+                        <input type="checkbox" id="isPublic" value="False" onclick="changePublic()" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
+                        </div>
+                        <span class="px-2" id="statusP">Private</span>
                     </label>
                     {% endif %}
 
@@ -213,8 +212,8 @@
         <div id="actBtn" class="flex gap-3 justify-end hidden">
             <button class="mt-4  w-24 bg-gray-800 text-white rounded-md p-3 hover:bg-gray-700 duration-150"
                 type="submit" name="submit" value="cancel">Cancel</button>
-            <button class="mt-4  w-24 bg-black text-white rounded-md p-3 hover:bg-black-200 duration-150" type="submit"
-                name="submit" value="save">Save</button>
+            <button class="mt-4  w-24 bg-black text-white rounded-md p-3 hover:bg-black-200 duration-150" id="submit"
+                type="submit" name="submit" value="save">Save</button>
         </div>
 </div>
 
@@ -372,19 +371,43 @@
 </div>
 
 <script>
+
+    if (localStorage.getItem("method") == "POST") {
+        localStorage.setItem("method", "GET");
+        window.location.replace('');
+    }
+    if((isPublic.value) == 'False') {
+
+        checker = false;
+    }
+    else{
+        checker = true;
+    }
+    isPublicText.value = checker
     msg.addEventListener('change', saveChange);
-    isPublic.addEventListener('change', changePublic);
+    // isPublic.addEventListener('change', changePublic);
     ill.addEventListener(
-        "mouseover", (e)=> listIllshow(e));
-    checker = isPublic.value
+        "mouseover", (e) => listIllshow(e));
 
     function saveChange() {
         actBtn.classList.remove('hidden');
+        
     }
 
-    function changePublic() {
-        isPublic.value = !checker
+    async function changePublic() {
+
+
         checker = !checker
+        isPublicText.value = checker
+        if (checker) {
+           
+            statusP.innerHTML = 'Public'
+        } else {
+           
+            statusP.innerHTML = 'Private'
+        }
+        localStorage.setItem("method", "POST");
+        
         saveChange()
     }
 
@@ -454,11 +477,14 @@
         }
     }
 
-    function listIllshow(e){
+    function listIllshow(e) {
 
-            listIll.style.left = e.clientX + 'px';
-            
+        listIll.style.left = e.clientX + 'px';
+
     }
+
+
+
 
 </script>
 

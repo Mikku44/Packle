@@ -114,7 +114,7 @@ def register(request):
                 try:
                     User.objects.get(userEmail=form.cleaned_data['email'])
                     error = True
-                    request.session['error'] = 'You can not use this Email.'
+                    request.session['error'] = 'This email already exist in own system.'
                 except:
                      #hash password into md5
                     pass_hash = md5(form.cleaned_data['password'].encode()).hexdigest()
@@ -135,6 +135,22 @@ def register(request):
                     data.save()
                     print(form.cleaned_data)
 
+
+                    notfi = Notification()
+                    notfi.acc_id = User.objects.get(userEmail=form.cleaned_data['email'])
+                    notfi.notice_title = 'ยินดีต้อนรับสมาชิกใหม่'
+                    notfi.notice_date = datetime.now()
+                    notfi.pic_source = 'https://media.istockphoto.com/id/1170730064/vector/customer-review-rating-different-people-give-review-rating-and-feedback-customer-choice-know.jpg?s=612x612&w=0&k=20&c=C56QmdHyDWO8j-S2Medh6akaIuThmaxuSWnr8i_madc='
+                    notfi.notice_detail = '''
+"ขอต้อนรับท่านเข้าสู่ครอบครัวของเรา! เราขอขอบคุณที่ท่านเลือกเป็นลูกค้าของเราและยินดีที่จะมีโอกาสที่จะบริการท่านทุกวันนี้และในอนาคตที่ยาวนาน
+
+เรามุ่งมั่นที่จะให้บริการท่านด้วยคุณภาพที่ดีที่สุด และทำให้ท่านรู้สึกพิเศษทุกครั้งที่ท่านมาถึงที่นี่. หากท่านมีคำถามหรือข้อเสนอแนะใด ๆ เกี่ยวกับผลิตภัณฑ์หรือบริการของเรา โปรดอย่าลังเลที่จะติดต่อเรา ทีมงานของเราพร้อมรับฟังและช่วยเสมอ
+
+ขอขอบคุณอีกครั้งที่ท่านมาเป็นส่วนหนึ่งของครอบครัวของเรา และเราหวังว่าท่านจะมีประสบการณ์ที่ยอดเยี่ยมกับเราทุกครั้งที่ท่านมาถึงที่นี่
+
+ขอให้ท่านมีวันที่สดใสและอิ่มอร่อยกับผลิตภัณฑ์และบริการของเรา! ขอบคุณอีกครั้งที่ท่านมาเป็นส่วนหนึ่งของทีมของเรา."
+'''
+                    notfi.save()
                     #for login
                     # data = User.objects.get(userEmail=form.cleaned_data['email'],hash_pass=pass_hash)
                     # data.lastLogin = datetime.now()
@@ -254,6 +270,10 @@ def transectionID(request,id):
     return redirect('payment')
     
 def product(request):
+    if ('action' in request.GET):
+        if(request.GET['action'] == 'remove'):
+            del request.session['errorMSG']
+
     logined  = loginCheck(request)
     context = {}
     # image = sorted(ImgGen.objects.all(), key=lambda x: random.random())
@@ -274,17 +294,19 @@ def product(request):
     
     popular = DetailImgGen.objects.filter(gen_isPublic=True,isRemove=False).order_by('-gen_star').first()
 
-    print(f"Popular : {popular}")
-    print(f"First : {x[0]}")
-    print(f"Second : {x[1]}")
-    print(f"Third : {x[2]}")
-    print(f"Forth : {x[3]}")
+    # print(f"Popular : {popular}")
+    # print(f"First : {x[0]}")
+    # print(f"Second : {x[1]}")
+    # print(f"Third : {x[2]}")
+    # print(f"Forth : {x[3]}")
 
     # ListOfUsers = ["asd",'ojef','alskdfj']
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
+        context = {'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
+    context = {'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
+    
     return render(request,'app_gen/product.html',context)
 
 def faq(request):
@@ -319,6 +341,7 @@ def generator(request):
     
 
     if(not logined):
+        request.session['errorMSG'] = 'Please login to use Live demo.'
         return HttpResponseRedirect(reverse('login'))
     file = "hello"
     submit = '0'
@@ -473,6 +496,12 @@ def profile(request):
     if request.method == 'POST':
         if request.POST['submit'] == 'imgsave':
             import os
+            try:
+                path = os.path.join(f'./app_gen/static/app_gen/imgGen/',str(request.session['uid']))
+                os.mkdir(path)
+                
+            except:
+                pass
             path = './app_gen/static/app_gen/imgGen/'+str(request.session['uid'])+'/'
             # upload = open(path, 'w')
             fileitem = request.FILES['img']
@@ -547,6 +576,9 @@ def profileVisit(request,id):
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/profile.html',context)
 def imageDetail(request,id):
+    if('uid' not in request.session):
+        request.session['errorMSG'] = 'Please Login to see package details.'
+        return redirect('product')
     userID = User.objects.get(id=request.session['uid'])
     img = ImgGen.objects.get(gen_id=id)
     detail = DetailImgGen.objects.get(gen_id=id)
@@ -554,13 +586,13 @@ def imageDetail(request,id):
     star = Star.objects.filter(DetailImgGen=detail.genDetail_id).count()
     stared = Star.objects.filter(DetailImgGen=detail.genDetail_id,user=userID)
     ill = Illegal.objects.filter(gen_id=id,status=True)
-    print(ill)
+    # print(ill)
     context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star,'stared':stared,'reload':False,'ill':ill}
     if request.method == "POST":
         if request.POST['submit'] == "save":
             detail.gen_message = request.POST['msg']
-            detail.gen_isPublic = request.POST['isPublic']
-
+            detail.gen_isPublic = request.POST['isPublic'].capitalize()
+            print(request.POST['isPublic'])
             detail.save()
         elif request.POST['submit'] == "remove":
             detail.isRemove = True
@@ -606,6 +638,7 @@ def imageDetail(request,id):
                 report.gen_id = img
                 report.report_date = datetime.now()
                 report.save()
+        
                  
     
     return render(request,'app_gen/imageDetail.html',context)
