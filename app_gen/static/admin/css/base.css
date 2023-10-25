@@ -3,10 +3,13 @@
 */
 
 /* VARIABLE DEFINITIONS */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;300;400;500;600;700&display=swap');
+
 html[data-theme="light"],
 :root {
     --primary: #4f46e5;
-    --secondary: #417690;
+    --secondary: #0b1a22;
     --accent: #f5dd5d;
     --primary-fg: #fff;
 
@@ -16,7 +19,7 @@ html[data-theme="light"],
     --body-loud-color: #000;
 
     --header-color: #ffc;
-    --header-branding-color: var(--accent);
+    --header-branding-color: #c4c3c3;
     --header-bg: var(--secondary);
     --header-link-color: var(--primary-fg);
 
@@ -56,8 +59,9 @@ html[data-theme="light"],
     --object-tools-hover-bg: var(--close-button-hover-bg);
 
     --font-family-primary:
-        -apple-system,
-        BlinkMacSystemFont,
+    -apple-system,
+    'Noto Sans Thai',
+    BlinkMacSystemFont,
         "Segoe UI",
         system-ui,
         Roboto,
@@ -69,6 +73,7 @@ html[data-theme="light"],
         "Segoe UI Symbol",
         "Noto Color Emoji";
     --font-family-monospace:
+    'Noto Sans Thai',
         ui-monospace,
         Menlo,
         Monaco,
@@ -86,6 +91,9 @@ html[data-theme="light"],
         "Segoe UI Emoji",
         "Segoe UI Symbol",
         "Noto Color Emoji";
+}
+*{
+    font-family: 'Noto Sans Thai', sans-serif;
 }
 
 html, body {
@@ -724,7 +732,7 @@ div.breadcrumbs a:focus, div.breadcrumbs a:hover {
 
 .addlink {
     padding-left: 16px;
-    background: url(../img/icon-addlink.svg) 0 1px no-repeat;
+    background: url(/static/icons/plus-solid.svg) 0 1px no-repeat;
 }
 
 .changelink, .inlinechangelink {

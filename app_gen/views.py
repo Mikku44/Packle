@@ -310,12 +310,39 @@ def product(request):
     return render(request,'app_gen/product.html',context)
 
 def faq(request):
+    if(request.method == 'POST'):
+        card = CreditCard.objects.get(id=request)
+        if(request['submit'] == 'remove'):
+            card.delete()
+        elif(request['submit'] == 'add'):
+            print(request.POST['address'])
+            card = CreditCard()
+            card.acc = request.session['uid']
+            card.creditName = request.POST['creditName']
+            card.creditNum = request.POST['creditNum']
+            card.CVC = request.POST['cvc']
+            card.DDVV = request.POST['ddvv']
+            # card.address = request.POST['address']
+            # card.save()
+        elif(request['submit'] == 'update'):
+            card = CreditCard.objects.get(id=request.POST['id'])
+            card.acc = request.session['uid']
+            card.creditName = request.POST['creditName']
+            card.creditNum = request.POST['creditNum']
+            card.CVC = request.POST['cvc']
+            card.DDVV = request.POST['ddvv']
+            card.address = request.POST['address']
+            card.save()
+
+
     logined  = loginCheck(request)
     context = {}
+    cards = CreditCard.objects.filter(acc_id=request.session['uid'])
+    print(cards)
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic}
+        context = {'logined':logined,'username':username,'pic':pic,'cards':cards}
     return render(request,'app_gen/FAQ.html',context)
 
 def features(request):
@@ -366,13 +393,26 @@ def generator(request):
         request.session['prompt'][request.session['genStep']]  = request.POST.get('brand')
         
         if(request.POST.get('width') is not None and request.session['genStep'] == '3'):
+         
+
             request.session['prompt'] ['descript'] = request.POST.get('prompt')
             request.session['prompt'][request.session['genStep']]  = f"{request.POST.get('prompt').replace(' ', '')} {request.POST.get('width')} {request.POST.get('height')} {request.POST.get('long')} {request.POST.get('unit')}"
             print(request.session['prompt']['0'],request.session['prompt']['1'])
             print(request.session['prompt'])
         elif (request.session['genStep'] == '4'):
-         
-             
+            
+            #add picture here
+            try:
+                logo = request.FILES['logo']
+                if logo.name:
+                    fn = f"./app_gen/static/app_gen/imgGen/{str(request.session['uid'])}/logo.png"
+                    request.session['logo'] = fn
+                    request.session['logoposition'] = request.POST['logoPos']
+                    open(fn, 'wb').write(logo.file.read())
+            except:
+                pass
+
+            request.session['genStep'] = '4'
             date = datetime.now()
             date = date.strftime("%d%m%y")
             prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + 'for ' + request.session['prompt'] ['descript']
@@ -384,11 +424,13 @@ def generator(request):
             
             request.session['fileGen'] = file
             user_id = request.session['uid']
-            prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
-            #  system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+str(user_id)+'\',\''+str(prompt)+'\');os.system(\'pause\');"')
-            #  system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\');os.system(\'pause\');"')
+            prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt']['descript']
+
+            mockup_style = request.session['prompt']['2']
+            # system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+str(user_id)+'\',\''+str(prompt)+'\');os.system(\'pause\');"')
+            # system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\');os.system(\'pause\');"')
             import app_gen.withAPI as gen
-            gen.save_image(str(user_id),str(prompt),filename)
+            gen.save_image(str(user_id),str(prompt),filename,mockup_style)
                       
             request.session['genStep'] = '4'
             #  del request.session['prompt']

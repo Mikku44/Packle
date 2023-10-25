@@ -74,12 +74,40 @@
     </div>
 </div>
 {% endif %}
+
+<button class="bg-[#00000073]  justify-center items-center h-screen w-screen fixed top-0 left-0 z-[100]" id="modalImage" onclick="fullscreen()" hidden>
+    <div class="w-[34rem] rounded-xl overflow-hidden"><img src="{{img.gen_source}}" id="ImageShow" alt=""></div>
+</button>
 <div class=" z-0 rounded-md border-1 bg-gray-900 p-5 ring-1 ring-gray-700 shadow-md">
+
     <form method="POST" action="/profile/generated/{{id}}">
         {% csrf_token %}
 
         <div class="flex justify-center relative">
-            <img class="rounded-xl w-96" src="{{ img.gen_source }}" alt="">
+            <div class="w-96 rounded-xl overflow-hidden group relative">
+                <div
+                    class="absolute bg-black w-full group-hover:opacity-25 opacity-0 duration-150 h-full flex gap-3 justify-center items-center">
+                    <button class="hover:text-yellow-500 duration-150" type="button" onclick="mockup()" value="raw">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="w-10 h-10">
+                            <path fill-rule="evenodd"
+                                d="M12 5.25c1.213 0 2.415.046 3.605.135a3.256 3.256 0 013.01 3.01c.044.583.077 1.17.1 1.759L17.03 8.47a.75.75 0 10-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 00-1.06-1.06l-1.752 1.751c-.023-.65-.06-1.296-.108-1.939a4.756 4.756 0 00-4.392-4.392 49.422 49.422 0 00-7.436 0A4.756 4.756 0 003.89 8.282c-.017.224-.033.447-.046.672a.75.75 0 101.497.092c.013-.217.028-.434.044-.651a3.256 3.256 0 013.01-3.01c1.19-.09 2.392-.135 3.605-.135zm-6.97 6.22a.75.75 0 00-1.06 0l-3 3a.75.75 0 101.06 1.06l1.752-1.751c.023.65.06 1.296.108 1.939a4.756 4.756 0 004.392 4.392 49.413 49.413 0 007.436 0 4.756 4.756 0 004.392-4.392c.017-.223.032-.447.046-.672a.75.75 0 00-1.497-.092c-.013.217-.028.434-.044.651a3.256 3.256 0 01-3.01 3.01 47.953 47.953 0 01-7.21 0 3.256 3.256 0 01-3.01-3.01 47.759 47.759 0 01-.1-1.759L6.97 15.53a.75.75 0 001.06-1.06l-3-3z"
+                                clip-rule="evenodd" />
+                        </svg>
+
+                    </button>
+                    <button class="hover:text-yellow-500 duration-150" type="button" onclick="fullscreen()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-10 h-10">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                        </svg>
+
+
+                    </button>
+                </div>
+                <img class=" w-96" src="{{ img.gen_source }}" id="image_pack" alt="raw">
+            </div>
             {% if img.acc_id.id == request.session.uid %}
             <button class="absolute right-0  bg-red-500 text-white rounded-md p-3  hover:bg-red-400 duration-150"
                 type="button" name="submit" value="remove" onclick="preventP()">
@@ -181,7 +209,8 @@
                     <div class="text-sm">Status</div>
                     {% if detail.gen_isPublic %}
                     <label class="relative inline-flex items-center mr-5 cursor-pointer">
-                        <input type="checkbox" id="isPublic" value="True" onclick="changePublic()" class="sr-only peer" checked>
+                        <input type="checkbox" id="isPublic" value="True" onclick="changePublic()" class="sr-only peer"
+                            checked>
                         <div
                             class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
                         </div>
@@ -190,7 +219,8 @@
 
                     {% else %}
                     <label class="relative inline-flex items-center mr-5 cursor-pointer">
-                        <input type="checkbox" id="isPublic" value="False" onclick="changePublic()" class="sr-only peer">
+                        <input type="checkbox" id="isPublic" value="False" onclick="changePublic()"
+                            class="sr-only peer">
                         <div
                             class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
                         </div>
@@ -376,11 +406,11 @@
         localStorage.setItem("method", "GET");
         window.location.replace('');
     }
-    if((isPublic.value) == 'False') {
+    if ((isPublic.value) == 'False') {
 
         checker = false;
     }
-    else{
+    else {
         checker = true;
     }
     isPublicText.value = checker
@@ -391,7 +421,7 @@
 
     function saveChange() {
         actBtn.classList.remove('hidden');
-        
+
     }
 
     async function changePublic() {
@@ -400,14 +430,14 @@
         checker = !checker
         isPublicText.value = checker
         if (checker) {
-           
+
             statusP.innerHTML = 'Public'
         } else {
-           
+
             statusP.innerHTML = 'Private'
         }
         localStorage.setItem("method", "POST");
-        
+
         saveChange()
     }
 
@@ -481,6 +511,29 @@
 
         listIll.style.left = e.clientX + 'px';
 
+    }
+
+    function mockup() {
+        if (image_pack.src.search('_mockup.png') == -1) {
+            image_pack.src = image_pack.src.replace(".png", "_mockup.png");
+            ImageShow.src = image_pack.src 
+        } else {
+
+            image_pack.src = image_pack.src.replace("_mockup.png", ".png");
+            ImageShow.src = image_pack.src 
+
+        }
+    }
+
+    function fullscreen() {
+        console.log('clicked')
+        if (modalImage.hidden) {
+            modalImage.classList.add('flex');
+            modalImage.hidden = false;
+            return
+        }
+        modalImage.classList.remove('flex');
+        modalImage.hidden = true;
     }
 
 

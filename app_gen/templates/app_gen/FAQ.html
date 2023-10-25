@@ -1,5 +1,140 @@
-{% extends 'app_gen/components/base.html' %}
-{% block title %} market {% endblock %}
+{% extends 'app_gen/components/base_profile.html' %}
+{% block title %}
+<div>Creditcard management</div>
+<a href="#" onclick="showAdd()">
+    <div
+        class="text-sm duration-200 hover:bg-slate-700 shadow-lg bg-slate-800 p-3 px-5 rounded-lg flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        New Creditcard
+    </div>
+</a>
+{% endblock %}
 {% block content %}
 
-{% endblock content %}
+<form method="post" action="{{reqeust.path}}">
+    {% csrf_token %}
+    {% for card in cards %}
+    <li class="bg-white rounded-2xl shadow-md p-5 text-black flex justify-between items-center ">
+
+        <div
+            class="rounded-2xl w-[400px] h-[200px] p-5 bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600 text-white">
+            <div class="flex flex-col justify-between " style="height: -webkit-fill-available;">
+                <div class="font-thin flex items-center gap-5">
+                    <div class="bg-red-500 rounded-full w-6 h-6">
+                        <div class="bg-yellow-500/80 translate-x-3 rounded-full w-6 h-6"></div>
+                    </div> Master card
+                </div>
+
+                <div>
+                    <div class="text-sm font-thin">Card name</div>
+                    <div class="text-2xl" id="cardNumber">
+                        000 0000 0000 0000
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>{{card.creditName}}</div>
+                    <div class="text-sm">
+                        <div class="font-thin">DD/VV</div>
+                        <div>{{card.DDVV}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const number = "{{card.creditNum}}"
+
+            var blind = number.slice(0, 4)
+            blind += " " + number.slice(4, 8)
+            blind += " " + number.slice(8, 12)
+            blind += " ****"
+            // (char in number){
+            //     blind +=  char + " "
+            // }
+            cardNumber.innerHTML = blind
+
+        </script>
+
+        <div id="addForm" class="hidden fixed top-10 bg-slate-900 rounded-2xl p-5 text-white">
+            <span class="grid gap-2" id="creditcard">
+                <label for="email">Credit Name</label>
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" type="Cname" id="Cname"
+                    name="creditName" placeholder="Credit Name">
+                <label for="cardinfo">Credit card infomation</label>
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" maxlength="19" type="text"
+                    id="cardNumb" name="creditNum" placeholder="1234 1234 1234 1234">
+                <div class="flex gap-3">
+                    <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" maxlength="5" type="text"
+                        id="mmyy" name="ddvv" placeholder="MM/YY">
+                    <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" maxlength="3" type="text"
+                        id="cardinfo" name="cvc" placeholder="CVC">
+                </div>
+                <label for="address">Address</label>
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" type="text" id="address"
+                    name="address[]" placeholder="Address Line 1">
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" type="text" id="address"
+                    name="address[]" placeholder="Address Line 2">
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" type="text" id="address"
+                    name="address[]" placeholder="City">
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" type="text" id="address"
+                    name="address[]" placeholder="State">
+                <input class="border-gray-300 bg-slate-500 border-2 p-2 rounded-md" type="text" id="address"
+                    name="address[]" placeholder="Post Code">
+                <div class="flex gap-2">
+                    <input type="checkbox" name="policy" id="policy">
+                    <label for="policy">I have read all and accepted the <a href="#"
+                            class="underline text-indigo-300">Privacy policies</a>.</label>
+                </div>
+                <button type="submit" class="text-white bg-indigo-600 cursor-pointer rounded-md p-3 " name="submit"
+                    value="collectCard">Save & Continue</button>
+
+            </span>
+        </div>
+
+        <div class="text-center text-white sm:flex grid p-2  gap-4">
+
+            <button type="submit" name="submit" value="edit"
+                class="bg-slate-700 px-5 py-2 hover:bg-blue-900 duration-150 rounded-sm ">Edit</button>
+
+
+            <button type="submit" value="remove" name="submit"
+                class="bg-black px-5 py-2 hover:bg-slate-900 duration-150 rounded-sm">Remove
+            </button>
+
+        </div>
+    </li>
+
+    {% endfor %}
+    </ul>
+
+
+    <script>
+       cardNumb.addEventListener("input", formatNumber);
+       mmyy.addEventListener("input", formatDate);
+       function formatNumber(e) {
+        // console.log(e.target.value);
+        const formated = e.target.value
+                .replace(/[^0-9]/gi, '')
+                .replace(/(.{4})/g, '$1 ').trim();
+        // console.log(formated);
+        cardNumb.value = formated
+       }
+
+
+       function formatDate(e) {
+        // console.log(e.target.value);
+        const formated = e.target.value
+                .replace(/[^0-9]/gi, ' ')
+                .replace(/(.{4})/g, '$1 ').trim();
+        // console.log(formated);
+        mmyy.value = formated
+       }
+
+        function showAdd() {
+            addForm.classList.toggle("hidden");
+        }
+    </script>
+
+    {% endblock content %}

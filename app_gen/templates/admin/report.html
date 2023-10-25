@@ -1,78 +1,156 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/src/core.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 
-
+<style>
+  h3{
+    color:unset;
+  }
+</style>
 
 <!-- total report -->
 
-<div class=" grid gap-5 sm:grid-flow-col bg-white ">
-
-  <div class="rounded-md p-4 my-4  hover:bg-purple-100 duration-150 shadow-md ">
-    <h3 class="text-lg">Total User</h3>
-    <div>{{users}}</div>
+<div class="flex justify-center flex-col">
+  
+  <div class=" grid sm:h-52 gap-5 sm:grid-flow-col  ">
+  
+    <div class="rounded-[1.2em] p-4 my-4 bg-gradient-to-r from-[#34c1f9] to-[#97ddf9] hover:text-white text-white duration-150 shadow-md ">
+      <h3 class="text-lg font-thin ">Total User</h3>
+      <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดผู้ใช้งาน</div>
+      <div class="text-[5rem] text-end">{{users}}</div>
+  
+    </div>
+  
+    <div class="rounded-[1.2em] p-4 my-4 bg-gradient-to-r from-[#7752FE] to-[#77a5fe] hover:text-white text-white duration-150 shadow-md">
+      <h3 class="text-lg font-thin ">Total Transaction</h3>
+      <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการซื้อ</div>
+      <div class="text-[5rem] text-end">{{trans}}</div>
+    </div>
+  
+    <div class="rounded-[1.2em] p-4 my-4 bg-gradient-to-r from-[#f9db34] to-[#f9ec7f] hover:text-white text-white duration-150 shadow-md">
+      <h3 class="text-lg font-thin ">Total Design</h3>
+      <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการออกแบบ</div>
+      <div class="text-[5rem] text-end">{{design}}</div>
+    </div>
+   <input type="hidden" id="range" value="{{range}}">
+  <input type="hidden" id="userStat" value="{{data}}">
+  <input type="hidden" id="transStat" value="{{tdata}}">
+  <input type="hidden" id="packStat" value="{{pdata}}">
   </div>
-
-  <div class="rounded-md p-4 my-4  hover:bg-purple-100 duration-150 shadow-md">
-    <h3 class="text-lg">Total Transaction</h3>
-    <div>{{trans}}</div>
+  
+ 
+  <!-- data -->
+  
+  <!-- {{data}}
+  <div></div>
+  {{sum}} -->
+  <!-- graph -->
+  
+  <div class="py-5">
+    <canvas id="myChart" class="rounded-2xl text-white p-4 shadow-md"> </canvas>
   </div>
-
-  <div class="rounded-md p-4 my-4  hover:bg-purple-100 duration-150 shadow-md">
-    <h3 class="text-lg">Total Design</h3>
-    <div>{{design}}</div>
-  </div>
-
-</div>
-
-
-<!-- data -->
-
-{{data}}
-<div></div>
-{{sum}}
-<!-- graph -->
-
-<div>
-  <canvas id="myChart"></canvas>
 </div>
 
 
 <script>
+  
+  console.log(range.value)
   const ctx = document.getElementById('myChart');
-  const labels = "{{data}}"
-  const data = "{{sum}}"
-  new Chart(ctx, {
+  const userlabels = JSON.parse(range.value)
+  const userData = JSON.parse(userStat.value)
+
+
+
+  const translabels = JSON.parse(range.value)
+  const transData = JSON.parse(transStat.value)
+  const packData = JSON.parse(packStat.value)
+
+  let delayed;
+
+
+
+
+  cht = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [
-        'January',
-        'February',
-        'March',
-        'April'
-      ],
+      labels: userlabels,
       datasets: [{
         label: 'Users',
-        data: JSON.parse("[" + "{{sum}}" + "]"),
-        borderWidth: 1,
-        tension: 0.1
+        data: userData,
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        backgroundColor: '#34c1f9',
+
+        fill:true
       },
       {
         label: 'Transactions',
-        data: JSON.parse("[" + "1,2,6,4,5,9" + "]"),
+        data: transData,
         borderWidth: 1,
-        tension: 0.1
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        backgroundColor: '#8E8FFA',
+        fill:true
+      },
+      {
+        label: 'Package Design',
+        data: packData,
+        borderWidth: 1,
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        backgroundColor: '#f9db34',
+
+
+        fill:true
       }
       ]
-    },
-    options: {
+    }, options: {
+      // gradientFill: true, 
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
+        }
+      },
+      animations: {
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          if (context.type === 'data' && context.mode === 'default') {
+            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
       scales: {
         y: {
+          title: {
+            display: true,
+
+            text: 'Amount of usage'
+          },
           beginAtZero: true
         },
         x: {
+          stacked: true,
+          title: {
+            display: true,
+            text: 'Month'
+          },
           beginAtZero: true
         }
       }
     }
-  });
+  }
+  );
+
+
+
 </script>

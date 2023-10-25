@@ -39,7 +39,7 @@ urlpatterns = [
     path('generator/complete',views.complete_gen,name='complete'),
     path('generator/collectImg',views.complete_gen,name='generator'),
 
-    path('FAQ/',views.faq,name='questions'),
+    path('creditcard/',views.faq,name='credit'),
     path('signout/',views.logout,name='signout'),
     path('signout/',views.logout,name='signout'),
     

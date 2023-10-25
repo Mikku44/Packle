@@ -9,7 +9,7 @@ headers = {"Authorization": f'{TOKEN}'}
 
 
 
-def save_image(user_id,prompt,filename):
+def save_image(user_id,prompt,filename,mockup):
     def query(payload):
         response = requests.post(API_URL, headers=headers, json=payload)
         return response
@@ -45,7 +45,7 @@ def save_image(user_id,prompt,filename):
 
 
         plt.imsave(path,image)
-        create_mockup(path,path2)
+        create_mockup(path,path2,mockup)
         
     else:
         print('Could not connect to server.')
@@ -53,14 +53,28 @@ def save_image(user_id,prompt,filename):
 # save_image('anda','mango with water spread and objects with green and yellow color pattern, artwork style')
 
 
-def create_mockup(image,path):
+def create_mockup(image,path,mockup):
     from PIL import Image
     import matplotlib.pyplot as plt
 
-    mask = Image.open('./app_gen/originMockup.jpg').convert('L')
+    
+    mockup_path = './app_gen/originMockup.jpg'
+    bg_mockup_path = './app_gen/originMockup2.jpg'
+    if mockup == 'TB':
+        mockup_path = './app_gen/tall box.jpg'
+        bg_mockup_path = './app_gen/tallBoxOrigin.jpg'
+    elif mockup == 'MLB':
+        mockup_path = './app_gen/mailingBoxmockup.png'
+        bg_mockup_path = './app_gen/mailingBoxmockup.jpg'
+    elif mockup == 'FB':
+        mockup_path = './app_gen/flatboxMockup.png'
+        bg_mockup_path = './app_gen/flatboxMockup.png'
+
+
+    mask = Image.open(mockup_path).convert('L')
     src =Image.open(image).resize(mask.size)
     src2 = Image.new("RGBA", src.size, 0)
-    mockup = Image.open('./app_gen/originMockup2.jpg')
+    mockup = Image.open(bg_mockup_path)
     im = Image.composite(src, src2, mask)
 
     # plt.imshow(mockup)

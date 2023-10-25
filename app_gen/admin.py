@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from app_gen.models import *
-
+from datetime import datetime, timedelta
 
 from django.contrib.admin import AdminSite
 from django.shortcuts import render
@@ -22,23 +22,97 @@ class MyAdminSite(AdminSite):
          return urls + super().get_urls()
      
      def index(self, request):
-        import datetime
+        from dateutil.relativedelta import relativedelta 
 
         users = User.objects.all()
         trans = Transaction.objects.all()
         design = ImgGen.objects.all()
 
 
-        data = ""
-        label = ""
-        for index,item in enumerate(design):
-           data += str(item.pk) 
-           label += str(item.pk)
-           if index != len(design) - 1:
-               data += ','
-               label += ','
+        data = []
+        tdata = []
+        pdata = []
+        # for index,item in enumerate(design):
+        #    data += str(item.pk) 
+        #    label += str(item.pk)
+        #    if index != len(design) - 1:
+        #        data += ','
+        #        label += ','
 
-        context = {'users':users.count(),'trans':trans.count(),'design':design.count(),'data':data,'sum':label}
+        if (users):
+            f = users[0].regAt
+            l = users[len(users)-1].regAt
+
+        months = []
+
+        while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
+           
+            fYear = int(f.strftime("%Y"))#type:ignore
+            firstMonth = int(f.strftime("%m"))#type:ignore
+            print(f'{f.month} {l.month}')
+            if(f > l):#type:ignore
+                break
+            data.append(str(User.objects.filter(regAt__lte=f).count()))#type:ignore
+
+            f += relativedelta(months=1) # type: ignore
+
+            # {"month":"8" ,"year" :"2023"}
+            months.append(f"{firstMonth}/{fYear}")
+           
+           
+
+        months = str(months).replace("'",'"')
+        data = str(data).replace("'",'"')
+        print(str(months).replace("'",'"'))
+
+
+        if (trans):
+            f = (trans[0].start_date + relativedelta(day=31)).replace(hour=0, minute=0, second=0)#type:ignore
+            l = trans[len(trans)-1].start_date
+
+        # months = []
+
+        while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
+            fYear = int(f.strftime("%Y"))#type:ignore
+            firstMonth = int(f.strftime("%m"))#type:ignore
+            # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
+            query = Transaction.objects.filter(start_date__lte=(f))#type:ignore
+            tdata.append(str(query.count()))#type:ignore
+
+            # for i in query:
+            #     print(i.start_date)
+            f += relativedelta(months=1) # type: ignore
+
+            # {"month":"8" ,"year" :"2023"}
+            # months.append(f"{firstMonth}/{fYear}")
+
+        tdata = str(tdata).replace("'",'"')
+
+        if (design):
+            f = (design[0].gen_CreateAt + relativedelta(day=31)).replace(hour=0, minute=0, second=0)#type:ignore
+            l = design[len(design)-1].gen_CreateAt
+
+        # months = []
+
+        while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
+            fYear = int(f.strftime("%Y"))#type:ignore
+            firstMonth = int(f.strftime("%m"))#type:ignore
+            # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
+            query = ImgGen.objects.filter(gen_CreateAt__lte=(f))#type:ignore
+            pdata.append(str(query.count()))#type:ignore
+
+            # for i in query:
+            #     print(i.start_date)
+            f += relativedelta(months=1) # type: ignore
+
+            # {"month":"8" ,"year" :"2023"}
+            # months.append(f"{firstMonth}/{fYear}")
+
+        pdata = str(pdata).replace("'",'"')
+        
+        
+
+        context = {'users':users.count(),'trans':trans.count(),'design':design.count(),'data':data,'tdata':tdata,'pdata':pdata,'range':months}
         return super().index(request,context)
 
 

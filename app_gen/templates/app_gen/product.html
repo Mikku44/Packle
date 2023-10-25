@@ -230,10 +230,10 @@
   function ShowPic(key) {
     pic = document.getElementsByClassName(key);
     pk = document.getElementsByClassName('package');
-    for (let i = 0; i < pk.length - 1; i += 1) {
+    for (let i = 0; i < pk.length ; i += 1) {
       pk[i].hidden = true;
     }
-    for (let i = 0; i < pic.length - 1; i += 1) {
+    for (let i = 0; i < pic.length ; i += 1) {
       pic[i].hidden = false;
     }
   }
