@@ -30,7 +30,7 @@
 
 
             {% if request.session.genStep == '0' %}
-              {% if min != 0  %}
+            {% if min != 0 %}
             <div>
               <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Create packaging for your
                 brand
@@ -51,15 +51,15 @@
                 </button>
               </div>
               {% else %}
-                <div class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
-                  You have used up all quota today.</div>
+              <div class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">
+                You have used up all quota today.</div>
               {% endif %}
-              
+
               <div class="mt-6 text-sm leading-5 text-gray-600 sm:text-center">
                 <div>remain : {{ min }}</div>
-                Want to upgrade your 
-                <a
-                  class="text-indigo-500 underline" href="/pricing">plan</a></div>
+                Want to upgrade your
+                <a class="text-indigo-500 underline" href="/pricing">plan</a>
+              </div>
             </div>
 
             {% elif request.session.genStep == '1' %}
@@ -192,11 +192,8 @@
 
             <label class="group cursor-pointer ">
               <p id="pic" class="pic flex justify-center ring-1  ring-gray-200 rounded-xl overflow-hidden"></p>
-              <div id='uploadbtn'>
-                <input
-                  class=" bg-white mt-5 p-3 group-hover:bg-indigo-500 duration-200   h-48 ring-1 ring-gray-200 rounded-xl  text-center w-full"
-                  type="file" id="file" accept="image/*" name="logo" onChange="getImg()">
-                <div class=" w-60 left-1/3 relative group-hover:text-gray-100 -top-32 -z-1 flex flex-col items-center">
+              <div id='uploadbtn' class="relative  h-48 justify-center items-center">
+                <div class=" absolute -z-1 top-1/2 left-[25%] sm:left-[calc(32%+3rem)] group-hover:text-gray-100  flex flex-col items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -204,6 +201,10 @@
                   </svg>
                   Upload or drop image here.
                 </div>
+                <input
+                  class=" bg-white mt-5  group-hover:bg-indigo-500 duration-200   h-full ring-1 ring-gray-200 rounded-xl  text-center w-full"
+                  type="file" id="file" accept="image/*" name="logo" onChange="getImg()">
+                
               </div>
 
             </label>
@@ -211,36 +212,40 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG (MAX.
               800x400px).</p>
 
-              <h1 class=" py-3 " id="position" hidden>
-                <div class="text-md font-bold tracking-tight py-3">Logo position</div>
-                <ul class=" justify-between  sm:flex"  >
-                  
-                  <li>
-                    <input type="radio" class="peer sr-only"  name="logoPos" value="top" id="logo[2]">
-                    <label for="logo[2]" class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
-                      <div class="w-12 border-2 h-12 flex justify-center items-start">
+            <h1 class=" py-3 " id="position" hidden>
+              <div class="text-md font-bold tracking-tight py-3">Logo position</div>
+              <ul class=" justify-between flex-wrap flex gap-6">
+
+                <li>
+                  <input type="radio" class="peer sr-only" name="logoPos" value="top" id="logo[2]">
+                  <label for="logo[2]"
+                    class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
+                    <div class="w-12 border-2 h-12 flex justify-center items-start">
                       <div class="h-5 bg-indigo-500 w-5 m-1"></div>
-                    </div></label>
-                  </li>
-                  <li>
-                    <input type="radio" class="peer sr-only"  name="logoPos" value="bottom" id="logo[3]">
-                    <label for="logo[3]" class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
-                      <div class="w-12 border-2 h-12 flex justify-center items-end">
-                        <div class="h-5 bg-indigo-500 w-5 m-1"></div>
-                      </div>
-                    </label>
-                  </li>
-                  <li>
-                    <input type="radio" class="peer sr-only"  name="logoPos" value="center" id="logo[4]">
-                    <label for="logo[4]" class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
-                      <div class="w-12 border-2 h-12 flex justify-center items-center">
-                        <div class="w-5 bg-indigo-500 h-5"></div>
-                      </div>
-                    </label>
-                  </li>
-                
-                </ul>
-              </h1>
+                    </div>
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" class="peer sr-only" name="logoPos" value="bottom" id="logo[3]">
+                  <label for="logo[3]"
+                    class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
+                    <div class="w-12 border-2 h-12 flex justify-center items-end">
+                      <div class="h-5 bg-indigo-500 w-5 m-1"></div>
+                    </div>
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" class="peer sr-only" name="logoPos" value="center" id="logo[4]">
+                  <label for="logo[4]"
+                    class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
+                    <div class="w-12 border-2 h-12 flex justify-center items-center">
+                      <div class="w-5 bg-indigo-500 h-5"></div>
+                    </div>
+                  </label>
+                </li>
+
+              </ul>
+            </h1>
 
             <script>
               function opt() {
@@ -265,23 +270,33 @@
 
 
             {% else %}
+            <input type="text" id="urlfile" value="{{ file }}" hidden>
 
-            <h1 class="textup text-xl font-bold tracking-tight sm:text-center sm:text-2xl py-5">
-              <div class="flex justify-center flex-col  items-center">
-                <input type="text" id="urlfile" value="{{ file }}" hidden>
-                <div class="flex gap-5">
-                  <div class="bg-black h-10 w-10 rounded-full animate-bounce	"></div>
-                  <div class="bg-black h-10 w-10 rounded-full animate-bounce	" style=" animation-delay: 200ms;"></div>
-                  <div class="bg-black h-10 w-10 rounded-full animate-bounce	" style=" animation-delay: 250ms;"></div>
+            <div class="flex flex-col justify-center fixed w-full h-full top-0 left-0 items-center">
+
+              <div
+                class="w-48 h-48 rounded-full bg-white shadow-lg relative flex justify-center items-center overflow-hidden">
+                <img src="/static/icons/milk-bottle.gif" class="w-36 changeColor animated" alt="">
+
+                <div class=" absolute h-48 w-48 animate-spin rounded-full border-4 border-solid align-[-0.125em]"
+                  role="status" style="animation-duration: 1500ms;border-right-color: #505151;">
+                  <span
+                    class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
                 </div>
-                
-                Generating...
-                <button type="submit" name="submit" value="0"
-                  class="mt-8 inline-block duration-200 hover:px-10  rounded-lg px-8 py-1.5 text-base  leading-7 text-red-600  ">
-                  <span>Cancel</span>
-                </button>
+
+
               </div>
-            </h1>
+
+              <div class="text-slate-800 pt-4 font-semibold text-xl">Preparing your packaging.</div>
+              <div class="text-slate-800 pb-4 font-thin text-sm">It might take a few minutes to complete the process.
+              </div>
+
+              <button type="submit" name="submit" value="0"
+                class="bg-gray-100 font-bold hover:scale-110 hover:bg-red-500 hover:text-gray-100 duration-150 rounded-md px-6 py-2 text-base text-black ">
+                <span>Cancel</span>
+              </button>
+
+            </div>
             <script src="/static/app_gen/fileExist.js"></script>
 
             {% endif %}
@@ -302,9 +317,14 @@
 
               </button>
 
-              <button type="submit" name="submit" value={{ request.session.genStep|add:1 }}
-                class=" inline-block duration-200 hover:px-10  rounded-lg bg-indigo-600 px-8 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600  hover:bg-indigo-700 hover:ring-indigo-700 ">
-                <span>Next</span>
+              <button type="submit" name="submit" value={{ request.session.genStep|add:1 }} onclick="showLoading()"
+                class=" inline-block duration-200 hover:px-10 justify-center items-center  rounded-lg bg-indigo-600 px-8 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600  hover:bg-indigo-700 hover:ring-indigo-700 ">
+                <span id="next">Next</span>
+                <div class="  h-5 w-5 animate-spin rounded-full border-2 border-solid align-[-0.125em] hidden" id="loading"
+                role="status" style="animation-duration: 1500ms;border-right-color: #505151;">
+                <span
+                  class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+              </div>
 
               </button>
 
@@ -360,6 +380,11 @@
   }
 
 
+  function showLoading(){
+    loading.classList.remove('hidden')
+    next.classList.add('hidden')
+  }
+
 </script>
 <style>
   input[type=file]::file-selector-button {
@@ -387,6 +412,40 @@
     color: transparent;
     content: "4";
   }
+
+  .changeColor.animated {
+    -webkit-animation: filter-animation 8s infinite;
+    animation: filter-animation 8s infinite;
+  }
+  @keyframes filter-animation {
+    0% {
+      filter: hue-rotate(0deg);
+    }
+
+    50% {
+      filter: hue-rotate(100deg);
+    }
+
+    100% {
+      filter: hue-rotate(0deg);
+    }
+  }
+
+  @-webkit-keyframes filter-animation {
+    0% {
+      -webkit-filter: hue-rotate(0deg);
+    }
+
+    50% {
+      -webkit-filter: hue-rotate(100deg);
+    }
+
+    100% {
+      -webkit-filter: hue-rotate(0deg);
+    }
+  }
+
+
 </style>
 
 </html>

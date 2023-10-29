@@ -375,8 +375,8 @@ def company(request):
 
 def generator(request):
     logined = loginCheck(request)
-    
-
+    billCheck(request)
+    # request.session['genStep'] = '4'
     if(not logined):
         request.session['errorMSG'] = 'Please login to use Live demo.'
         return HttpResponseRedirect(reverse('login'))
@@ -565,28 +565,8 @@ def db(request):
 
 def profile(request):
 
-    
-
     logined  = loginCheck(request)
-    bill = Transaction.objects.filter(acc_id=request.session['uid']).order_by('-upgrade_id').first()
-    print(bill)
-    role = request.session['role']
-    # print(bill[1].duedate)
-    if (bill):
-        if (bill.duedate < datetime.now() and request.session['role'] != 'Starter'):#type:ignore
-            user = User.objects.get(id=request.session['uid'])
-            user.classUser = Class.objects.get(class_id=1)
-            user.save()
-            request.session['role'] = 'Starter'
-
-             #add Notification
-            noti = Notification()
-            noti.pic_source = "https://img.freepik.com/free-vector/urgent-concept-illustration_114360-7610.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1698019200&semt=ais"
-            noti.acc_id = user
-            noti.notice_title = f'แจ้งเตือน Subscription {role} plan ของคุณหมดอายุแล้ว'
-            noti.notice_detail = f'แจ้งเตือนการสมัครสมาชิก {role} plan ของคุณหมดอายุแล้ว ณ วันที่ {datetime.now().strftime("%D%M%Y")} ตอนนี้ท่านสามารถใช้งานเว็บไซต์ของเราได้ในระดับ Starter หากต้องการอัปเกรดระดับสามารถเข้า ไปที่หน้า Pricing เพื่อใช้งานอย่างต่อเนื่อง , ขอบคุณที่ใช้บริการของเรา'
-            noti.notice_date = datetime.now()
-            noti.save()
+    billCheck(request)
 
     imgurl = ImgGen.objects.filter(acc_id=request.session['uid'])
     imgurl = DetailImgGen.objects.filter(gen__in=imgurl,isRemove=False)
@@ -935,3 +915,23 @@ def NoticesCheck(request):
     return noti
 
     # user = User.objects.get(userEmail='cookie')
+def billCheck(request):
+    bill = Transaction.objects.filter(acc_id=request.session['uid']).order_by('-upgrade_id').first()
+    print(bill)
+    role = request.session['role']
+    # print(bill[1].duedate)
+    if (bill):
+        if (bill.duedate < datetime.now() and request.session['role'] != 'Starter'):#type:ignore
+            user = User.objects.get(id=request.session['uid'])
+            user.classUser = Class.objects.get(class_id=1)
+            user.save()
+            request.session['role'] = 'Starter'
+
+             #add Notification
+            noti = Notification()
+            noti.pic_source = "https://img.freepik.com/free-vector/urgent-concept-illustration_114360-7610.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1698019200&semt=ais"
+            noti.acc_id = user
+            noti.notice_title = f'แจ้งเตือน Subscription {role} plan ของคุณหมดอายุแล้ว'
+            noti.notice_detail = f'แจ้งเตือนการสมัครสมาชิก {role} plan ของคุณหมดอายุแล้ว ณ วันที่ {datetime.now().strftime("%D%M%Y")} ตอนนี้ท่านสามารถใช้งานเว็บไซต์ของเราได้ในระดับ Starter หากต้องการอัปเกรดระดับสามารถเข้า ไปที่หน้า Pricing เพื่อใช้งานอย่างต่อเนื่อง , ขอบคุณที่ใช้บริการของเรา'
+            noti.notice_date = datetime.now()
+            noti.save()
