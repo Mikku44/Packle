@@ -9,7 +9,7 @@ API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffus
 TOKEN = os.environ.get('HUG_TOKEN')
 print(TOKEN)
 headers = {"Authorization": f'{TOKEN}'}
-print(os.getcwd())
+# print(os.getcwd())
 def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     # initialize the dimensions of the image to be resized and
     # grab the image size
@@ -44,7 +44,7 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
 
 
 
-def save_image(user_id,prompt,filename,mockup):
+def save_image(user_id,prompt,filename,mockup,logo=None,pos=None):
     def query(payload):
         response = requests.post(API_URL, headers=headers, json=payload)
         return response
@@ -84,7 +84,7 @@ def save_image(user_id,prompt,filename,mockup):
 
 
             plt.imsave(path,image)
-            create_mockup(path,path2,mockup)
+            create_mockup(path,path2,mockup,logo,pos)
             
         else:
             print('Could not connect to server.')
@@ -111,10 +111,86 @@ def create_mockup(image,path,mockup,logo=None,pos=None):
     if mockup == 'TB':
         mockup_path = './app_gen/tall box.jpg'
         bg_mockup_path = './app_gen/tallBoxOrigin.jpg'
+        x = 15
+        y = 310
+        shear = 0.08
+        if pos == 'top': 
+            y =50
+            x = 80
+            shear = -0.055
+        elif pos == 'bottom':
+            x = -10
+            y = 450
+            shear = 0.02
+
+        
+
+        mask = Image.open(mockup_path).convert('L')
+        pattern = cv2.imread(image)
+        pattern = cv2.cvtColor(pattern, cv2.COLOR_BGR2RGBA)
+        src2 = Image.new("RGB", mask.size, 255)
+       
+        rows, cols, dim = pattern.shape
+        M = np.float32([[1, -0.186,250], #  shear x ,pos x 0
+              [-0.055, 1  ,100], #shear y , pos y 0.385
+              [0, 0  , 1]]) # type: ignore
+
+        pattern = cv2.warpPerspective(pattern,M,(int(cols*1),int(rows*1)))# type: ignore
+        if logo is not None:
+            M = np.float32([[1, 0,420], #  shear x ,pos x 0
+            [shear, 1  ,100], #shear y , pos y 0.385
+            [0, 0  , 1]]) # type: ignore
+            logo = cv2.imread(logo,cv2.IMREAD_UNCHANGED)
+            logo = cv2.cvtColor(logo, cv2.COLOR_BGR2RGBA)
+            logo = image_resize(logo, width =110)
+            logo = cv2.warpPerspective(logo,M,(int(cols*1),int(rows*2))) # type: ignore
+            pattern = cvzone.overlayPNG(pattern,logo,[x,y])
+            #make overlay
+            patt_wlogo = cvzone.overlayPNG(pattern,logo,[x,y])
+            src = Image.fromarray(patt_wlogo).resize(mask.size)
+
+        mockup = Image.open(bg_mockup_path)
+        mockup.paste(src,(0,0),mask=mask) # type: ignore
+        mockup.show()
+        mockup.save(path)
+        return
+    
      
     elif mockup == 'MLB':
         mockup_path = './app_gen/milkmockup.png'
         bg_mockup_path = './app_gen/milkmockupOrigin.png'
+  
+        y = 410
+        if pos == 'top': 
+            y =250
+        elif pos == 'bottom':
+            y = 630
+
+        mask = Image.open(mockup_path).convert('L')
+        pattern = cv2.imread(image)
+        pattern = cv2.cvtColor(pattern, cv2.COLOR_BGR2RGBA)
+        src2 = Image.new("RGBA", mask.size, 0)
+        rows, cols, dim = pattern.shape
+        M = np.float32([[1, 0,380], #  shear x ,pos x 0
+              [-0.055, 1  ,100], #shear y , pos y 0.385
+              [0, 0  , 1]]) # type: ignore
+
+        if logo is not None:
+            logo = cv2.imread(logo,cv2.IMREAD_UNCHANGED)
+            logo = cv2.cvtColor(logo, cv2.COLOR_BGR2RGBA)
+            logo = image_resize(logo, width =130)
+            logo = cv2.warpPerspective(logo,M,(int(cols*1),int(rows*2))) # type: ignore
+            pattern = cvzone.overlayPNG(pattern,logo,[x,y])
+            #make overlay
+            patt_wlogo = cvzone.overlayPNG(pattern,logo,[x,y])
+            src = Image.fromarray(patt_wlogo).resize(mask.size)
+
+        mockup = Image.open(bg_mockup_path)
+        mockup.paste(src,(0,0),mask=mask) # type: ignore
+        mockup.show()
+        mockup.save(path)
+        return
+    
     elif mockup == 'FB':
         mockup_path = './app_gen/snackBag.jpg'
         bg_mockup_path = './app_gen/snackBagOrigin.jpg'
@@ -130,12 +206,13 @@ def create_mockup(image,path,mockup,logo=None,pos=None):
 
         mask = Image.open(mockup_path).convert('L')
         pattern = cv2.imread(image)
+        pattern = cv2.cvtColor(pattern, cv2.COLOR_BGR2RGBA)
         src2 = Image.new("RGBA", mask.size, 0)
         rows, cols, dim = pattern.shape
         M = np.float32([[1, 0.8,600], #  shear x ,pos x
                         [-0.48, 1  ,600], #shear y , pos y
                         [0, 0  , 1]]) # type: ignore
-        
+        #resize logo
         if logo is not None:
             logo = cv2.imread(logo,cv2.IMREAD_UNCHANGED)
             logo = cv2.cvtColor(logo, cv2.COLOR_BGR2RGBA)
@@ -149,6 +226,7 @@ def create_mockup(image,path,mockup,logo=None,pos=None):
         mockup = Image.open(bg_mockup_path)
         mockup.paste(src,(0,0),mask=mask)
         mockup.show()
+        mockup.save(path)
         return
 
     # witout logo
@@ -189,10 +267,12 @@ def create_mockup(image,path,mockup,logo=None,pos=None):
     # plt.show()
     mockup.paste(im,(0,0),mask=mask)
     mockup.show()
-    # mockup.save(path)
+    mockup.save(path)   #uncomment to save the file
     # return im
 
 
 # create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxabstr213552.png")
 
-create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'sq','./app_gen/static/app_gen/imgGen/1/psu.png')
+# create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'','./app_gen/static/app_gen/imgGen/1/psu.png','center')
+# create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'','./app_gen/static/app_gen/imgGen/1/psu.png','bottom')
+# create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'','./app_gen/static/app_gen/imgGen/1/psu.png','top')

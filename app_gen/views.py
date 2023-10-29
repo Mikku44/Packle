@@ -439,11 +439,18 @@ def generator(request):
             prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt']['descript']
 
             mockup_style = request.session['prompt']['2']
+
+          
             # system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+str(user_id)+'\',\''+str(prompt)+'\');os.system(\'pause\');"')
             # system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\');os.system(\'pause\');"')
             import app_gen.withAPI as gen
-            gen.save_image(str(user_id),str(prompt),filename,mockup_style)
-                      
+            if "logo" in request.session:
+                logo =  request.session['logo']
+                pos =  request.session['logoposition']
+                gen.save_image(str(user_id),str(prompt),filename,mockup_style,logo,pos)
+            else:
+                gen.save_image(str(user_id),str(prompt),filename,mockup_style)
+
             request.session['genStep'] = '4'
             #  del request.session['prompt']
              
