@@ -52,30 +52,38 @@ class ImgGen(models.Model):
     acc_id = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     gen_CreateAt = models.DateTimeField()
 
-   
-    def delete(self):
-        import os
-        path = './app_gen/static/app_gen/imgGen/'+ str(self.acc_id.id)
-        dir = os.listdir(path)
-        for index in dir:
-            path = './app_gen/static/app_gen/imgGen/'+ str(self.acc_id.id) + '/' + index
-            if(len(os.listdir(path)) == 0):
-                os.rmdir(path)
-        try:
-            
-            source = "./app_gen"+self.gen_source.replace('%20',' ')
-            print(source)
-            os.remove(source)
-            
-        except:
-            pass
-        super().delete()
-        
-        # os.remove("demofile.txt")
-        # super().save()
 
-         
-         
+    def delete(self,*args,**kwargs):
+        curImg = self.gen_source[self.gen_source.rfind('/')+1:]
+        # print('deleted')
+        import os
+        print(os.getcwd())
+        path = '/app_gen/static/app_gen/imgGen/'+ str(self.acc_id.id)#type:ignore
+        dir = os.listdir(os.getcwd()+path)
+        print(os.getcwd()+path)
+        print(dir)
+        #remove empty directory
+        for d in dir:
+            
+            try:
+                subpath = os.getcwd()+path + '/' + d#type:ignore
+                # print(subpath)
+                # print(os.listdir(subpath))
+                files = os.listdir(subpath)
+                if(len(files) == 0):
+                    os.rmdir(subpath)
+
+                for file in files:
+                    # print(f"{file} , {curImg}")
+                    if (file) == curImg:
+                            print('deleted')
+                            os.remove(f'{subpath}/{file}')
+                            os.remove(f"{subpath}/{file.replace('.png','_mockup.png')}")
+                        
+
+            except:
+                pass
+        super(ImgGen,self).delete(*args,**kwargs)
 
     @property
     def Action(self):
@@ -83,11 +91,11 @@ class ImgGen(models.Model):
     
     @property
     def Preview(self):
-        return format_html('<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src={} style="width:100%;"></img></div>'.format(self.gen_source))
+        return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{self.gen_source}" style="width:100%;"></img></div>')
     
     @property
     def UserName(self):
-        return self.acc_id.name
+        return self.acc_id.name#type:ignore
     def __str__(self):
         return 'ID #' + str(self.gen_id) 
     class Meta:
@@ -118,16 +126,20 @@ class Star(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
-        return self.user.name
+        return self.user.name #type:ignore
     
-    # def create(self):
-    #     self.DetailImgGen.gen_star = 1
-    #     print('add')
-    #     self.save()
+    def save(self,*args,**kwargs):
+        self.DetailImgGen.gen_star += 1
+        print(f'star : {self.DetailImgGen.gen_star}')
+        self.DetailImgGen.save()
+        super(Star,self).save(*args,**kwargs)
+        
 
-    # def delete(self):
-    #     self.DetailImgGen.gen_star -= 1
-    #     super().delete()
+    def delete(self,*args,**kwargs):
+        self.DetailImgGen.gen_star -= 1
+        print(f'star : {self.DetailImgGen.gen_star}')
+        self.DetailImgGen.save()
+        super(Star,self).delete(*args,**kwargs)
     
         
     
@@ -235,5 +247,6 @@ class DetailCollection(models.Model):
     gen_id = models.ForeignKey(ImgGen,on_delete=models.CASCADE)
 
     def __str__(self):
-        return format_html('<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src={} style="width:100%;"></img></div>'.format(self.gen_id.gen_source))
+        return str(self.col_detail_id)
+        # return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{self.gen_id.gen_source}" style="width:100%;"></img></div>')
 

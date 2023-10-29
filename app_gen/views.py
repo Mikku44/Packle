@@ -310,28 +310,38 @@ def product(request):
     return render(request,'app_gen/product.html',context)
 
 def faq(request):
-    if(request.method == 'POST'):
-        card = CreditCard.objects.get(id=request)
-        if(request['submit'] == 'remove'):
+    if('remove' in request.GET):
+        try:
+            card = CreditCard.objects.get(id=request.GET['remove'])
             card.delete()
-        elif(request['submit'] == 'add'):
-            print(request.POST['address'])
+            request.session['msg'] = 'Credit card has deleted successfully'
+        except:
+            request.session['msg'] = 'Something was wrong!'
+
+    if('action' in request.GET):
+         del request.session['msg']
+            
+
+    if(request.method == 'POST'):
+        
+        if(request.POST['submit'] == 'add'):
+            address =  request.POST['addr'] +' '+ request.POST['addr2'] +' '+ request.POST['addr3'] +' '+ request.POST['addr4'] +' '+ request.POST['addr5']
             card = CreditCard()
-            card.acc = request.session['uid']
+            card.acc = User.objects.get(id=request.session['uid'])
             card.creditName = request.POST['creditName']
-            card.creditNum = request.POST['creditNum']
+            card.creditNum = request.POST['creditNum'].replace(' ', '')
             card.CVC = request.POST['cvc']
             card.DDVV = request.POST['ddvv']
-            # card.address = request.POST['address']
-            # card.save()
-        elif(request['submit'] == 'update'):
+            card.address = address
+            card.save()
+        elif(request.POST['submit'] == 'update'):
             card = CreditCard.objects.get(id=request.POST['id'])
-            card.acc = request.session['uid']
+            card.acc = User.objects.get(id=request.session['uid'])
             card.creditName = request.POST['creditName']
             card.creditNum = request.POST['creditNum']
             card.CVC = request.POST['cvc']
             card.DDVV = request.POST['ddvv']
-            card.address = request.POST['address']
+            card.address = request.POST['addr']
             card.save()
 
 
@@ -342,7 +352,7 @@ def faq(request):
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'cards':cards}
+        context = {'logined':logined,'username':username,'pic':pic,'cards':cards,'notices':NoticesCheck(request)}
     return render(request,'app_gen/FAQ.html',context)
 
 def features(request):
@@ -377,9 +387,11 @@ def generator(request):
     imgmin = Class.objects.get(class_name=request.session['role']).max_gen_per_date  - len(ImgGen.objects.filter(acc_id=request.session['uid'],gen_CreateAt__gt=datetime(datetime.now().year,datetime.now().month,datetime.now().day)))
 
     print(request.session['genStep'])
+    # print(request.session['prompt'])
     if 'genStep' not in request.session:
         request.session['genStep'] = str(0)
         request.session['prompt'] = {'0':''}
+       
         # request.session['prompt'] = {'0':'mdjrny-v4-style box '}
     else:
         if request.session['genStep'] == '0':
@@ -436,7 +448,7 @@ def generator(request):
             #  del request.session['prompt']
              
             print("done")
-            return render(request,'app_gen/imgGen.html',{'file':file})  
+            return render(request,'app_gen/imgGen.html',{'file':file.replace('.png',' 4.png')})  
             #  return redirect('complete')
              
     context = {'submit' :submit,'brand': brand,'min':int(imgmin)}
@@ -470,15 +482,20 @@ def generator(request):
     return response
 
 def complete_gen(request):
+
+    addOn = [' 1',' 2',' 3',' 4']
     date = datetime.now()
     date = date.strftime("%d%m%y")
     prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
     filename = prompt[19:]
-    file =  request.session['fileGen']
+
+    
     request.session['genStep'] = '0'
     if request.method == 'POST':
+        import os
         
-        
+        file =  request.POST['packaging']
+
         img = ImgGen()
         img.acc_id = User.objects.get(id=request.session['uid'])
         img.gen_source = file
@@ -491,11 +508,30 @@ def complete_gen(request):
         detail.gen_message = filename
         detail.gen_isPublic = True
         detail.save()
-
+        try:
+            for item in request.session['files_path']:
+                path =  request.session['files_path'][item]
+                # print(path)
+                if path != file:
+                    if path != (request.session['files_path']['0']):
+                        fullPath = f"{os.getcwd()}/app_gen/{path[1:]}"
+                        print(fullPath)
+                        os.remove(f"{fullPath}")
+                        os.remove(f"{fullPath.replace('.png', '_mockup.png')}")
+        except:
+            pass
+        # os.remove('D:\\anda/app_gen/static/app_gen/imgGen/1/261023/goandpin123832 1 copy.png')
 
         return redirect('profile')
+    file_path = []
 
-    file_path = request.session['fileGen']
+    
+    for i in addOn:
+        file_path.append(request.session['fileGen'].replace('.png',f'{i}.png'))
+    
+    request.session['files_path'] = {'0':''}
+    for i in range(1,len(file_path)+1):
+        request.session['files_path'][i] = request.session['fileGen'].replace('.png',f' {i}.png')
 
     context= {'imgurl':'google.com','date':date,'filename':file_path}
     return render(request,'app_gen/complete.html',context)
@@ -521,21 +557,37 @@ def db(request):
     return render(request,'app_gen/db.html',params)
 
 def profile(request):
+
+    
+
     logined  = loginCheck(request)
-    bill = Transaction.objects.filter(acc_id=request.session['uid'])
+    bill = Transaction.objects.filter(acc_id=request.session['uid']).order_by('-upgrade_id').first()
+    print(bill)
+    role = request.session['role']
     # print(bill[1].duedate)
     if (bill):
-        if (bill[len(bill)-1].duedate < datetime.now()):
+        if (bill.duedate < datetime.now() and request.session['role'] != 'Starter'):#type:ignore
             user = User.objects.get(id=request.session['uid'])
             user.classUser = Class.objects.get(class_id=1)
             user.save()
             request.session['role'] = 'Starter'
 
+             #add Notification
+            noti = Notification()
+            noti.pic_source = "https://img.freepik.com/free-vector/urgent-concept-illustration_114360-7610.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1698019200&semt=ais"
+            noti.acc_id = user
+            noti.notice_title = f'แจ้งเตือน Subscription {role} plan ของคุณหมดอายุแล้ว'
+            noti.notice_detail = f'แจ้งเตือนการสมัครสมาชิก {role} plan ของคุณหมดอายุแล้ว ณ วันที่ {datetime.now().strftime("%D%M%Y")} ตอนนี้ท่านสามารถใช้งานเว็บไซต์ของเราได้ในระดับ Starter หากต้องการอัปเกรดระดับสามารถเข้า ไปที่หน้า Pricing เพื่อใช้งานอย่างต่อเนื่อง , ขอบคุณที่ใช้บริการของเรา'
+            noti.notice_date = datetime.now()
+            noti.save()
+
     imgurl = ImgGen.objects.filter(acc_id=request.session['uid'])
     imgurl = DetailImgGen.objects.filter(gen__in=imgurl,isRemove=False)
-    print(imgurl)
+    # print(imgurl)
     context = {}
     if request.method == 'POST':
+        
+
         if request.POST['submit'] == 'imgsave':
             import os
             try:
@@ -558,6 +610,12 @@ def profile(request):
                 user.save()
                 request.session['pic'] = '/static/app_gen/imgGen/'+ str(request.session['uid']) +'/' + 'profile.png'
                 open(fn, 'wb').write(fileitem.file.read())
+        
+        elif request.POST['submit'] == 'change':
+            user = User.objects.get(id=request.session['uid'])
+            user.hash_pass =  md5(request.POST['password'].encode()).hexdigest()
+            user.save()
+    
         else :
             user = User.objects.get(id=request.session['uid'])
             user.name = request.POST['name']
@@ -569,7 +627,7 @@ def profile(request):
         username = request.session['username']
         pic = request.session['pic']
         email = request.session['email']
-        context = {'logined':logined,'username':username,'email':email,'pic':pic,'gen':'bg-slate-700','img':imgurl}
+        context = {'logined':logined,'username':username,'email':email,'pic':pic,'gen':'bg-slate-700','img':imgurl,'notices':NoticesCheck(request)}
     else:
         return HttpResponseRedirect(reverse('login'))
     
@@ -613,7 +671,7 @@ def profileVisit(request,id):
         username = userInfo.name
         pic = userInfo.pic
         email = userInfo.userEmail
-        context = {'logined':logined,'username':username,'email':email,'pic':pic,'gen':'bg-slate-700','img':detail,'act':action}
+        context = {'logined':logined,'username':username,'email':email,'pic':pic,'gen':'bg-slate-700','img':detail,'act':action,'notices':NoticesCheck(request)}
     else:
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/profile.html',context)
@@ -629,7 +687,7 @@ def imageDetail(request,id):
     stared = Star.objects.filter(DetailImgGen=detail.genDetail_id,user=userID)
     ill = Illegal.objects.filter(gen_id=id,status=True)
     # print(ill)
-    context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star,'stared':stared,'reload':False,'ill':ill}
+    context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star,'stared':stared,'reload':False,'ill':ill,'notices':NoticesCheck(request)}
     if request.method == "POST":
         if request.POST['submit'] == "save":
             detail.gen_message = request.POST['msg']
@@ -671,7 +729,8 @@ def imageDetail(request,id):
                 context['reload'] = True
         elif request.POST['submit'] == 'report':
             print('reported',request.POST['repo'])
-            normal = Illegal.objects.filter(cop_details=request.POST['repo'])
+            normal = Illegal.objects.filter(cop_details=request.POST['repo'],gen_id=id)
+            print(normal)
             if(normal):
                 pass
             else:
@@ -680,6 +739,19 @@ def imageDetail(request,id):
                 report.gen_id = img
                 report.report_date = datetime.now()
                 report.save()
+
+                detail.gen_isPublic = False
+                detail.save()
+
+                #add Notification
+                noti = Notification()
+                noti.pic_source = img.gen_source
+                noti.acc_id = img.acc_id
+                noti.notice_title = 'แจ้งเตือนงานออกแบบ Package ของคุณ'
+                noti.notice_detail = f'มีรายงานว่างานออกแบบ Package ID: {img.gen_id} ของคุณได้ละเมิดกฏของเว็บไซต์ของเรา ดังนี้  \'{request.POST["repo"]}\' ตอนนี้ทางผู้ดูแลกำลังตรวจสอบ หากมีข้อสงสัยสามารถติดต่อผู้ดูแลได้'
+                noti.notice_date = datetime.now()
+                noti.save()
+
         
                  
     
@@ -696,7 +768,7 @@ def bin(request):
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'bin':bin,'img':detail}
+        context = {'logined':logined,'username':username,'pic':pic,'bin':bin,'img':detail,'notices':NoticesCheck(request)}
     else:
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/bin.html',context)
@@ -722,7 +794,7 @@ def payment(request):
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'payment':'bg-slate-700','history':transection}
+        context = {'logined':logined,'username':username,'pic':pic,'payment':'bg-slate-700','history':transection,'notices':NoticesCheck(request)}
     else:
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/payment.html',context)
@@ -737,7 +809,7 @@ def paymentDetail(request,id):
         if logined:
             username = request.session['username']
             pic = request.session['pic']
-            context = {'logined':logined,'username':username,'pic':pic,'payment':'bg-slate-700','pay':transection,'plan':classObj}
+            context = {'logined':logined,'username':username,'pic':pic,'payment':'bg-slate-700','pay':transection,'plan':classObj,'notices':NoticesCheck(request)}
         else:
             return HttpResponseRedirect(reverse('login'))
         return render(request,'app_gen/paymentDetail.html',context)
@@ -751,7 +823,7 @@ def notiDetail(request,id):
     
     note.is_read = True
     note.save()
-    context = {'note':note,'noti':'bg-slate-700'}
+    context = {'note':note,'noti':'bg-slate-700','notices':NoticesCheck(request)}
     return render(request,'app_gen/notiDetail.html',context)
     # try:
     # except:
@@ -763,7 +835,7 @@ def notifications(request):
     context = {}
     if loginCheck(request):
         note = Notification.objects.filter(acc_id=request.session['uid'])
-        context = {'note':note,'noti':'bg-slate-700'}
+        context = {'note':note,'noti':'bg-slate-700','notices':NoticesCheck(request)}
 
         
     else:
@@ -776,14 +848,18 @@ def collections(request):
         nCol.col_name = request.POST['col_name']
         nCol.col_user = User.objects.get(id=request.session['uid'])
         nCol.save()
+   
     
     col = Collection.objects.filter(col_user=request.session['uid'])
+   
+    # print(Details)
+    print(col.all())
     logined  = loginCheck(request)
     context = {}
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'logined':logined,'username':username,'pic':pic,'coll':'bg-slate-700','col':col}
+        context = {'logined':logined,'username':username,'pic':pic,'coll':'bg-slate-700','col':col,'notices':NoticesCheck(request)}
     else:
         return HttpResponseRedirect(reverse('login'))
     return render(request,'app_gen/collections.html',context)
@@ -796,13 +872,18 @@ def colDetail(request,id):
     pack = ImgGen.objects.filter(acc_id=request.session['uid'])
     pack = pack.exclude(gen_id__in=dCol.values("gen_id"))
     
-    context = {'images':dCol,'col':col,'packages':pack}
+    context = {'images':dCol,'col':col,'packages':pack,'notices':NoticesCheck(request)}
 
     if 'submit' in request.GET:
         if request.GET['submit'] == 'unsave':
             print(request.GET['id'])
             dCol = DetailCollection.objects.filter(col_id=id,gen_id=request.GET['id'])
             dCol.delete()
+        if request.GET['submit'] == 'remove':
+            dCol = Collection.objects.filter(col_id=id)
+            dCol.delete()
+            return redirect('collections')
+            
     if request.method == 'POST':
 
         if request.POST['submit'] == 'rename':
@@ -841,6 +922,9 @@ def loginCheck(request):
         return True
     else:
         return False
-    
+
+def NoticesCheck(request):
+    noti  = Notification.objects.filter(acc_id=request.session['uid'],is_read=False).count()
+    return noti
 
     # user = User.objects.get(userEmail='cookie')

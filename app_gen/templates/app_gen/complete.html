@@ -26,30 +26,14 @@
         <form method="post" action="collectImg" class="flex justify-center items-center flex-col gap-2">
             {% csrf_token %}
             <div class="grid grid-cols-2 grid-rows-2 gap-2 h-2/3 w-1/2 items-stretch text-center">
+              {% for file in filename %}
               <div>
-                <input type="radio" id="one" name="packaging" value="{{ filename }}" class="hidden peer">
-                <label for="one" class="inline-flex items-center overflow-hidden justify-between h-full w-full  text-gray-500 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:ring-indigo-800 peer-checked:ring-1 peer-checked:ring-offset-2 peer-checked:text-gray-800 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                  <img class="w-full" src="{{ filename }}" alt="">
+                <input type="radio" id="{{ file }}" name="packaging" value="{{ file }}" class="hidden peer">
+                <label for="{{ file }}" class="inline-flex items-center overflow-hidden justify-between h-full w-full  text-gray-500 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:ring-indigo-800 peer-checked:ring-1 peer-checked:ring-offset-2 peer-checked:text-gray-800 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                  <img class="w-full" src="{{ file }}" alt="">
                 </label>
               </div>
-              <div>
-                <input type="radio" id="two" name="packaging" value="{{ filename }}" class="hidden peer">
-                <label for="two" class="inline-flex items-center justify-between h-full w-full overflow-hidden text-gray-500 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:ring-indigo-800 peer-checked:ring-1 peer-checked:ring-offset-2 peer-checked:text-gray-800 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                  <img class="w-full" src="{{ filename }}" alt="">
-                </label>
-              </div>
-              <div>
-                <input type="radio" id="three" name="packaging" value="{{ filename }}" class="hidden peer">
-                <label for="three" class="inline-flex items-center justify-between h-full w-full overflow-hidden text-gray-500 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:ring-indigo-800 peer-checked:ring-1 peer-checked:ring-offset-2 peer-checked:text-gray-800 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                  <img class="w-full" src="{{ filename }}" alt="">
-                </label>
-              </div>
-              <div>
-                <input type="radio" id="four" name="packaging" value="{{ filename }}" class="hidden peer">
-                <label for="four" class="inline-flex items-center justify-between h-full w-full overflow-hidden text-gray-500 bg-gray-100 border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:ring-indigo-800 peer-checked:ring-1 peer-checked:ring-offset-2 peer-checked:text-gray-800 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                  <img class="w-full" src="{{ filename }}" alt="">
-                </label>
-              </div>
+              {% endfor %}
             </div>
             <div class="flex justify-end"><button type="submit" value="submit" class="bg-indigo-500 rounded-md text-white p-5 px-6">Chose this picture</button></div>
           </form>

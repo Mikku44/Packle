@@ -1,4 +1,5 @@
 {% extends "app_gen/components/base_profile.html" %}
+{% load poll_extras %}
 {% block title %}<div>Collections</div><button onclick="panelAct()">
   <div
     class="text-sm duration-200 hover:bg-slate-700 shadow-lg bg-slate-800 p-3 px-5 rounded-lg flex items-center gap-2">
@@ -10,22 +11,23 @@
 
   {% block content %}
 
-  <form method="post" action="/profile/collections/" id="panel" class="hidden fixed top-3/6 left-[40vw]">
-    {% csrf_token %}
-    <div class="shadow-lg bg-slate-900 rounded-2xl p-10 grid items-center gap-5">
-      <div class="text-2xl">Create Collection</div>
-      <input type="text" placeholder="Collection Name" required name="col_name" class="p-2 rounded-lg bg-slate-500 ">
-
-      <button type="submit" name="submit" class="rounded-md bg-black px-3 py-2 hover:bg-slate-500">Create</button>
-
-      <button type="button" class="hover:text-slate-200" onclick="panelAct()">Cancel</button>
-    </div>
-  </form>
+  <div class="fixed w-full h-full bg-black/50 left-0 top-0 flex justify-center items-center hidden" id="panel">
+    <form method="post" action="/profile/collections/"  class="">
+      {% csrf_token %}
+      <div class="shadow-lg bg-slate-900 rounded-2xl p-10 grid items-center gap-5">
+        <div class="text-2xl">Create Collection</div>
+        <input type="text" placeholder="Collection Name" required name="col_name" class="p-2 rounded-lg bg-slate-500 ">
+        <button type="submit" name="submit" class="rounded-md bg-black px-3 py-2 hover:bg-slate-500">Create</button>
+        <button type="button" class="hover:text-slate-200" onclick="panelAct()">Cancel</button>
+      </div>
+    </form>
+  </div>
 
   <div class="grid justify-items-start justify-start grid-flow-col gap-3">
 
     {% for item in col%}
-    <a href="/profile/collections/{{ item.col_id }}" class="grid  gap-4 bg-slate-700 rounded-md p-2 overflow-hidden hover:bg-slate-500 duration-150">
+   
+    <a href="/profile/collections/{{ item.col_id }}" class="grid  gap-4 bg-slate-700 rounded-2xl p-2 overflow-hidden hover:bg-slate-500 duration-150">
       <!-- <div class="grid grid-cols-2 gap-2">
         <div class="w-20 h-20 rounded-md overflow-hidden"><img class="h-full w-full"
             src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg" alt=""></div>
@@ -36,9 +38,13 @@
         <div class="w-20 h-20 rounded-md overflow-hidden"><img class="h-full w-full"
             src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg" alt=""></div>
       </div> -->
-      <div class="h-52 rounded-md overflow-hidden"><img class="h-full w-full"
-        src="https://img.freepik.com/premium-photo/collection-modern-floral-abstract-cards_939033-10467.jpg" alt=""></div>
-      <div class="text-center">{{ item.col_name }}</div>
+      <div class="h-52 rounded-xl shadow-lg overflow-hidden">
+        
+        <img class="h-full w-full "
+        src=" {{item.col_id | detailCol}}" alt="">
+      
+      </div>
+      <div class="text-left px-3">{{ item.col_name }}</div>
     </a>
     {% endfor %}
   </div>

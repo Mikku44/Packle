@@ -10,51 +10,68 @@
     <button id="cancleRename" type="button" class="text-md hidden">Cancel</button>
 </form>
 
-<button onclick="panelAct()">
-    <div
-        class="text-sm duration-200 hover:bg-slate-700 shadow-lg bg-slate-800 p-3 px-5 rounded-lg flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        Add package
-</button>
+<div>
+    <button onclick="panelAct()">
+        <div
+            class="text-sm duration-200 hover:bg-slate-700 shadow-lg bg-slate-800 p-3 px-5 rounded-lg flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Add package
+    </button>
+    
+    <a href="{{request.path}}?submit=remove">
+        <button>
+            <div
+                class="text-sm duration-200 hover:bg-slate-700 shadow-lg bg-slate-800 p-3 px-5 rounded-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l1.664 1.664M21 21l-1.5-1.5m-5.485-1.242L12 17.25 4.5 21V8.742m.164-4.078a2.15 2.15 0 011.743-1.342 48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185V19.5M4.664 4.664L19.5 19.5" />
+                  </svg>
+        
+                Remove
+        </button>
+    </a>
+</div>
+
 
 
 {% endblock %}
 
 {% block content %}
 
-<form method="post" action={{ request.path }} id="panel" class="hidden fixed top-10 left-[17vw] sm:left-[35vw] z-[100]">
-    {% csrf_token %}
-    <div class="shadow-lg bg-slate-900 rounded-2xl p-10 grid items-center gap-5">
-        <div class="text-2xl">Add package</div>
-
-        <input type="hidden" class="text-black" id="id" name="id">
-        <div class="grid grid-cols-3  gap-2 overflow-y-scroll overflow-x-hidden h-[50vh]">
-            {% for package in packages %}
-            <div class="relative">
-                <input type="checkbox" class="rounded-full w-10 absolute top-3 right-3 peer hidden"
-                    id="package{{package.gen_id}}" value="{{package.gen_id }}">
-                <label for="package{{package.gen_id }}"
-                    class="rounded-full w-5 h-5 ring-white ring-offset-3 ring-1 absolute top-3 right-3 peer-checked:bg-slate-800"></label>
-                <label for="package{{package.gen_id }}">
-                    <img class="h-auto sm:max-w-[10rem] max-w-[5rem] rounded-lg duration-150 hover:shadow-md"
-                        src={{package.gen_source }} />
-                </label>
+<div id="panel" class="hidden  z-[100] fixed w-full h-full top-0 left-0 flex justify-center items-center bg-black/50" >
+    <form method="post" action={{ request.path }}  class="">
+        {% csrf_token %}
+        <div class="shadow-lg bg-slate-900 rounded-2xl p-10 grid items-center gap-5">
+            <div class="text-2xl">Add package</div>
+    
+            <input type="hidden" class="text-black" id="id" name="id">
+            <div class="grid grid-cols-3  gap-2 overflow-y-scroll overflow-x-hidden h-[50vh]">
+                {% for package in packages %}
+                <div class="relative">
+                    <input type="checkbox" class="rounded-full w-10 absolute top-3 right-3 peer hidden"
+                        id="package{{package.gen_id}}" value="{{package.gen_id }}">
+                    <label for="package{{package.gen_id }}"
+                        class="rounded-full w-5 h-5 ring-white ring-offset-3 ring-1 absolute top-3 right-3 peer-checked:bg-slate-800"></label>
+                    <label for="package{{package.gen_id }}">
+                        <img class="h-auto sm:max-w-[10rem] max-w-[5rem] rounded-lg duration-150 hover:shadow-md"
+                            src="{{package.gen_source }}" />
+                    </label>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+    
+    
+    
+    
+            <button type="submit" name="submit" name="submit" value="add"
+                class="rounded-md bg-black px-3 py-2 hover:bg-slate-500">Add</button>
+    
+            <button type="button" class="hover:text-slate-200" onclick="panelAct()">Cancel</button>
         </div>
-
-
-
-
-        <button type="submit" name="submit" name="submit" value="add"
-            class="rounded-md bg-black px-3 py-2 hover:bg-slate-500">Add</button>
-
-        <button type="button" class="hover:text-slate-200" onclick="panelAct()">Cancel</button>
-    </div>
-</form>
+    </form>
+</div>
 
 <div class="grid grid-cols-2 md:grid-cols-4 mb-96 gap-4 z-0">
 
@@ -91,7 +108,7 @@
 
                 </a>
             </div>
-                <img class="h-full object-cover rounded-lg " src={{image.gen_id.gen_source }} />
+                <img class="h-full object-cover rounded-lg " src="{{image.gen_id.gen_source }}" />
 
 
             </div>

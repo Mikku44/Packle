@@ -1,7 +1,7 @@
 {% extends "app_gen/components/base_profile.html" %}
 {% block title %}Notifications{% endblock %}
 {% block content %}
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-3 w-full">
   {% for i in note %}
    <!-- card items -->
   <a href="{{ i.noti_id }}">
@@ -21,7 +21,7 @@
         <div class="text-sm "><u>Read more</u> {{ i.notice_date }}</div>
       </div>
       {% if i.pic_source != '' %}
-      <div class="w-20 h-20 rounded-xl overflow-hidden"><img src={{ i.pic_source }} alt="" srcset=""></div>
+      <div class="w-20 h-20 rounded-xl overflow-hidden"><img src="{{ i.pic_source }}" class="h-full object-cover" alt="" srcset=""></div>
       {% endif %}
 
       <div class="relative "> 

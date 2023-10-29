@@ -75,8 +75,11 @@
 </div>
 {% endif %}
 
+
 <button class="bg-[#00000073]  justify-center items-center h-screen w-screen fixed top-0 left-0 z-[100]" id="modalImage" onclick="fullscreen()" hidden>
+   
     <div class="w-[34rem] rounded-xl overflow-hidden"><img src="{{img.gen_source}}" id="ImageShow" alt=""></div>
+    
 </button>
 <div class=" z-0 rounded-md border-1 bg-gray-900 p-5 ring-1 ring-gray-700 shadow-md">
 
@@ -106,7 +109,11 @@
 
                     </button>
                 </div>
+                {% if ill %}
+                <img class=" w-96" src="https://img.freepik.com/free-vector/clear-blurred-background_1034-587.jpg" id="image_pack" alt="raw">
+                {% else %}
                 <img class=" w-96" src="{{ img.gen_source }}" id="image_pack" alt="raw">
+                {%endif%}
             </div>
             {% if img.acc_id.id == request.session.uid %}
             <button class="absolute right-0  bg-red-500 text-white rounded-md p-3  hover:bg-red-400 duration-150"
@@ -155,6 +162,9 @@
 
                     <div class="" id="starAmount">{{ star }}</div>
                 </div>
+
+                {% if ill %}
+                {% else %}
                 <a href="{{ img.gen_source }}" download target="_blank" class="grid justify-items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
                         <path
@@ -162,6 +172,7 @@
                     </svg>
 
                 </a>
+               
 
                 <a href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:8000{{ request.get_full_path }} "
                     class="grid justify-items-center" target="_blank">
@@ -172,6 +183,7 @@
                     </svg>
 
                 </a>
+                {% endif %}
 
                 <button type="button" onclick="preventR()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -207,6 +219,17 @@
             <div class="p-5 bg-gray-800 ring-gray-700 ring-1 rounded-xl ">
                 <div>
                     <div class="text-sm">Status</div>
+                    {% if ill %}
+                    <label class="relative inline-flex items-center mr-5 cursor-pointer">
+                        <input type="checkbox" disabled id="isPublic" value="False"
+                            class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600">
+                        </div>
+                        <span class="px-2" id="statusP">Private</span>
+                    </label>
+                    <div class="text-sm text-gray-300">Do not release it to the public as it is against the law. </div>
+                    {% else %}
                     {% if detail.gen_isPublic %}
                     <label class="relative inline-flex items-center mr-5 cursor-pointer">
                         <input type="checkbox" id="isPublic" value="True" onclick="changePublic()" class="sr-only peer"
@@ -227,6 +250,8 @@
                         <span class="px-2" id="statusP">Private</span>
                     </label>
                     {% endif %}
+                {% endif %}
+
 
                 </div>
                 <div class="mt-5
@@ -324,7 +349,7 @@
     <dialog id="report">
         <div>
 
-            <form class=" text-white p-10  shadow-md rounded-md  bg-black/80" action="/profile/generated/{{id}}"
+            <form class=" text-white p-10  shadow-md rounded-md  bg-black/80" method="post" action="{{request.path}}"
                 method="post">
                 {% csrf_token %}
                 <div class="text-center text-yellow-500 flex gap-2 py-2">

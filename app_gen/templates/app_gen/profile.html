@@ -40,9 +40,69 @@
 <!-- <span class="inline-flex items-center rounded-full  w-full bg-red-600/50 px-5 py-5 text-xs font-medium text-white ring-2 ring-offset-30 ring-red-600/20  ">Please <a href="# " class="underline px-1"> confirm your E-mail address </a> to use full options.</span> -->
 {% endif %}
 <div class="flex gap-3 bg-black p-5 rounded-3xl my-2 h-1/6 items-center overflow-hidden relative cover">
-
+  <button onclick="settingShow()" class="absolute right-10 top-10 duration-150 hover:text-indigo-500 flex group">
+    <div class="px-5 bg-black/50 text-white rounded-full duration-150 opacity-0 group-hover:opacity-100 group-hover:-translate-x-3">change password</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hover:rotate-90 duration-150">
+      <path fill-rule="evenodd"
+        d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 00-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 00-1.85-1.567h-1.843zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z"
+        clip-rule="evenodd" />
+    </svg>
+  </button>
   <form action="/profile/" method="post" enctype="multipart/form-data" class="flex justify-center items-center gap-2">
     {% csrf_token %}
+
+    <div class="fixed w-full h-full top-0 left-0 bg-black/50 z-[5] flex justify-center items-center hidden"
+      id="setting">
+      <div class="p-4 bg-slate-900 rounded-lg ">
+        <button onclick="settingShow()" type="button" class="flex justify-end w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+
+        </button>
+        <div class="grid overflow-auto gap-3 p-5 ">
+          <h1>Change password</h1>
+          <input type="text" placeholder="Email" class="p-2 rounded-lg bg-slate-400 ring-2  cursor-default"
+            value="{{request.session.email}}" readonly>
+          <input type="password" placeholder="New password" name="password" id="pass"
+            class="p-2 rounded-lg bg-slate-900 ring-2 ">
+          <input type="password" placeholder="Verify your password" name="verpassword" id="pass"
+            class="p-2 rounded-lg bg-slate-900 ring-2 ">
+          <button type="submit" name="submit" id="change" value="change"
+            class="rounded-md  bg-slate-500 px-3 py-2 hover:bg-slate-500" disabled>Save</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      pass[0].addEventListener("input", (event) => { checkPass(); });
+      pass[1].addEventListener("input", (event) => { checkPass(); });
+
+
+      function checkPass() {
+        if (pass[0].value != "") {
+          if (pass[0].value == pass[1].value) {
+            pass[0].classList.remove("ring-red-500")
+            pass[1].classList.remove("ring-red-500")
+            pass[0].classList.add("ring-green-500")
+            pass[1].classList.add("ring-green-500")
+            change.classList.add('bg-black')
+            change.classList.remove('bg-slate-500')
+            change.disabled = false
+          } else {
+            console.log('not equal')
+            change.classList.add('bg-slate-500')
+            change.classList.remove('bg-black')
+            pass[0].classList.remove("ring-green-500")
+            pass[1].classList.remove("ring-green-500")
+            pass[0].classList.add("ring-red-500")
+            pass[1].classList.add("ring-red-500")
+          
+          }
+        }
+
+      }
+    </script>
     <div class="bg-black overflow-hidden w-28  h-28 rounded-full relative group">
       <div class="absolute w-full h-full"><img id="img" class="object-cover w-full h-full" src="{{ pic }}" alt=""></div>
       {% if request.session.username == username %}
@@ -59,6 +119,8 @@
       </svg>
     </button>
   </form>
+
+
   <div>
     <div class="flex justify-start group gap-5 items-center">
       <!-- <div class="text-2xl bg-none name">{{ request.session.username }}</div> -->
@@ -111,6 +173,10 @@
           }
         }
 
+        function settingShow() {
+          setting.classList.toggle('hidden');
+        }
+
       </script>
 
     </div>
@@ -156,18 +222,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
 
-<div class="grid grid-cols-2 md:grid-cols-4 mb-96 gap-4 z-0">
+<div class="grid grid-cols-2 md:grid-cols-4 mb-96 gap-4 ">
 
   {% for image in img %}
 
 
 
-  <div class="grid gap-4 relative">
+  <div class="grid gap-4 ">
 
     <a href="/profile/generated/{{ image.gen.gen_id }}">
       <button data-modal-target="defaultModal" data-modal-toggle="defaultModal">
         <img class="h-auto max-w-full rounded-lg hover:scale-105 duration-150 hover:shadow-md"
-          src={{image.gen.gen_source }} />
+          src="{{image.gen.gen_source }}" />
       </button>
     </a>
 
@@ -185,20 +251,7 @@
 
 
 
-  {% comment %}TODO modal {% endcomment %}
 
-  <dialog id="fullscreen"
-    class="fixed bg-black/50 top-0  left-0 right-0 z-50  w-full  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] h-full">
-    <div class="flex  items-center justify-center">
-      <!-- Modal content -->
-
-      <img class="h-auto max-w-full rounded-lg "
-        src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg" alt="" />
-
-
-    </div>
-  </dialog>
-  {% comment %}TODO endmodal {% endcomment %}
 
 </div>
 </div>
