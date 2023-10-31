@@ -3,6 +3,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+  h1{
+    font-size: 36px;
+    font-weight: bold;
+  }
   h3{
     color:unset;
   }
@@ -14,24 +18,29 @@
   
   <div class=" grid sm:h-52 gap-5 sm:grid-flow-col  ">
   
-    <div class="rounded-[1.2em] p-4 my-4 bg-gradient-to-r from-[#34c1f9] to-[#97ddf9] hover:text-white text-white duration-150 shadow-md ">
-      <h3 class="text-lg font-thin ">Total User</h3>
-      <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดผู้ใช้งาน</div>
-      <div class="text-[5rem] text-end">{{users}}</div>
+    <a href="app_gen/user/" class="focus:no-underline">
+      <div class="rounded-[1.2em] p-4 my-4 bg-white/80 hover:shadow-xl text-cyan-500 hover:shadow-cyan-500/50 cursor-pointer  duration-150 shadow-md ">
+        <h3 class="text-lg font-thin ">Total User</h3>
+        <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดผู้ใช้งาน</div>
+        <div class="text-[5rem] text-end">{{users}}</div>
+      </div>
+    </a>
   
-    </div>
+    <a href="app_gen/transaction/" class="focus:no-underline">
+      <div class="rounded-[1.2em] p-4 my-4 bg-white/80 hover:shadow-xl text-blue-500 hover:shadow-blue-500/50 cursor-pointer  duration-150 shadow-md">
+        <h3 class="text-lg font-thin ">Total Transaction</h3>
+        <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการซื้อ</div>
+        <div class="text-[5rem] text-end">{{trans}}</div>
+      </div>
+    </a>
   
-    <div class="rounded-[1.2em] p-4 my-4 bg-gradient-to-r from-[#7752FE] to-[#77a5fe] hover:text-white text-white duration-150 shadow-md">
-      <h3 class="text-lg font-thin ">Total Transaction</h3>
-      <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการซื้อ</div>
-      <div class="text-[5rem] text-end">{{trans}}</div>
-    </div>
-  
-    <div class="rounded-[1.2em] p-4 my-4 bg-gradient-to-r from-[#f9db34] to-[#f9ec7f] hover:text-white text-white duration-150 shadow-md">
-      <h3 class="text-lg font-thin ">Total Design</h3>
-      <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการออกแบบ</div>
-      <div class="text-[5rem] text-end">{{design}}</div>
-    </div>
+    <a href="app_gen/imggen/" class="focus:no-underline">
+      <div class="rounded-[1.2em] p-4 my-4 bg-white/80 hover:shadow-xl text-emerald-500 hover:shadow-emerald-500/50 cursor-pointer  duration-150 shadow-md">
+        <h3 class="text-lg font-thin ">Total Design</h3>
+        <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการออกแบบ</div>
+        <div class="text-[5rem] text-end">{{design}}</div>
+      </div>
+    </a>
    <input type="hidden" id="range" value="{{range}}">
   <input type="hidden" id="userStat" value="{{data}}">
   <input type="hidden" id="transStat" value="{{tdata}}">

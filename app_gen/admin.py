@@ -7,9 +7,17 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from app_gen.models import *
 from datetime import datetime, timedelta
-
+from django import forms
 from django.contrib.admin import AdminSite
 from django.shortcuts import render
+
+
+@admin.action(description="ตรวจสอบแล้ว")
+def accept_report(modeladmin, request, queryset):
+    for obj in queryset:
+        obj.status = True
+        obj.save()
+
 
 class MyAdminSite(AdminSite):
      index_title = 'Dashboard'
@@ -49,7 +57,7 @@ class MyAdminSite(AdminSite):
            
             fYear = int(f.strftime("%Y"))#type:ignore
             firstMonth = int(f.strftime("%m"))#type:ignore
-            print(f'{f.month} {l.month}')
+            print(f'{f.month} {l.month}')#type:ignore
             if(f > l):#type:ignore
                 break
             data.append(str(User.objects.filter(regAt__lte=f).count()))#type:ignore
@@ -120,13 +128,18 @@ admin.site = MyAdminSite()
 
 # Register your models here.
 
+
+
+
 # @admin.register(User)
 class  PackmaUser(admin.ModelAdmin):
     
-    list_display = ['id','name',"userEmail",'classUser',"status","regAt","lastLogin","Action"]
+    list_display = ['id','name',"userEmail",'classUser',"status","lastLogin","Action"]
+    # field = ['name']
     search_fields = ['name']
     ordering  = ['id']
     list_filter = ["status"]
+
     
 # @admin.register(Class)
 class PackmaClass(admin.ModelAdmin):
@@ -141,7 +154,10 @@ class PackmaClass(admin.ModelAdmin):
 
 # @admin.register(DetailImgGen)
 class PackmaDetailImgGen(admin.ModelAdmin):
-    list_display = ['genDetail_id','gen','gen_isPublic','gen_message','gen_star','isRemove']
+    def getSource(self, obj):
+        gen_source = obj.gen.gen_source
+        return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{gen_source}" style="width:100%;"></img></div>')
+    list_display = ['genDetail_id','gen','getSource','gen_isPublic','gen_message','gen_star','isRemove']
     ordering = ['genDetail_id']
     
     class Meta:
@@ -160,28 +176,56 @@ class PackmaImgGen(admin.ModelAdmin):
 
 # @admin.register(Illegal)
 class PackmaIllegal(admin.ModelAdmin):
-    list_display = ['cop_id','cop_details','status','gen_id']
+    def getSource(self, obj):
+        gen_source = obj.gen_id.gen_source
+        return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{gen_source}" style="width:100%;"></img></div>')
+    list_display = ['cop_id','cop_details','status','gen_id','getSource']
     ordering = ['cop_id']
+    actions = [accept_report]
 
 class PackmaCol(admin.ModelAdmin):
-    list_display = ['col_id','col_name']
+    def username(self,obj):
+        return obj.col_user.name
+    list_display = ['col_id','col_name','col_user','username']
     ordering = ['col_id']
 
 class PackmaColDeltail(admin.ModelAdmin):
-    list_display = ['col_detail_id','col_id','gen_id']
+    def getSource(self, obj):
+        gen_source = obj.gen_id.gen_source
+        return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{gen_source}" style="width:100%;"></img></div>')
+    list_display = ['col_detail_id','col_id','gen_id','getSource']
     ordering = ['col_detail_id']
 
 class PackmaNotification(admin.ModelAdmin):
-    list_display = ['noti_id','acc_id','is_read','pic_source','notice_title','notice_date','Action']
+  
+    # def getSource(self, obj):
+    #     source = obj.pic_source
+    #     return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{source}" style="width:100%;"></img></div>')
+    
+    list_display = ['noti_id','acc_id','is_read','notice_title','notice_date','Action']
     ordering = ['noti_id']
+    # fields = ['is_read','acc_id','notice_title','pic_source','notice_detail','notice_date']
+
 
 
 class PackmaTransaction(admin.ModelAdmin):
+   
+
     list_display = ['upgrade_id','acc_id','start_date','duedate','status','purchase_date','total_amount','Action']
     ordering = ['upgrade_id']
 
 class StarAdmin(admin.ModelAdmin):
-   pass
+    def getSource(self, obj):
+        gen_source = obj.DetailImgGen.gen.gen_source
+        return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{gen_source}" style="width:100%;"></img></div>')
+    list_display = ['DetailImgGen','user']
+
+
+class CommentAdmin(admin.ModelAdmin):
+    def getSource(self, obj):
+        gen_source = obj.gen.gen_source
+        return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{gen_source}" style="width:100%;"></img></div>')
+    list_display = ['getSource','message','date','commentator']
 
 
 admin.site.register(User,PackmaUser)
@@ -192,6 +236,7 @@ admin.site.register(Illegal,PackmaIllegal)
 admin.site.register(Notification,PackmaNotification)
 admin.site.register(Transaction,PackmaTransaction)
 admin.site.register(Star,StarAdmin)
-admin.site.register(CommentImgGen)
+admin.site.register(CommentImgGen,CommentAdmin)
 admin.site.register(Collection,PackmaCol)
 admin.site.register(DetailCollection,PackmaColDeltail)
+admin.site.empty_value_display = "(None)"

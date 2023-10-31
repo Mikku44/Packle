@@ -10,7 +10,15 @@ from hashlib import md5
 from datetime import datetime
 from django.utils import timezone
 import regex
+from django.core.mail import send_mail
 
+# send_mail(
+#     "Subject here",
+#     "Here is the message.",
+#     "from@example.com",
+#     ["to@example.com"],
+#     fail_silently=False,
+# )
 
 username = ""
 pic = ""
@@ -20,7 +28,7 @@ def conn(sql):
     conn = connection.cursor()
     conn.execute(sql)
     return conn.fetchall()
-
+    
 
 
 def add_month():
@@ -47,9 +55,49 @@ def home(request):
 def logout(request):
     request.session.flush()
     return  HttpResponseRedirect('/')
+def forgot(request):
+    if loginCheck(request):
+        return HttpResponseRedirect(reverse('home'))
+    if('resend' in request.GET):
+         del request.session['otp'] 
+    if('action' in request.GET):
+        if (request.session['errorMSG'] != None):
+            del request.session['errorMSG'] 
+    if(request.method == 'POST'):
+        if('verify' in request.POST):
+            otp = request.POST['p1'] + request.POST['p2'] + request.POST['p3'] + request.POST['p4']
+            if(otp == request.session['otp']):
+                request.session['otp'] = "changePass"
+                print('corrent')
+            else:
+               request.session['errorMSG'] = 'Invalid otp'
 
+            return render(request,'app_gen/forgotpasst.html')
+        if ('change' in request.POST):
+            user = User.objects.get(userEmail=request.session['email'])
+            if(request.POST['password'] == request.POST['password2']):
+                user.hash_pass = md5(request.POST['password'].encode()).hexdigest()
+                user.save()
+                request.session['errorMSG'] = 'Password has been changed successfully.'
+                del request.session['otp']
+                return redirect('login')
+            else:
+                 request.session['errorMSG'] = 'Something was wrong.'
+            return render(request,'app_gen/forgotpasst.html')
+        if('send' in request.POST):
+            try:
+                user = User.objects.get(userEmail=request.POST['email'])
+                request.session['email']  = request.POST['email']
+                request.session['otp'] = user.hash_pass[0:4]
+                print(user.hash_pass[0:4])
+            except:
+                request.session['errorMSG'] = 'Invalid Email Address.'
+    return render(request,'app_gen/forgotpasst.html')
 def login(request):
     error = False
+    if ('action' in request.GET):
+        if(request.GET['action'] == 'remove'):
+            del request.session['errorMSG']
     
     response = render(request,'app_gen/login.html',context={'error':error,})
     print(request.COOKIES)
@@ -189,15 +237,22 @@ def market(request):
     return render(request,'app_gen/market.html',context)
 
 def transection(request):
-    card = CreditCard.objects.filter(acc=request.session['uid'])
-    
-    if request.method == 'POST':
-        clss = Class.objects.get(class_name=request.POST['plan'])
-        request.session['cost'] = clss.class_price
-        request.session['classID'] = clss.class_id
-        return render(request,'app_gen/transection.html',context={'price':str(clss.class_price),'card':card})
+    print(loginCheck(request))
+    if(loginCheck(request)):
+        card = CreditCard.objects.filter(acc=request.session['uid'])
+        
+        if request.method == 'POST':
+            clss = Class.objects.get(class_name=request.POST['plan'])
+            request.session['cost'] = clss.class_price
+            request.session['classID'] = clss.class_id
+            return render(request,'app_gen/transection.html',context={'price':str(clss.class_price),'card':card})
+        else:
+            return HttpResponseRedirect(reverse('market'))
+       
     else:
-        return HttpResponseRedirect(reverse('market'))
+        request.session['errorMSG'] = "Please Login to upgrade the plan"
+        return redirect('login')
+        
 def collect_card(request):
 
     user = User.objects.get(id=request.session['uid'])
@@ -375,11 +430,12 @@ def company(request):
 
 def generator(request):
     logined = loginCheck(request)
-    billCheck(request)
+    
     # request.session['genStep'] = '4'
     if(not logined):
         request.session['errorMSG'] = 'Please login to use Live demo.'
         return HttpResponseRedirect(reverse('login'))
+    billCheck(request)
     file = "hello"
     submit = '0'
     brand = ''
@@ -732,7 +788,7 @@ def imageDetail(request,id):
 
                 #add Notification
                 noti = Notification()
-                noti.pic_source = img.gen_source
+                noti.pic_source = str(img.gen_source) # type: ignore
                 noti.acc_id = img.acc_id
                 noti.notice_title = 'แจ้งเตือนงานออกแบบ Package ของคุณ'
                 noti.notice_detail = f'มีรายงานว่างานออกแบบ Package ID: {img.gen_id} ของคุณได้ละเมิดกฏของเว็บไซต์ของเรา ดังนี้  \'{request.POST["repo"]}\' ตอนนี้ทางผู้ดูแลกำลังตรวจสอบ หากมีข้อสงสัยสามารถติดต่อผู้ดูแลได้'
@@ -821,12 +877,17 @@ def notiDetail(request,id):
 def notifications(request):
     context = {}
     if loginCheck(request):
-        note = Notification.objects.filter(acc_id=request.session['uid'])
+        note = Notification.objects.filter(acc_id=request.session['uid']).order_by('-notice_date','is_read')
         context = {'note':note,'noti':'bg-slate-700','notices':NoticesCheck(request)}
 
-        
+        if( 'clear' in request.GET):
+            note = Notification.objects.filter(acc_id=request.session['uid'],is_read=True)
+            note.delete()
+            # request.session['errMSG'] = "Clear all readed."
     else:
         return HttpResponseRedirect(reverse('login'))
+    
+    
     return render(request,'app_gen/notification.html',context)
 
 def collections(request):
@@ -904,7 +965,7 @@ def information(request):
     return render(request,'app_gen/infomation.html',context)
 
 def loginCheck(request):
-    if 'username' in request.session:
+    if 'uid' in request.session:
         request.session['logined'] = True
         return True
     else:
@@ -929,7 +990,7 @@ def billCheck(request):
 
              #add Notification
             noti = Notification()
-            noti.pic_source = "https://img.freepik.com/free-vector/urgent-concept-illustration_114360-7610.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1698019200&semt=ais"
+            noti.pic_source = "https://img.freepik.com/free-vector/urgent-concept-illustration_114360-7610.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1698019200&semt=ais" #type:ignore
             noti.acc_id = user
             noti.notice_title = f'แจ้งเตือน Subscription {role} plan ของคุณหมดอายุแล้ว'
             noti.notice_detail = f'แจ้งเตือนการสมัครสมาชิก {role} plan ของคุณหมดอายุแล้ว ณ วันที่ {datetime.now().strftime("%D%M%Y")} ตอนนี้ท่านสามารถใช้งานเว็บไซต์ของเราได้ในระดับ Starter หากต้องการอัปเกรดระดับสามารถเข้า ไปที่หน้า Pricing เพื่อใช้งานอย่างต่อเนื่อง , ขอบคุณที่ใช้บริการของเรา'

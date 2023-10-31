@@ -15,6 +15,7 @@ html[data-theme="light"],
 
     --body-fg: #333;
     --body-bg: #fff;
+    --body-bg-c:#ecf9ff;
     --body-quiet-color: #666;
     --body-loud-color: #000;
 
@@ -27,7 +28,7 @@ html[data-theme="light"],
     --breadcrumbs-link-fg: var(--body-bg);
     --breadcrumbs-bg: var(--primary);
 
-    --link-fg: #417893;
+    --link-fg: #080808;
     --link-hover-color: #036;
     --link-selected-fg: #5b80b2;
 
@@ -42,7 +43,7 @@ html[data-theme="light"],
 
     --darkened-bg: #f8f8f8; /* A bit darker than --body-bg */
     --selected-bg: #e4e4e4; /* E.g. selected table cells */
-    --selected-row: #ffc;
+    --selected-row: #ecf9ff;
 
     --button-fg: #fff;
     --button-bg: var(--primary);
@@ -111,7 +112,7 @@ body {
 
 /* LINKS */
 
-a:link, a:visited {
+a {
     color: var(--link-fg);
     text-decoration: none;
     transition: color 0.15s, background 0.15s;
@@ -317,7 +318,7 @@ table {
 td, th {
     font-size: 0.8125rem;
     line-height: 1rem;
-    border-bottom: 1px solid var(--hairline-color);
+    /* border-bottom: 1px solid var(--hairline-color); */
     vertical-align: top;
     padding: 8px;
 }
@@ -351,16 +352,16 @@ tr.alt {
     background: var(--darkened-bg);
 }
 
-tr:nth-child(odd), .row-form-errors {
+/* tr:nth-child(odd), .row-form-errors {
     background: var(--body-bg);
-}
+} */
 
-tr:nth-child(even),
+/* tr:nth-child(even),
 tr:nth-child(even) .errorlist,
 tr:nth-child(odd) + .row-form-errors,
 tr:nth-child(odd) + .row-form-errors .errorlist {
     background: var(--darkened-bg);
-}
+} */
 
 /* SORTABLE TABLES */
 
@@ -708,7 +709,8 @@ td ul.errorlist + input, td ul.errorlist + select, td ul.errorlist + textarea {
 /* BREADCRUMBS */
 
 div.breadcrumbs {
-    background: var(--breadcrumbs-bg);
+    /* background: var(--breadcrumbs-bg); */
+    background: var(--header-bg);
     padding: 10px 40px;
     border: none;
     color: var(--breadcrumbs-fg);
@@ -730,14 +732,14 @@ div.breadcrumbs a:focus, div.breadcrumbs a:hover {
     background: url(../img/icon-viewlink.svg) 0 1px no-repeat;
 }
 
-.addlink {
+/* .addlink {
     padding-left: 16px;
     background: url(/static/icons/plus-solid.svg) 0 1px no-repeat;
-}
+} */
 
 .changelink, .inlinechangelink {
     padding-left: 16px;
-    background: url(../img/icon-changelink.svg) 0 1px no-repeat;
+    /* background: url(../img/icon-changelink.svg) 0 1px no-repeat; */
 }
 
 .deletelink {
@@ -846,6 +848,7 @@ a.deletelink:focus, a.deletelink:hover {
 #container > .main {
     display: flex;
     flex: 1 0 auto;
+    background: var(--body-bg-c);
 }
 
 .main > .content {
@@ -876,10 +879,17 @@ a.deletelink:focus, a.deletelink:hover {
 }
 
 #content-main {
+    
     float: left;
     width: 100%;
 }
 
+#content-main form{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 10px;
+    padding: 24px;
+    background: var(--body-bg);
+}
 #content-related {
     float: right;
     width: 260px;

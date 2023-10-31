@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import cv2
 import cvzone
-
+import matplotlib.pyplot  as plt
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
 TOKEN = os.environ.get('HUG_TOKEN')
 print(TOKEN)
@@ -15,6 +15,8 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     # grab the image size
     dim = None
     (h, w) = image.shape[:2]
+
+    # print(height / float(h))
 
     # if both the width and height are None, then return the
     # original image
@@ -27,17 +29,27 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
         # dimensions
         r = height / float(h) #type:ignore
         dim = (int(w * r), height)
-
+        
+       
     # otherwise, the height is None
     else:
         # calculate the ratio of the width and construct the
         # dimensions
         r = width / float(w)
         dim = (width, int(h * r))
+        (h, w)  = dim
+
+
+        
 
     # resize the image
     resized = cv2.resize(image, dim, interpolation = inter)#type:ignore
-
+    # print(h , w)
+    # print(h > w)
+    # if(h < w):
+    #     r = width / float(h) #type:ignore
+    #     dim = (int(w * r), width)
+    #     resized = cv2.resize(image, dim, interpolation = inter)#type:ignore
     # return the resized image
     return resized
 
@@ -50,14 +62,15 @@ def save_image(user_id,prompt,filename,mockup,logo=None,pos=None):
         return response
     
     addOn = [' 1',' 2',' 3',' 4']
-
-    for i in addOn:
+    i = 0
+    while i < len(addOn):
         image_bytes = query({
             "inputs": prompt + i,
         })
         print((image_bytes))
 
         if image_bytes.ok:
+            i+=1
             import io
             from PIL import Image
             import matplotlib.pyplot as plt
@@ -79,8 +92,8 @@ def save_image(user_id,prompt,filename,mockup,logo=None,pos=None):
                 pass
 
 
-            path = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}{i}.png'
-            path2 = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}{i}_mockup.png'
+            path = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}{addOn[i]}.png'
+            path2 = f'./app_gen/static/app_gen/imgGen/{user_id}/{date}/{filename}{addOn[i]}_mockup.png'
 
 
             plt.imsave(path,image)
@@ -216,7 +229,7 @@ def create_mockup(image,path,mockup,logo=None,pos=None):
         if logo is not None:
             logo = cv2.imread(logo,cv2.IMREAD_UNCHANGED)
             logo = cv2.cvtColor(logo, cv2.COLOR_BGR2RGBA)
-            logo = image_resize(logo, width = 400)
+            logo = image_resize(logo, width = 130)
             pattern = cvzone.overlayPNG(pattern,logo,[x,y])
 
         shear_pattern = cv2.warpPerspective(pattern,M,(int(cols*2.5),int(rows*1.6)))#type:ignore
@@ -272,7 +285,10 @@ def create_mockup(image,path,mockup,logo=None,pos=None):
 
 
 # create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxabstr213552.png")
-
+# logo = cv2.imread('./app_gen/static/app_gen/imgGen/1/logo.png',cv2.IMREAD_UNCHANGED)
+# image = image_resize(logo, width = 80)
+# plt.imshow(image)
+# plt.show()
 # create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'','./app_gen/static/app_gen/imgGen/1/psu.png','center')
 # create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'','./app_gen/static/app_gen/imgGen/1/psu.png','bottom')
 # create_mockup("./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png","./app_gen/static/app_gen/imgGen/1/171023/boxastro2130.png",'','./app_gen/static/app_gen/imgGen/1/psu.png','top')

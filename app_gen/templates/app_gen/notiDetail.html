@@ -11,8 +11,12 @@
 
 <div class="grid gap-4 z-0 justify-items-center  rounded-md border-1 p-5 ">
     
-    
+    {% if 'images/' in  note.pic_source.url %}
+    <img class="img-responsive w-1/3 rounded-lg" src="{{ note.pic_source.url }}"></img>
+    {% elif note.pic_source != ''%}
     <img class="img-responsive w-1/3 rounded-lg" src="{{ note.pic_source }}"></img>
+
+    {% endif %}
     <div>
         <div>{{ note.notice_date }}</div>
         <div>{{ note.notice_detail }}</div>

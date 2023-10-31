@@ -192,11 +192,13 @@ class CreditCard(models.Model):
 
 class Notification(models.Model):
     noti_id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-    pic_source = models.CharField(max_length=255,default="",blank=True)
+    # pic_source = models.CharField(max_length=255,default="",blank=True)
+    pic_source = models.ImageField(upload_to='images',blank=True,null=True,max_length=500)
     is_read = models.BooleanField(default=False)
     acc_id = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     notice_title = models.CharField(max_length=255,null=False)
     notice_detail = models.TextField(max_length=800,default="")
+    # notice_test = models.TextField(max_length=800,default="")
     notice_date = models.DateTimeField(null=True)
     @property
     def Action(self):
