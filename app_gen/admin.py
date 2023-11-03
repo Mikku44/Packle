@@ -40,6 +40,7 @@ class MyAdminSite(AdminSite):
         data = []
         tdata = []
         pdata = []
+        months = []
         # for index,item in enumerate(design):
         #    data += str(item.pk) 
         #    label += str(item.pk)
@@ -50,23 +51,20 @@ class MyAdminSite(AdminSite):
         if (users):
             f = users[0].regAt
             l = users[len(users)-1].regAt
+            while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
+            
+                fYear = int(f.strftime("%Y"))#type:ignore
+                firstMonth = int(f.strftime("%m"))#type:ignore
+                print(f'{f.month} {l.month}')#type:ignore
+                if(f > l):#type:ignore
+                    break
+                data.append(str(User.objects.filter(regAt__lte=f).count()))#type:ignore
 
-        months = []
+                f += relativedelta(months=1) # type: ignore
 
-        while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
-           
-            fYear = int(f.strftime("%Y"))#type:ignore
-            firstMonth = int(f.strftime("%m"))#type:ignore
-            print(f'{f.month} {l.month}')#type:ignore
-            if(f > l):#type:ignore
-                break
-            data.append(str(User.objects.filter(regAt__lte=f).count()))#type:ignore
-
-            f += relativedelta(months=1) # type: ignore
-
-            # {"month":"8" ,"year" :"2023"}
-            months.append(f"{firstMonth}/{fYear}")
-           
+                # {"month":"8" ,"year" :"2023"}
+                months.append(f"{firstMonth}/{fYear}")
+            
            
 
         months = str(months).replace("'",'"')
@@ -78,43 +76,38 @@ class MyAdminSite(AdminSite):
             f = (trans[0].start_date + relativedelta(day=31)).replace(hour=0, minute=0, second=0)#type:ignore
             l = trans[len(trans)-1].start_date
 
-        # months = []
+            while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
+                fYear = int(f.strftime("%Y"))#type:ignore
+                firstMonth = int(f.strftime("%m"))#type:ignore
+                # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
+                query = Transaction.objects.filter(start_date__lte=(f))#type:ignore
+                tdata.append(str(query.count()))#type:ignore
 
-        while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
-            fYear = int(f.strftime("%Y"))#type:ignore
-            firstMonth = int(f.strftime("%m"))#type:ignore
-            # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
-            query = Transaction.objects.filter(start_date__lte=(f))#type:ignore
-            tdata.append(str(query.count()))#type:ignore
+                # for i in query:
+                #     print(i.start_date)
+                f += relativedelta(months=1) # type: ignore
 
-            # for i in query:
-            #     print(i.start_date)
-            f += relativedelta(months=1) # type: ignore
-
-            # {"month":"8" ,"year" :"2023"}
-            # months.append(f"{firstMonth}/{fYear}")
+                # {"month":"8" ,"year" :"2023"}
+                # months.append(f"{firstMonth}/{fYear}")
 
         tdata = str(tdata).replace("'",'"')
 
         if (design):
             f = (design[0].gen_CreateAt + relativedelta(day=31)).replace(hour=0, minute=0, second=0)#type:ignore
             l = design[len(design)-1].gen_CreateAt
+            while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
+                fYear = int(f.strftime("%Y"))#type:ignore
+                firstMonth = int(f.strftime("%m"))#type:ignore
+                # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
+                query = ImgGen.objects.filter(gen_CreateAt__lte=(f))#type:ignore
+                pdata.append(str(query.count()))#type:ignore
 
-        # months = []
+                # for i in query:
+                #     print(i.start_date)
+                f += relativedelta(months=1) # type: ignore
 
-        while (f.strftime("%Y") <= l.strftime("%Y")):#type:ignore
-            fYear = int(f.strftime("%Y"))#type:ignore
-            firstMonth = int(f.strftime("%m"))#type:ignore
-            # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
-            query = ImgGen.objects.filter(gen_CreateAt__lte=(f))#type:ignore
-            pdata.append(str(query.count()))#type:ignore
-
-            # for i in query:
-            #     print(i.start_date)
-            f += relativedelta(months=1) # type: ignore
-
-            # {"month":"8" ,"year" :"2023"}
-            # months.append(f"{firstMonth}/{fYear}")
+                # {"month":"8" ,"year" :"2023"}
+                # months.append(f"{firstMonth}/{fYear}")
 
         pdata = str(pdata).replace("'",'"')
         

@@ -464,20 +464,23 @@ def generator(request):
          
 
             request.session['prompt'] ['descript'] = request.POST.get('prompt')
-            request.session['prompt'][request.session['genStep']]  = f"{request.POST.get('prompt').replace(' ', '')} {request.POST.get('width')} {request.POST.get('height')} {request.POST.get('long')} {request.POST.get('unit')}"
+            request.session['prompt'][request.session['genStep']]  = f" {request.POST.get('prompt')} {request.POST.get('width')} {request.POST.get('height')} {request.POST.get('long')} {request.POST.get('unit')}"
             print(request.session['prompt']['0'],request.session['prompt']['1'])
             print(request.session['prompt'])
         elif (request.session['genStep'] == '4'):
             
             #add picture here
-            try:
+            if ('logo' in request.FILES):
                 logo = request.FILES['logo']
                 if logo.name:
                     fn = f"./app_gen/static/app_gen/imgGen/{str(request.session['uid'])}/logo.png"
                     request.session['logo'] = fn
                     request.session['logoposition'] = request.POST['logoPos']
                     open(fn, 'wb').write(logo.file.read())
-            except:
+            else:
+                if "logo" in request.session:
+                    del request.session['logo']
+                    del request.session['logoposition']
                 pass
 
             request.session['genStep'] = '4'
@@ -499,13 +502,17 @@ def generator(request):
           
             # system(f'start "" python -c "import os;from app_gen.StableDiff import *;print(\'startGen\');genImg(\''+str(user_id)+'\',\''+str(prompt)+'\');os.system(\'pause\');"')
             # system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\');os.system(\'pause\');"')
-            import app_gen.withAPI as gen
+            # import app_gen.withAPI as gen
             if "logo" in request.session:
                 logo =  request.session['logo']
                 pos =  request.session['logoposition']
-                gen.save_image(str(user_id),str(prompt),filename,mockup_style,logo,pos)
+                # gen.save_image(str(user_id),str(prompt),filename,mockup_style,logo,pos)
+                system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\',\'{logo}\',\'{pos}\');os.system(\'pause\');"')
+
             else:
-                gen.save_image(str(user_id),str(prompt),filename,mockup_style)
+                # gen.save_image(str(user_id),str(prompt),filename,mockup_style)
+                system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\');os.system(\'pause\');"')
+
 
             request.session['genStep'] = '4'
             #  del request.session['prompt']
@@ -726,11 +733,12 @@ def imageDetail(request,id):
     img = ImgGen.objects.get(gen_id=id)
     detail = DetailImgGen.objects.get(gen_id=id)
     comment = CommentImgGen.objects.filter(gen_id=id).order_by('-date')
-    star = Star.objects.filter(DetailImgGen=detail.genDetail_id).count()
+    star_name = Star.objects.filter(DetailImgGen=detail.genDetail_id)
+    star = star_name.count()
     stared = Star.objects.filter(DetailImgGen=detail.genDetail_id,user=userID)
     ill = Illegal.objects.filter(gen_id=id,status=True)
     # print(ill)
-    context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star,'stared':stared,'reload':False,'ill':ill,'notices':NoticesCheck(request)}
+    context = {'img':img,'detail':detail,'id':id,'comments':comment,'star':star,'stared':stared,'reload':False,'ill':ill,'notices':NoticesCheck(request),'star_name':star_name}
     if request.method == "POST":
         if request.POST['submit'] == "save":
             detail.gen_message = request.POST['msg']

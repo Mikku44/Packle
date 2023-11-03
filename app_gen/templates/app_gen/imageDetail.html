@@ -160,7 +160,19 @@
                     <button type="submit" name="submit" id="addStar" value="addStar"></button>
                     {% endif %}
 
-                    <div class="" id="starAmount">{{ star }}</div>
+                    <div data-tooltip-target="starer" data-tooltip-placement="top" class="" id="starAmount">{{ star }}
+                    </div>
+                    <div id="starer" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-slate-700 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                       ผู้ที่กดถูกใจภาพนี้
+                       {% for name in star_name %}
+                        <div>{{name.user.name}}</div>
+                        {% empty %}
+                        <div>-ยังไม่มีผู้กดถูกใจ-</div>
+                  
+                        {% endfor %}
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+                    
                 </div>
 
                 {% if ill %}
