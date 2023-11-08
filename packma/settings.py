@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-!a94^yr=$7(*m7qi=-x4+mw5xetb8tr54gm8==3#@#mt#r$+it
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+# CSRF_TRUSTED_ORIGINS = ['https://python-opencv.mikkucn.repl.co/']
 
 # Application definition
 
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app_gen.apps.AppGenConfig',
     'app_gen.apps.MyAdminConfig',
-    'django.core.mail'
+    'django.core.mail',
+    'django.contrib.humanize'
     
 ]
 
@@ -87,7 +88,7 @@ DATABASES = {
     #     "HOST": "127.0.0.1",
     #     "PORT": "3306",
     #      'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'" ,"use_pure": True},
-    # }
+    # },
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.sqlite3', # This is where you put the name of the db file. 

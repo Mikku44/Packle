@@ -80,11 +80,7 @@ def save_image(user_id,prompt,filename,mockup,logo=None,pos=None):
             date = datetime.now()
             date = date.strftime("%d%m%y")
 
-            try:
-                path = os.path.join(f'./app_gen/static/app_gen/imgGen/',str(user_id))
-                os.mkdir(path)
-            except:
-                pass
+           
             try:
                 path = os.path.join(f'./app_gen/static/app_gen/imgGen/{str(user_id)}/',str(date))
                 os.mkdir(path)

@@ -3,7 +3,9 @@
 
 
 {% block content %}
-{% if  request.session.errorMSG != null %}
+{% if request.session.errorMSG != null %}
+<script src="https://unpkg.com/scrollreveal"></script>
+
 <div class="fixed bottom-10 right-10 z-[100]">
   <div id="toast-warning"
     class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white border-2 border-orange-100 rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
@@ -30,6 +32,8 @@
   </div>
 </div>
 {% endif %}
+
+
 <div class="sticky top-0 z-[10]">
   <div class="pt-5 w-full flex justify-center ">
     <div
@@ -56,17 +60,27 @@
 
 </div>
 <div class="bg-white">
+  <!-- <div class="fixed rounded-full blur-xl">
+    <svg width="300" height="200">
+      <polygon points="200 0 , 0 200 ,200 200 ,0 0"
+      style="fill:rgb(255, 0, 123);" />
+    </svg>
+  </div> -->
   <div
-    class="mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+    class=" mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
     <div>
-      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Most Popular Packaging.</h2>
-      <p class="mt-4 text-gray-500">The walnut wood card tray is precision milled to perfectly fit a stack of Focus
-        cards. The powder coated steel divider separates active cards from new ones, or can be used to archive
-        important task lists.</p>
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl textup">The Most Popular Packaging.</h2>
+      <p class="mt-4 text-md textdown  text-gray-900">Take inspiration from this pattern and create a new pattern that evokes a similar vibe and
+        style and intricacies that make it stand out. .</p>
+      <div class="textup">
+        <p
+          class=" mt-4 bg-gray-100  text-gray-800 text-xs font-medium mr-2 px-2.5 py-2 rounded-full dark:bg-gray-700 dark:text-gray-400  w-full sm:w-1/2 text-center hover:scale-110 duration-150">
+          {{most.gen_message}}</p>
+      </div>
 
 
     </div>
-    <div class="grid ">
+    <div class="grid textup">
       <a href="/profile/generated/{{ most.gen.gen_id }}" class="relative">
         <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 right-5"> <svg
             xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -78,24 +92,29 @@
       </a>
     </div>
   </div>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <div class="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl textup py-5 sm:px-36 px-4">Discovery</div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-5 sm:px-36">
     <div class="grid gap-4">
       {% for i in sec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }}  package">
+      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textdown  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
             </svg> {{i.gen_star}}</p>
-          <div
-            class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center ">
-            <div>{{ i.gen.gen_id }}</div>
-            <div>{{ i.gen.acc_id.name }}</div>
-            <div>{{ i.gen.gen_CreateAt }}</div>
+            <div
+            class="absolute bg-black/20 hidden group-hover:flex  justify-end  flex-col  w-full h-full rounded-lg z-50 text-white  ">
+            
+            <div class="bg-white shadow-xl justify-end rounded-xl text-slate-600 mx-5 mb-2 p-2">
+              <div class="text-ellipsis w-full truncate text-slate-600">ID#{{i.gen.gen_id}} {{ i.gen_message }}</div>
+             
+                <div> {{ i.gen.acc_id.name }}</div>
+              
+            </div>
           </div>
           <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen.gen_source }}"
             alt="" />
@@ -110,20 +129,24 @@
     <div class="grid gap-4">
       {% for i in ssec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }}  package">
+      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textup  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
             </svg> {{i.gen_star}}</p>
-          <div
-            class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center ">
-            <div>{{ i.gen.gen_id }}</div>
-            <div>{{ i.gen.acc_id.name }}</div>
-            <div>{{ i.gen.gen_CreateAt }}</div>
+            <div
+            class="absolute bg-black/20 hidden group-hover:flex  justify-end  flex-col  w-full h-full rounded-lg z-50 text-white  ">
+            
+            <div class="bg-white shadow-xl justify-end rounded-xl text-slate-600 mx-5 mb-2 p-2">
+              <div class="text-ellipsis w-full truncate text-slate-600">ID#{{i.gen.gen_id}} {{ i.gen_message }}</div>
+             
+                <div> {{ i.gen.acc_id.name }}</div>
+              
+            </div>
           </div>
           <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen.gen_source }}"
             alt="" />
@@ -138,19 +161,23 @@
     <div class="grid gap-4">
       {% for i in tsec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }}  package">
+      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textdown  package">
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
             </svg> {{i.gen_star}}</p>
-          <div
-            class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center">
-            <div>{{ i.gen.gen_id }}</div>
-            <div>{{ i.gen.acc_id.name }}</div>
-            <div>{{ i.gen.gen_CreateAt }}</div>
+            <div
+            class="absolute bg-black/20 hidden group-hover:flex  justify-end  flex-col  w-full h-full rounded-lg z-50 text-white  ">
+            
+            <div class="bg-white shadow-xl justify-end rounded-xl text-slate-600 mx-5 mb-2 p-2">
+              <div class="text-ellipsis w-full truncate text-slate-600">ID#{{i.gen.gen_id}} {{ i.gen_message }}</div>
+             
+                <div> {{ i.gen.acc_id.name }}</div>
+              
+            </div>
           </div>
           <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen.gen_source }}"
             alt="" />
@@ -162,22 +189,26 @@
     </div>
     <!-- end row 3 -->
     <div class="grid gap-4">
-      {% for i in fsec %}
+      {% for i in fosec %}
 
-      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }}  package">
+      <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textup  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute bottom-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
             </svg> {{i.gen_star}}</p>
-          <div
-            class="absolute bg-black opacity-0 group-hover:opacity-50 w-full h-24 rounded-lg z-50 text-white text-center ">
-            <div>{{ i.gen.gen_id }}</div>
-            <div>{{ i.gen.acc_id.name }}</div>
-            <div>{{ i.gen.gen_CreateAt }}</div>
+            <div
+            class="absolute bg-black/20 hidden group-hover:flex  justify-end  flex-col  w-full h-full rounded-lg z-50 text-white  ">
+            
+            <div class="bg-white shadow-xl justify-end rounded-xl text-slate-600 mx-5 mb-2 p-2">
+              <div class="text-ellipsis w-full truncate text-slate-600">ID#{{i.gen.gen_id}} {{ i.gen_message }}</div>
+             
+                <div> {{ i.gen.acc_id.name }}</div>
+              
+            </div>
           </div>
           <img class="h-auto max-w-full rounded-lg group-hover:scale-110 duration-150" src="{{ i.gen.gen_source }}"
             alt="" />
@@ -189,7 +220,13 @@
       {% endfor %}
     </div>
 
+   
   </div>
+</div>
+<div class="flex justify-center px-5 my-8">
+  <button onclick="window.location.reload()"  class="rounded-2xl font-medium w-full text-center text-gray-600 my-2 py-5 border  bg-white duration-150 bg-white hover:bg-gray-300 hover:text-slate-250">
+    Refresh
+  </button>
 </div>
 </body>
 <script src="/static/app_gen/nav.js"></script>
@@ -230,10 +267,10 @@
   function ShowPic(key) {
     pic = document.getElementsByClassName(key);
     pk = document.getElementsByClassName('package');
-    for (let i = 0; i < pk.length ; i += 1) {
+    for (let i = 0; i < pk.length; i += 1) {
       pk[i].hidden = true;
     }
-    for (let i = 0; i < pic.length ; i += 1) {
+    for (let i = 0; i < pic.length; i += 1) {
       pic[i].hidden = false;
     }
   }
@@ -249,8 +286,17 @@
   const queryString = window.location.search;
   console.log(queryString);
   if (queryString != '') {
-      window.location.replace('./');
+    window.location.replace('./');
   }
+</script>
+
+<script>
+  ScrollReveal().reveal('.textup', {
+    delay: 150, distance: '10%', origin: 'bottom',
+  });
+  ScrollReveal().reveal('.textdown', {
+    delay: 150, distance: '-10%', origin: 'bottom',
+  });
 </script>
 
 {% endblock %}

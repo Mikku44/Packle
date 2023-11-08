@@ -11,7 +11,7 @@ from datetime import datetime
 from django.utils import timezone
 import regex
 from django.core.mail import send_mail
-
+import os
 # send_mail(
 #     "Subject here",
 #     "Here is the message.",
@@ -184,8 +184,9 @@ def register(request):
                     print(form.cleaned_data)
 
 
+                    acc = User.objects.get(userEmail=form.cleaned_data['email'])
                     notfi = Notification()
-                    notfi.acc_id = User.objects.get(userEmail=form.cleaned_data['email'])
+                    notfi.acc_id = acc
                     notfi.notice_title = 'ยินดีต้อนรับสมาชิกใหม่'
                     notfi.notice_date = datetime.now()
                     notfi.pic_source = 'https://media.istockphoto.com/id/1170730064/vector/customer-review-rating-different-people-give-review-rating-and-feedback-customer-choice-know.jpg?s=612x612&w=0&k=20&c=C56QmdHyDWO8j-S2Medh6akaIuThmaxuSWnr8i_madc='
@@ -213,6 +214,12 @@ def register(request):
                     # request.session['genStep']  = '0'
                     # request.session['prompt'] = {'0':'pattern'}
 
+                    try:
+                        path = os.path.join(f'./app_gen/static/app_gen/imgGen/',str(acc.id))
+                        os.mkdir(path)
+                    except:
+                        print("can't create directory.")
+                        pass
                     return login(request)
 
             
@@ -287,7 +294,7 @@ def collect_card(request):
 def transectionID(request,id):
     
     if request.method == 'POST':
-        print(request.POST['payment'])
+        # print(request.POST['payment'])
         if request.POST['payment'] == 'ID':
             card = CreditCard.objects.filter(acc=request.session['uid'])
             
@@ -359,8 +366,8 @@ def product(request):
     if logined:
         username = request.session['username']
         pic = request.session['pic']
-        context = {'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
-    context = {'sec':x[0],'ssec':x[1],'tsec':x[2],'fsec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
+        context = {'username':username,'pic':pic,'sec':x[0],'ssec':x[1],'tsec':x[2],'fosec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
+    context = {'sec':x[0],'ssec':x[1],'tsec':x[2],'fosec':x[3],'most':popular,'ListOfUsers':ListOfUsers}
     
     return render(request,'app_gen/product.html',context)
 
@@ -557,7 +564,7 @@ def complete_gen(request):
     date = datetime.now()
     date = date.strftime("%d%m%y")
     prompt = request.session['prompt']['0'] + ' '+request.session['prompt']['1'] + ' ' + request.session['prompt'] ['descript']
-    filename = prompt[19:]
+    filename = prompt[:]
 
     
     request.session['genStep'] = '0'

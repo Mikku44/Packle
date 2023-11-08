@@ -25,8 +25,8 @@
         {% if request.POST.payment == 'ID' %}
         <form method="post" action="/transections/{{ id }}" class="bg-white dark:bg-gray-900">
             {{id}}
-            <input type="text" name="payment" value="hasID" hidden>
-            <input type="text" name="plan" value="{{ request.POST.plan }}" hidden>
+            <input  type="text" name="payment" value="hasID" hidden>
+            <input  type="text" name="plan" value="{{ request.POST.plan }}" hidden>
 
             {% else %}
             <form method="post" action="collect/" class="bg-white dark:bg-gray-900">
@@ -51,13 +51,14 @@
                             <div class="text-lg font-semibold">Select Payment</div>
                             <div>
                                 <div class="p-5">
-                                    <input type="radio" class="peer hidden" value="Promptpay" name="payment" id="pp">
+                                    <input  type="radio" class="peer hidden" value="Promptpay" name="payment"
+                                        id="pp">
                                     <label class="peer-checked:ring-black ring-1 ring-offest-2 rounded-sm p-3"
                                         for="pp">PromptPay</label>
                                 </div>
                                 <div class="p-5">
-                                    <input type="radio" class="peer hidden" value="credit" name="payment" id="cc"
-                                        checked>
+                                    <input  type="radio" class="peer hidden" value="credit" name="payment"
+                                        id="cc" checked>
                                     <label class="peer-checked:ring-black ring-1 ring-offest-2 rounded-sm p-3"
                                         for="cc">Credit Card</label>
                                 </div>
@@ -94,7 +95,7 @@
                             {% if card%}
                             {% for i in card %}
                             <div class="grid" id="creditcard">
-                                <input type="checkbox" value="{{ i.id }}" id="{{ i.id }}" class="peer hidden">
+                                <input  type="checkbox" value="{{ i.id }}" id="{{ i.id }}" class="peer hidden">
                                 <label for="{{ i.id }}"
                                     class="p-2 peer-checked:ring-offset-1 peer-checked:ring-1 border-1 border-gray-400 rounded-md group shadow-lg peer-checked:ring-green-400">
                                     <div class="flex gap-2">
@@ -132,30 +133,30 @@
 
                             <div class="grid gap-2 hidden" id="formAddCard">
                                 <label for="email">Credit Name</label>
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="Cname" id="Cname"
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="Cname" id="Cname"
                                     name="Cname" placeholder="Credit Name">
                                 <label for="cardinfo">Credit card infomation</label>
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
-                                    name="cardinfo" placeholder="1234 1234 1234 1234">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="text"
+                                    id="cardinfo" name="cardinfo" placeholder="1234 1234 1234 1234">
                                 <div class="flex gap-3">
-                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
-                                        name="cardinfo2" placeholder="MM/YY">
-                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
-                                        name="cardinfo3" placeholder="CVC">
+                                    <input  class="border-gray-300 border-2 p-2 rounded-md" type="text"
+                                        id="cardinfo" name="cardinfo2" placeholder="MM/YY">
+                                    <input  class="border-gray-300 border-2 p-2 rounded-md" type="text"
+                                        id="cardinfo" name="cardinfo3" placeholder="CVC">
                                 </div>
                                 <label for="address">Address</label>
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
                                     name="addr" placeholder="Address Line 1">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
                                     name="addr2" placeholder="Address Line 2">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
                                     name="addr3" placeholder="City">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
                                     name="addr4" placeholder="State">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
+                                <input  class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
                                     name="addr5" placeholder="Post Code">
                                 <div class="flex gap-2">
-                                    <input type="checkbox" name="policy" id="policy">
+                                    <input  type="checkbox" name="policy" id="policy">
                                     <label for="policy">I have read all and accepted the <a href="#"
                                             class="underline text-indigo-300">Privacy policies</a>.</label>
                                 </div>
@@ -164,34 +165,34 @@
                                 <button type="submit" value="later" name="submit">Pay later</button>
                             </div>
                             {% else %}
-                           
+
 
                             <span class="grid gap-2" id="creditcard">
                                 <label for="email">Credit Name</label>
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="Cname" id="Cname"
-                                    name="Cname" placeholder="Credit Name">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="Cname"
+                                    id="Cname" name="Cname" placeholder="Credit Name">
                                 <label for="cardinfo">Credit card infomation</label>
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
-                                    name="cardinfo" placeholder="1234 1234 1234 1234">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                    id="cardinfo" name="cardinfo" placeholder="1234 1234 1234 1234">
                                 <div class="flex gap-3">
-                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
-                                        name="cardinfo2" placeholder="MM/YY">
-                                    <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="cardinfo"
-                                        name="cardinfo3" placeholder="CVC">
+                                    <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                        id="cardinfo" name="cardinfo2" placeholder="MM/YY">
+                                    <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                        id="cardinfo" name="cardinfo3" placeholder="CVC">
                                 </div>
                                 <label for="address">Address</label>
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
-                                    name="addr" placeholder="Address Line 1">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
-                                    name="addr2" placeholder="Address Line 2">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
-                                    name="addr3" placeholder="City">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
-                                    name="addr4" placeholder="State">
-                                <input class="border-gray-300 border-2 p-2 rounded-md" type="text" id="address"
-                                    name="addr5" placeholder="Post Code">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                    id="address" name="addr" placeholder="Address Line 1">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                    id="address" name="addr2" placeholder="Address Line 2">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                    id="address" name="addr3" placeholder="City">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                    id="address" name="addr4" placeholder="State">
+                                <input  class="border-gray-300 border-2 p-2 rounded-md cdi" type="text"
+                                    id="address" name="addr5" placeholder="Post Code">
                                 <div class="flex gap-2">
-                                    <input type="checkbox" name="policy" id="policy">
+                                    <input  type="checkbox"  name="policy" id="policy">
                                     <label for="policy">I have read all and accepted the <a href="#"
                                             class="underline text-indigo-300">Privacy policies</a>.</label>
                                 </div>
@@ -199,7 +200,7 @@
                                     name="submit" value="collectCard">Save & Continue</button>
                                 <button type="submit" value="later" name="submit">Pay later</button>
                             </span>
-                            <input type="hidden" id="creditcard">
+                            <input  type="hidden" id="creditcard">
                             {% endif %}
 
 
@@ -223,14 +224,17 @@
         delay: 200, distance: '10%', origin: 'bottom',
     });
 
+    inputCdi = document.getElementsByClassName('cdi');
 
     cc.addEventListener('click', function () {
         title.innerHTML = 'Pay with Credit Card';
 
         qr.classList.add('hidden');
-        if (document.getElementById('add') != null)
+        if (document.getElementById('add') != null) {
             add.classList.remove('hidden');
 
+
+        }
         for (let i = 0; i < creditcard.length; i += 1) {
             creditcard[i].classList.remove('hidden');
         }
@@ -239,6 +243,7 @@
     })
     pp.addEventListener('click', function () {
         title.innerHTML = 'Pay with Prompt Pay';
+       
         for (let i = 0; i < creditcard.length; i += 1) {
             creditcard[i].classList.add('hidden');
         }

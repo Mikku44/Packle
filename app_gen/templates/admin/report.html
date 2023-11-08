@@ -1,70 +1,112 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/src/core.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-
+{% load humanize %}
 <style>
-  h1{
+  h1 {
     font-size: 36px;
     font-weight: bold;
   }
-  h3{
-    color:unset;
+
+  h3 {
+    color: unset;
+  }
+
+  .bg-white {
+    background-color: var(--body-bg);
+  }
+
+  .text-black {
+    color: var(--body-fg);
+  }
+
+  h1 {
+    color: black;
   }
 </style>
 
 <!-- total report -->
 
-<div class="flex justify-center flex-col">
-  
-  <div class=" grid sm:h-52 gap-5 sm:grid-flow-col  ">
-  
-    <a href="app_gen/user/" class="focus:no-underline">
-      <div class="rounded-[1.2em] p-4 my-4 bg-white/80 hover:shadow-xl text-cyan-500 hover:shadow-cyan-500/50 cursor-pointer  duration-150 shadow-md ">
-        <h3 class="text-lg font-thin ">Total User</h3>
-        <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดผู้ใช้งาน</div>
-        <div class="text-[5rem] text-end">{{users}}</div>
+<div class="flex justify-center">
+  <div class="flex justify-center flex-col w-[70vw] items-center ">
+
+    <div class=" grid sm:h-52 gap-5 sm:grid-flow-col  w-full">
+
+      <a href="app_gen/user/" class="focus:no-underline">
+        <div
+          class="rounded-[1.2em] p-4 my-4 bg-white hover:shadow-xl text-cyan-500 hover:shadow-cyan-500/50 cursor-pointer  duration-150 shadow-md ">
+          <h3 class="text-lg font-thin ">Total User</h3>
+          <div class="rounded-full  h-6">ยอดผู้ใช้งาน</div>
+          <div class="text-[5rem] text-end">{{users}}</div>
+        </div>
+      </a>
+
+      <a href="app_gen/transaction/" class="focus:no-underline">
+        <div
+          class="rounded-[1.2em] p-4 my-4 bg-white hover:shadow-xl text-blue-500 hover:shadow-blue-500/50 cursor-pointer  duration-150 shadow-md">
+          <h3 class="text-lg font-thin ">Total Transaction</h3>
+          <div class="rounded-full  h-6">ยอดการซื้อ</div>
+          <div class="text-[5rem] text-end">{{trans}}</div>
+        </div>
+      </a>
+
+      <a href="app_gen/imggen/" class="focus:no-underline">
+        <div
+          class="rounded-[1.2em] p-4 my-4 bg-white hover:shadow-xl text-emerald-500 hover:shadow-emerald-500/50 cursor-pointer  duration-150 shadow-md">
+          <h3 class="text-lg font-thin ">Total Design</h3>
+          <div class="rounded-full  h-6">ยอดการออกแบบ</div>
+          <div class="text-[5rem] text-end">{{design}}</div>
+        </div>
+      </a>
+
+      <a href="app_gen/transaction/" class="focus:no-underline">
+        <div
+          class="rounded-[1.2em] p-4 my-4 bg-white hover:shadow-xl text-[#b99810] hover:shadow-[#b99810]/50 cursor-pointer  duration-150 shadow-md">
+          <h3 class="text-lg font-thin ">Total Revenue</h3>
+          <div class="rounded-full h-6 ">ยอดรายได้รวม</div>
+          <div class="text-[5rem] text-end">฿{{revenue|intcomma}}</div>
+        </div>
+      </a>
+      <input type="hidden" id="range" value="{{range}}">
+      <input type="hidden" id="userStat" value="{{data}}">
+      <input type="hidden" id="transStat" value="{{tdata}}">
+      <input type="hidden" id="packStat" value="{{pdata}}">
+      <input type="hidden" id="revenueStat" value="{{rdata}}">
+    </div>
+
+
+    <!-- data -->
+
+    <!-- {{data}}
+    <div></div>
+    {{sum}} -->
+    <!-- graph -->
+
+    <div class="py-5 w-[90%] overflow-hidden">
+      <div class="w-full flex items-center justify-center gap-4 py-5">
+
+        <button onclick="changeGraph('OS')">
+          <div id="OS" class="rounded-full bg-white text-black shadow-md px-4 py-2 duration-150">Overall Summary</div>
+        </button>
+
+        <button onclick="changeGraph('RS')">
+          <div id="RS" class="rounded-full bg-gray-300 text-gray-500 px-4 py-2  duration-150">Revenue Summary</div>
+        </button>
       </div>
-    </a>
-  
-    <a href="app_gen/transaction/" class="focus:no-underline">
-      <div class="rounded-[1.2em] p-4 my-4 bg-white/80 hover:shadow-xl text-blue-500 hover:shadow-blue-500/50 cursor-pointer  duration-150 shadow-md">
-        <h3 class="text-lg font-thin ">Total Transaction</h3>
-        <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการซื้อ</div>
-        <div class="text-[5rem] text-end">{{trans}}</div>
+      <div class="flex gap-4 w-full">
+        <canvas id="myChart" class="w-[300px] sm:w-full rounded-2xl bg-white text-white p-4 shadow-md"> </canvas>
+        <canvas id="myChart_" class="w-[300px] sm:w-full rounded-2xl bg-white p-4 shadow-md hidden"> </canvas>
       </div>
-    </a>
-  
-    <a href="app_gen/imggen/" class="focus:no-underline">
-      <div class="rounded-[1.2em] p-4 my-4 bg-white/80 hover:shadow-xl text-emerald-500 hover:shadow-emerald-500/50 cursor-pointer  duration-150 shadow-md">
-        <h3 class="text-lg font-thin ">Total Design</h3>
-        <div class="rounded-full bg-white/50 w-[60%] h-6 text-center px-4">ยอดการออกแบบ</div>
-        <div class="text-[5rem] text-end">{{design}}</div>
-      </div>
-    </a>
-   <input type="hidden" id="range" value="{{range}}">
-  <input type="hidden" id="userStat" value="{{data}}">
-  <input type="hidden" id="transStat" value="{{tdata}}">
-  <input type="hidden" id="packStat" value="{{pdata}}">
-  </div>
-  
- 
-  <!-- data -->
-  
-  <!-- {{data}}
-  <div></div>
-  {{sum}} -->
-  <!-- graph -->
-  
-  <div class="py-5">
-    <canvas id="myChart" class="rounded-2xl text-white p-4 shadow-md"> </canvas>
+    </div>
   </div>
 </div>
 
 
 <script>
-  
+
   console.log(range.value)
   const ctx = document.getElementById('myChart');
+  const ctx_ = document.getElementById('myChart_');
   const userlabels = JSON.parse(range.value)
   const userData = JSON.parse(userStat.value)
 
@@ -72,6 +114,7 @@
 
   const translabels = JSON.parse(range.value)
   const transData = JSON.parse(transStat.value)
+  const revenueData = JSON.parse(revenueStat.value)
   const packData = JSON.parse(packStat.value)
 
   let delayed;
@@ -79,87 +122,196 @@
 
 
 
-  cht = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: userlabels,
-      datasets: [{
-        label: 'Users',
-        data: userData,
-        borderWidth: 2,
-        tension: 0.3,
-        pointRadius: 5,
-        pointHoverRadius: 8,
-        backgroundColor: '#34c1f9',
-
-        fill:true
-      },
-      {
-        label: 'Transactions',
-        data: transData,
-        borderWidth: 1,
-        tension: 0.3,
-        pointRadius: 5,
-        pointHoverRadius: 8,
-        backgroundColor: '#8E8FFA',
-        fill:true
-      },
-      {
-        label: 'Package Design',
-        data: packData,
-        borderWidth: 1,
-        tension: 0.3,
-        pointRadius: 5,
-        pointHoverRadius: 8,
-        backgroundColor: '#f9db34',
 
 
-        fill:true
-      }
-      ]
-    }, options: {
-      // gradientFill: true, 
-      responsive: true,
-      plugins: {
-        title: {
-          display: true,
-          text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
-        }
-      },
-      animations: {
-        onComplete: () => {
-          delayed = true;
-        },
-        delay: (context) => {
-          let delay = 0;
-          if (context.type === 'data' && context.mode === 'default') {
-            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+
+
+
+</script>
+
+<script>
+  selectPoint = document.getElementById("OS")
+  changeGraph("OS")
+  function changeGraph(id) {
+    selectPoint.classList.add('bg-gray-300');
+    selectPoint.classList.add('text-gray-500');
+    selectPoint.classList.remove('bg-white');
+    selectPoint.classList.remove('text-black');
+    selectPoint.classList.remove('shadow-md');
+    selectPoint = document.getElementById(id)
+    selectPoint.classList.add('bg-white');
+    selectPoint.classList.add('text-black');
+    selectPoint.classList.add('shadow-md');
+    selectPoint.classList.remove('bg-gray-300');
+    selectPoint.classList.remove('text-gray-500');
+    if (id == 'RS') {
+      myChart_.classList.remove("hidden");
+      myChart.classList.add("hidden");
+      cht = new Chart(ctx_, {
+        type: 'line',
+        data: {
+          labels: userlabels,
+          datasets: [
+            {
+              label: 'Revenue Per Month',
+              data: revenueData,
+              borderWidth: 5,
+              tension: 0.3,
+              pointRadius: 5,
+              pointHoverRadius: 8,
+              backgroundColor: '#ffffff',
+              borderColor:"#8E8FFA",
+              fill: false
+            },
+
+          ]
+        }, options: {
+          // gradientFill: true, 
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: (ctx) => 'Revenue Summary',
+            }
+            ,
+            legend: {
+              labels: {
+
+                font: {
+                  size: 16,
+                  family: 'Noto Sans Thai',
+                }
+              }
+            }
+          },
+          animations: {
+            onComplete: () => {
+              delayed = true;
+            },
+            delay: (context) => {
+              let delay = 0;
+              if (context.type === 'data' && context.mode === 'default') {
+                delay = context.dataIndex * 300 + context.datasetIndex * 100;
+              }
+              return delay;
+            },
+          },
+          scales: {
+            y: {
+              title: {
+                display: true,
+
+                text: 'Amount of usage'
+              },
+              beginAtZero: true
+            },
+            x: {
+              stacked: true,
+              title: {
+                display: true,
+                text: 'Month'
+              },
+              beginAtZero: true
+            }
           }
-          return delay;
-        },
-      },
-      scales: {
-        y: {
-          title: {
-            display: true,
-
-            text: 'Amount of usage'
-          },
-          beginAtZero: true
-        },
-        x: {
-          stacked: true,
-          title: {
-            display: true,
-            text: 'Month'
-          },
-          beginAtZero: true
         }
       }
+      );
+    } else {
+      myChart_.classList.add("hidden");
+      myChart.classList.remove("hidden");
+      cht = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: userlabels,
+          datasets: [{
+            label: 'Users',
+            data: userData,
+            borderWidth: 5,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            backgroundColor: '#ffffff',
+            borderColor:"#34c1f9",
+
+            fill: false
+          },
+          {
+            label: 'Transactions',
+            data: transData,
+            borderWidth: 5,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            backgroundColor: '#ffffff',
+            borderColor:"#8E8FFA",
+            fill: false
+          },
+          {
+            label: 'Package Design',
+            data: packData,
+            borderWidth: 5,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            backgroundColor: '#ffffff',
+            borderColor:"#f9db34",
+
+
+            fill: false
+          }
+          ]
+        }, options: {
+          // gradientFill: true, 
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: (ctx) => "Overall Summary",
+            },
+            legend: {
+              labels: {
+
+                font: {
+                  size: 14,
+                  family: 'Noto Sans Thai',
+                }
+              }
+            }
+          },
+          animations: {
+            onComplete: () => {
+              delayed = true;
+            },
+            delay: (context) => {
+              let delay = 0;
+              if (context.type === 'data' && context.mode === 'default') {
+                delay = context.dataIndex * 300 + context.datasetIndex * 100;
+              }
+              return delay;
+            },
+          },
+          scales: {
+            y: {
+              title: {
+                display: true,
+
+                text: 'Amount of usage'
+              },
+              beginAtZero: true
+            },
+            x: {
+              stacked: true,
+              title: {
+                display: true,
+                text: 'Month'
+              },
+              beginAtZero: true
+            }
+          }
+        }
+      }
+      );
     }
   }
-  );
-
-
-
 </script>

@@ -1,4 +1,4 @@
-
+from django.shortcuts import redirect, render
 from typing import Any
 from django.contrib.admin import AdminSite
 from django.core.handlers.wsgi import WSGIRequest
@@ -10,13 +10,18 @@ from datetime import datetime, timedelta
 from django import forms
 from django.contrib.admin import AdminSite
 from django.shortcuts import render
+from django.db.models import Sum
 
 
 @admin.action(description="ตรวจสอบแล้ว")
 def accept_report(modeladmin, request, queryset):
-    for obj in queryset:
-        obj.status = True
-        obj.save()
+
+    print(request.POST)
+    print(request.path)
+    queryset.update(status=True)
+    # for obj in queryset:
+    #     obj.status = True
+    #     obj.save()
 
 
 class MyAdminSite(AdminSite):
@@ -25,10 +30,23 @@ class MyAdminSite(AdminSite):
          from django.urls import path
     
          urls = [
-            #  path('report/', self.admin_view(self.report)),
+             path('app_gen/illegal/accept/', self.admin_view(self.accept_ill)),
          ]
          return urls + super().get_urls()
-     
+     def accept_ill(self, request):
+         try:
+            if('Accept' in request.GET):
+                ill = Illegal.objects.get(cop_id=request.GET['Accept'])
+                ill.status = True
+                ill.save()
+            elif('Unaccept' in request.GET):
+                ill = Illegal.objects.get(cop_id=request.GET['Unaccept'])
+                ill.status = False
+                ill.save()
+         except:
+            pass
+        #  return HttpResponse(request.GET['accept'])
+         return redirect('/admin/app_gen/illegal/')
      def index(self, request):
         from dateutil.relativedelta import relativedelta 
 
@@ -36,10 +54,12 @@ class MyAdminSite(AdminSite):
         trans = Transaction.objects.all()
         design = ImgGen.objects.all()
 
+        revenue = Transaction.objects.aggregate(Sum('total_amount'))['total_amount__sum']
 
         data = []
         tdata = []
         pdata = []
+        rdata = [0]
         months = []
         # for index,item in enumerate(design):
         #    data += str(item.pk) 
@@ -55,7 +75,7 @@ class MyAdminSite(AdminSite):
             
                 fYear = int(f.strftime("%Y"))#type:ignore
                 firstMonth = int(f.strftime("%m"))#type:ignore
-                print(f'{f.month} {l.month}')#type:ignore
+                # print(f'{f.month} {l.month}')#type:ignore
                 if(f > l):#type:ignore
                     break
                 data.append(str(User.objects.filter(regAt__lte=f).count()))#type:ignore
@@ -64,12 +84,13 @@ class MyAdminSite(AdminSite):
 
                 # {"month":"8" ,"year" :"2023"}
                 months.append(f"{firstMonth}/{fYear}")
-            
-           
+        
+        data.append(str(User.objects.filter(regAt__lte=f).count()))#type:ignore
+        months.append(f"{firstMonth}/{fYear}")# type: ignore
 
         months = str(months).replace("'",'"')
         data = str(data).replace("'",'"')
-        print(str(months).replace("'",'"'))
+        # print(str(months).replace("'",'"'))
 
 
         if (trans):
@@ -82,7 +103,11 @@ class MyAdminSite(AdminSite):
                 # print(f'Year : {firstMonth} f: {(f)}')#type:ignore
                 query = Transaction.objects.filter(start_date__lte=(f))#type:ignore
                 tdata.append(str(query.count()))#type:ignore
-
+                # query = Transaction.objects.filter(purchase_date__lt=(f))#type:ignore
+                rpm = query.aggregate(Sum('total_amount'))['total_amount__sum']
+                rpm = rpm - int(rdata[-1])
+                rdata.append(str(rpm))
+                print(type(rpm - int(rdata[-1])))
                 # for i in query:
                 #     print(i.start_date)
                 f += relativedelta(months=1) # type: ignore
@@ -110,10 +135,14 @@ class MyAdminSite(AdminSite):
                 # months.append(f"{firstMonth}/{fYear}")
 
         pdata = str(pdata).replace("'",'"')
+
+        del rdata[0]
+        rdata = str(rdata).replace("'",'"')
         
+        print(rdata)
         
 
-        context = {'users':users.count(),'trans':trans.count(),'design':design.count(),'data':data,'tdata':tdata,'pdata':pdata,'range':months}
+        context = {'users':users.count(),'trans':trans.count(),'design':design.count(),'data':data,'tdata':tdata,'pdata':pdata,'range':months,'revenue':revenue,'rdata':rdata}
         return super().index(request,context)
 
 
@@ -169,10 +198,18 @@ class PackmaImgGen(admin.ModelAdmin):
 
 # @admin.register(Illegal)
 class PackmaIllegal(admin.ModelAdmin):
+
+    def acceptReport(self,obj):
+        
+        if(obj.status == True):
+            action = "Unaccept"
+        else:
+            action = "Accept"
+        return format_html(f'<a href="./accept/?{action}={obj.cop_id}"><div style="color:white;border-radius:5px;padding:10px 5px;background:#79aec8;text-align:center;">{action}</div></a>')
     def getSource(self, obj):
         gen_source = obj.gen_id.gen_source
         return format_html(f'<div style="width:10vw; overflow:hidden;border-radius:10px;"><img src="{gen_source}" style="width:100%;"></img></div>')
-    list_display = ['cop_id','cop_details','status','gen_id','getSource']
+    list_display = ['cop_id','cop_details','status','gen_id','getSource','acceptReport']
     ordering = ['cop_id']
     actions = [accept_report]
 
