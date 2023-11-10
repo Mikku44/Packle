@@ -446,6 +446,9 @@ def generator(request):
     file = "hello"
     submit = '0'
     brand = ''
+    logo = None
+    pos = None
+    text = None
     
     imgmin = Class.objects.get(class_name=request.session['role']).max_gen_per_date  - len(ImgGen.objects.filter(acc_id=request.session['uid'],gen_CreateAt__gt=datetime(datetime.now().year,datetime.now().month,datetime.now().day)))
 
@@ -477,6 +480,8 @@ def generator(request):
         elif (request.session['genStep'] == '4'):
             
             #add picture here
+            if ('text' in request.POST):
+                request.session['text'] = request.POST['text']
             if ('logo' in request.FILES):
                 logo = request.FILES['logo']
                 if logo.name:
@@ -514,12 +519,10 @@ def generator(request):
                 logo =  request.session['logo']
                 pos =  request.session['logoposition']
                 # gen.save_image(str(user_id),str(prompt),filename,mockup_style,logo,pos)
-                system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\',\'{logo}\',\'{pos}\');os.system(\'pause\');"')
-
-            else:
-                # gen.save_image(str(user_id),str(prompt),filename,mockup_style)
-                system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\');os.system(\'pause\');"')
-
+            if "text" in request.session:
+                text = request.session["text"]
+                
+            system(f'start "" python -c "import os;from app_gen.withAPI import *;print(\'startGen\');save_image(\'{str(user_id)}\',\'{str(prompt)}\',\'{filename}\',\'{mockup_style}\',\'{logo}\',\'{pos}\',\'{text}\');os.system(\'pause\');"')
 
             request.session['genStep'] = '4'
             #  del request.session['prompt']

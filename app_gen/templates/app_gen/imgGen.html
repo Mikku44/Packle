@@ -21,7 +21,7 @@
     <form accept='{% url "generator" %}' method="post" enctype='multipart/form-data'>
       {% csrf_token %}
       <div class="relative px-6  lg:px-8">
-        <div class="mx-auto max-w-3xl pt-48 ">
+        <div class="mx-auto pt-48 ">
           <div>
             <div class="hidden sm:mb-8 sm:flex sm:justify-center">
 
@@ -31,7 +31,7 @@
 
             {% if request.session.genStep == '0' %}
             {% if min != 0 %}
-            <div>
+            <div class="max-w-3xl flex justify-center">
               <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Create packaging for your
                 brand
               </h1>
@@ -66,7 +66,7 @@
             <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl py-5">
               {{request.session.genStep }}
           </div>
-          <div>
+          <div class="max-w-3xl flex justify-center">
             <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Select your package style
             </h1>
 
@@ -154,7 +154,7 @@
             <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl py-5">
               {{request.session.genStep }}
           </div>
-          <div>
+          <div class=" grid justify-center">
             <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Customize for youself.
             </h1>
             <div class="font-bold text-gray-900 pt-10">Size of box</div>
@@ -183,17 +183,22 @@
                 <input type="radio" class="peer hidden" name="prompt" id="s1" value="Minimalism Style">
                 <label
                   class="flex peer-checked:ring-2  items-center justify-between ring-indigo-500 font-semibold text-gray-600 relative rounded-md bg-white p-3  border-2 shadow-md block"
-                  for="s1">Minimalism Style 
+                  for="s1">Minimalism Style
                   <div data-tooltip-target="tooltip-minimal" data-tooltip-placement="right">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hover:text-black duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="w-6 h-6 hover:text-black duration-150">
                       <path fill-rule="evenodd"
                         d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                        clip-rule="evenodd" /></svg>
+                        clip-rule="evenodd" />
+                    </svg>
 
-                        <div id="tooltip-minimal" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                          “มินิมอล” เป็นคอนเซปท์การออกแบบที่เรียบง่าย ตัดทอนสิ่งที่ไม่จำเป็นออกไปให้เหลือน้อยที่สุด เน้นเรื่องประโยชน์ใช้สอย ตามปรัชญา “Less is more” น้อย…แต่มาก ของลุดวิก มีส ฟาน เดอร์ โรห์ (Ludwig Mies van der Rohe) 
-                          <div class="tooltip-arrow" data-popper-arrow></div>
-                      </div>
+                    <div id="tooltip-minimal" role="tooltip"
+                      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                      “มินิมอล” เป็นคอนเซปท์การออกแบบที่เรียบง่าย ตัดทอนสิ่งที่ไม่จำเป็นออกไปให้เหลือน้อยที่สุด
+                      เน้นเรื่องประโยชน์ใช้สอย ตามปรัชญา “Less is more” น้อย…แต่มาก ของลุดวิก มีส ฟาน เดอร์ โรห์ (Ludwig
+                      Mies van der Rohe)
+                      <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
                   </div>
                 </label>
               </li>
@@ -202,17 +207,24 @@
                 <input type="radio" class="peer hidden" name="prompt" id="s2" value="Abstract style">
                 <label
                   class="flex peer-checked:ring-2  items-center justify-between ring-indigo-500 font-semibold text-gray-600 relative rounded-md bg-white p-3  border-2 shadow-md block"
-                  for="s2">Abstract style 
+                  for="s2">Abstract style
                   <div data-tooltip-target="tooltip-abstract" data-tooltip-placement="right">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hover:text-black duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="w-6 h-6 hover:text-black duration-150">
                       <path fill-rule="evenodd"
                         d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                        clip-rule="evenodd" /></svg>
+                        clip-rule="evenodd" />
+                    </svg>
 
-                        <div id="tooltip-abstract" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                          ศิลปะที่แสดงถึงทัศนคติที่เกี่ยวข้องกับจิตใจ เป็นศิลปะที่ไม่ได้แสดงถึงความสมจริงของสีสัน รูปภาพ และสภาพแวดล้อม แต่ศิลปินเลือกที่จะนำเสนอความคิดอย่างอิสระผ่านการสร้างสรรค์ภาพ ที่เน้นอิสระของเส้นสี รูปร่างที่แปลกใหม่ การตัดต่อ ตัดทอนรูปทรงขึ้นมาใหม่ ที่ไม่ได้จำกัดอยู่บนรูปสี่เหลี่ยมหรือสามเหลี่ยม การถ่ายทอดภาพนำเสนออกมาทางภาพสองมิติและสามมิติ ด้วยความที่เป็นศิลปะแบบนามธรรมทำให้ไม่สามารถโยงเข้ากับแหล่งอ้างอิงรูปธรรมใด ๆ
-                          <div class="tooltip-arrow" data-popper-arrow></div>
-                      </div>
+                    <div id="tooltip-abstract" role="tooltip"
+                      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                      ศิลปะที่แสดงถึงทัศนคติที่เกี่ยวข้องกับจิตใจ เป็นศิลปะที่ไม่ได้แสดงถึงความสมจริงของสีสัน รูปภาพ
+                      และสภาพแวดล้อม แต่ศิลปินเลือกที่จะนำเสนอความคิดอย่างอิสระผ่านการสร้างสรรค์ภาพ
+                      ที่เน้นอิสระของเส้นสี รูปร่างที่แปลกใหม่ การตัดต่อ ตัดทอนรูปทรงขึ้นมาใหม่
+                      ที่ไม่ได้จำกัดอยู่บนรูปสี่เหลี่ยมหรือสามเหลี่ยม การถ่ายทอดภาพนำเสนออกมาทางภาพสองมิติและสามมิติ
+                      ด้วยความที่เป็นศิลปะแบบนามธรรมทำให้ไม่สามารถโยงเข้ากับแหล่งอ้างอิงรูปธรรมใด ๆ
+                      <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
                   </div>
                 </label>
               </li>
@@ -223,15 +235,20 @@
                   class="flex peer-checked:ring-2  items-center justify-between ring-indigo-500 font-semibold text-gray-600 relative rounded-md bg-white p-3  border-2 shadow-md block"
                   for="s3">Realistic Style
                   <div data-tooltip-target="tooltip-real" data-tooltip-placement="right">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hover:text-black duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="w-6 h-6 hover:text-black duration-150">
                       <path fill-rule="evenodd"
                         d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                        clip-rule="evenodd" /></svg>
+                        clip-rule="evenodd" />
+                    </svg>
 
-                        <div id="tooltip-real" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                          งานศิลปะที่แสดงออกตรงๆ ด้วยรูปทรงที่เหมือนจริง องค์ประกอบที่เน้นชัดไปที่ตัวรูปทรง ไม่ว่าจะเป็นมุมมองใดก็สามารถทำให้เราเข้าใจได้อย่างชัดเจนว่าต้องการแสดงออกถึงสิ่งใด การจัดน้ำหนักให้เห็นความตื้นลึกของรูปทรง
-                          <div class="tooltip-arrow" data-popper-arrow></div>
-                      </div>
+                    <div id="tooltip-real" role="tooltip"
+                      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                      งานศิลปะที่แสดงออกตรงๆ ด้วยรูปทรงที่เหมือนจริง องค์ประกอบที่เน้นชัดไปที่ตัวรูปทรง
+                      ไม่ว่าจะเป็นมุมมองใดก็สามารถทำให้เราเข้าใจได้อย่างชัดเจนว่าต้องการแสดงออกถึงสิ่งใด
+                      การจัดน้ำหนักให้เห็นความตื้นลึกของรูปทรง
+                      <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
                   </div>
                 </label>
               </li>
@@ -240,17 +257,22 @@
                 <input type="radio" class="peer hidden" name="prompt" id="s4" value="Retro Style">
                 <label
                   class=" flex peer-checked:ring-2  items-center justify-between ring-indigo-500 font-semibold text-gray-600 relative rounded-md bg-white p-3  border-2 shadow-md block"
-                  for="s4">Retro Style 
+                  for="s4">Retro Style
                   <div data-tooltip-target="tooltip-retro" data-tooltip-placement="right">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hover:text-black duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                      class="w-6 h-6 hover:text-black duration-150">
                       <path fill-rule="evenodd"
                         d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                        clip-rule="evenodd" /></svg>
+                        clip-rule="evenodd" />
+                    </svg>
 
-                        <div id="tooltip-retro" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                          สไตล์ที่เกิดจากความรู้สึกถวิลหาอดีต เป็นสไตล์โมเดิร์นแบบย้อนยุคไปในปี 1950-1970 เรโทร (Retro)' เป็นคำที่ย่อมาจากคำในภาษาฝรั่งเศสว่า 'Retrograde' เช่นเดียวกับคำว่า 'Retroactive' ความหมายดั้งเดิมคือ 'การอ้างอิงถึงอดีต แต่ไม่ใช่จากอดีต' 
-                          <div class="tooltip-arrow" data-popper-arrow></div>
-                      </div>
+                    <div id="tooltip-retro" role="tooltip"
+                      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                      สไตล์ที่เกิดจากความรู้สึกถวิลหาอดีต เป็นสไตล์โมเดิร์นแบบย้อนยุคไปในปี 1950-1970 เรโทร (Retro)'
+                      เป็นคำที่ย่อมาจากคำในภาษาฝรั่งเศสว่า 'Retrograde' เช่นเดียวกับคำว่า 'Retroactive'
+                      ความหมายดั้งเดิมคือ 'การอ้างอิงถึงอดีต แต่ไม่ใช่จากอดีต'
+                      <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
                   </div>
                 </label>
               </li>
@@ -267,90 +289,92 @@
           <div>
             <h1 class="textup text-4xl font-bold tracking-tight sm:text-center sm:text-6xl">Make something unique.
             </h1>
-            <div class="font-bold text-gray-900 mt-10">Your logo (optional)</div>
+            <div class="sm:flex gap-5 items-center justify-center">
+              <div id="input" class="sm:w-[50%]">
 
-            <label class="group cursor-pointer ">
-              <p id="pic" class="pic flex justify-center ring-1  ring-gray-200 rounded-xl overflow-hidden"></p>
-              <div id='uploadbtn' class="relative  h-48 justify-center items-center">
-                <div
-                  class=" absolute -z-1 top-1/2 left-[25%] sm:left-[calc(32%+3rem)] group-hover:text-gray-100  flex flex-col items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-                  </svg>
-                  Upload or drop image here.
+                <div class="font-bold text-gray-900 mt-10">Put your Text (optional)</div>
+                <input class="bg-white mt-5 p-3 rounded-xl ring-1 ring-gray-200  w-full" type="text" id='text'
+                  name="text" placeholder="Ex. WE\nHAVE\nAN\nIDEA">
+                <p class="text-sm text-gray-500 dark:text-gray-300" id="file_input_help">Use <b>"\n"</b> to make new
+                  line and in the line cloud not more than 5 characters.</p>
+                <div class="font-bold text-gray-900 mt-10">Your logo (optional)</div>
+                <label class="group cursor-pointer ">
+                  <p id="pic" class="pic flex justify-center ring-1  ring-gray-200 rounded-xl overflow-hidden"></p>
+                  <div id='uploadbtn' class="relative  h-48 justify-center items-center">
+                    <div
+                      class=" absolute -z-1 top-1/2 left-[25%] sm:left-[calc(32%+3rem)] group-hover:text-gray-100  flex flex-col items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                      </svg>
+                      Upload or drop image here.
+                    </div>
+                    <input
+                      class=" bg-white mt-5  group-hover:bg-indigo-500 duration-200   h-full ring-1 ring-gray-200 rounded-xl  text-center w-full"
+                      type="file" id="file" accept="image/*" name="logo" onChange="getImg()">
+                  </div>
+                </label>
+                <p class="pt-5  text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+                  Recommended to use logo with a ratio of 16:9.<br /></p>
+                <p class="text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+                  SVG, PNG, JPG (MAX.
+                  800x400px).</p>
+                <h1 class=" py-3 " id="position" hidden>
+                  <div class="text-md font-bold tracking-tight py-3">Logo position</div>
+                  <ul class=" justify-between flex-wrap flex gap-6">
+                    <li>
+                      <input type="radio" class="peer sr-only" name="logoPos" value="top" id="logo[2]">
+                      <label for="logo[2]"
+                        class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
+                        <div class="w-12 border-2 h-12 flex justify-center items-start">
+                          <div class="h-5 bg-indigo-500 w-5 m-1"></div>
+                        </div>
+                      </label>
+                    </li>
+                    <li>
+                      <input type="radio" class="peer sr-only" name="logoPos" value="bottom" id="logo[3]">
+                      <label for="logo[3]"
+                        class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
+                        <div class="w-12 border-2 h-12 flex justify-center items-end">
+                          <div class="h-5 bg-indigo-500 w-5 m-1"></div>
+                        </div>
+                      </label>
+                    </li>
+                    <li>
+                      <input type="radio" class="peer sr-only" name="logoPos" value="center" id="logo[4]">
+                      <label for="logo[4]"
+                        class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
+                        <div class="w-12 border-2 h-12 flex justify-center items-center">
+                          <div class="w-5 bg-indigo-500 h-5"></div>
+                        </div>
+                      </label>
+                    </li>
+                  </ul>
+                </h1>
+                <script>
+                  function opt() {
+                    color.toggleAttribute('readonly')
+                  }
+                </script>
+                <div class="mt-10">
+                  <div class="flex align-center items-center gap-2"><input
+                      class='w-4 h-4 text-purple-600 border-gray-300 bg-purple-500 focus:ring-purple-500  rounded-xl'
+                      type="checkbox" name="optional" id="opt1" onclick="opt()">
+                    <div class="font-bold text-gray-900 ">What color do you want?(optional)</div>
+                  </div>
+                  <label for="opt1">
+                    <input readonly class="bg-white mt-5 p-3 rounded-xl ring-1 ring-gray-200  w-full" type="text"
+                      id='color' name="color" placeholder="Ex. blue tone">
+                  </label>
                 </div>
-                <input
-                  class=" bg-white mt-5  group-hover:bg-indigo-500 duration-200   h-full ring-1 ring-gray-200 rounded-xl  text-center w-full"
-                  type="file" id="file" accept="image/*" name="logo" onChange="getImg()">
-
               </div>
-
-            </label>
-
-            <p class="pt-5  text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
-
-              Recommended to use logo with a ratio of 16:9.<br /></p>
-            <p class="text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
-
-              SVG, PNG, JPG (MAX.
-              800x400px).</p>
-
-
-            <h1 class=" py-3 " id="position" hidden>
-              <div class="text-md font-bold tracking-tight py-3">Logo position</div>
-              <ul class=" justify-between flex-wrap flex gap-6">
-
-                <li>
-                  <input type="radio" class="peer sr-only" name="logoPos" value="top" id="logo[2]">
-                  <label for="logo[2]"
-                    class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
-                    <div class="w-12 border-2 h-12 flex justify-center items-start">
-                      <div class="h-5 bg-indigo-500 w-5 m-1"></div>
-                    </div>
-                  </label>
-                </li>
-                <li>
-                  <input type="radio" class="peer sr-only" name="logoPos" value="bottom" id="logo[3]">
-                  <label for="logo[3]"
-                    class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
-                    <div class="w-12 border-2 h-12 flex justify-center items-end">
-                      <div class="h-5 bg-indigo-500 w-5 m-1"></div>
-                    </div>
-                  </label>
-                </li>
-                <li>
-                  <input type="radio" class="peer sr-only" name="logoPos" value="center" id="logo[4]">
-                  <label for="logo[4]"
-                    class="w-48 h-52 border-2 peer-checked:border-indigo-500  rounded-lg  justify-center items-center flex">
-                    <div class="w-12 border-2 h-12 flex justify-center items-center">
-                      <div class="w-5 bg-indigo-500 h-5"></div>
-                    </div>
-                  </label>
-                </li>
-
-              </ul>
-            </h1>
-
-            <script>
-              function opt() {
-
-                color.toggleAttribute('readonly')
-
-              }
-            </script>
-            <div class="mt-10">
-
-              <div class="flex align-center items-center gap-2"><input
-                  class='w-4 h-4 text-purple-600 border-gray-300 bg-purple-500 focus:ring-purple-500  rounded-xl'
-                  type="checkbox" name="optional" id="opt1" onclick="opt()">
-                <div class="font-bold text-gray-900 ">What color do you want?(optional)</div>
+              <div id="output" class="sm:w-[40%] duration-200 overflow-hidden bg-slate-600 p-5 mt-10 rounded-3xl">
+                <div class="text-md font-bold py-3 text-white">Output Preview</div>
+                <div class="border border-gray-200 rounded-xl h-[70vh] p-5 bg-white">
+                  <div id="textPreview" class="text-[45px]"></div>
+                </div>
               </div>
-              <label for="opt1">
-                <input readonly class="bg-white mt-5 p-3 rounded-xl ring-1 ring-gray-200  w-full" type="text" id='color'
-                  name="color" placeholder="Ex. blue tone">
-              </label>
             </div>
 
 
@@ -531,6 +555,34 @@
       -webkit-filter: hue-rotate(0deg);
     }
   }
+
+  @font-face {
+    font-family: 'MNMINI';
+    src: url(/static/fonts/MN%20MINI.ttf);
+  }
+
+  #textPreview {
+    font-family: MNMINI;
+    line-height: 1;
+  }
 </style>
+
+<script>
+  text.addEventListener("input", (e) => {
+
+
+    var value = e.target.value
+    value = value.replaceAll("\\n", "<br/>")
+    textPreview.innerHTML = value;
+  })
+
+  text.onkeydown = function (evt) {
+    if (evt.which === 13) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      return false;
+    }
+  };
+</script>
 
 </html>
