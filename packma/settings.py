@@ -80,20 +80,20 @@ WSGI_APPLICATION = 'packma.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     "ENGINE": "mysql.connector.django",
-    #     "NAME": "PACKMA_DB",
-    #     "USER": "root",
-    #     "PASSWORD": "",
-    #     "HOST": "127.0.0.1",
-    #     "PORT": "3306",
-    #      'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'" ,"use_pure": True},
-    # },
-     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3', # This is where you put the name of the db file. 
-                 # If one doesn't exist, it will be created at migration time.
-    }
+    'default': {
+        "ENGINE": "mysql.connector.django",
+        "NAME": "PACKMA_DB",
+        "USER": "root",
+        "PASSWORD": "",
+        "HOST": "127.0.0.1",
+        "PORT": "3306",
+         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'" ,"use_pure": True},
+    },
+    #  'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': 'db.sqlite3', # This is where you put the name of the db file. 
+    #              # If one doesn't exist, it will be created at migration time.
+    # }
 }
 
 

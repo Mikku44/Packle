@@ -5,7 +5,7 @@ import requests
 
 # # Create your models here.
 def ActionBtn(id):
-    return format_html('<div style="display:flex;column-gap:10px;"><a href="{}/change" style="background:#79aec8;padding:10px;text-align:center;color:white;">Edit</a><a href={}/delete style="background:#79aec8;padding:10px;text-align:center;color:white;">Delete</a></div>'.format(id,id))
+    return format_html('<div style="display:flex;column-gap:10px;"><a href="{}/change" style="color:white;border-radius:5px;padding:10px 15px;background:#79aec8;text-align:center;">Edit</a><a href={}/delete style="color:white;border-radius:5px;padding:10px 15px;background:#BE3144;text-align:center;">Delete</a></div>'.format(id,id))
 
 
 class Class(models.Model):

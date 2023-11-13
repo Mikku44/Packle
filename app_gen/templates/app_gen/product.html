@@ -38,7 +38,7 @@
   <div class="pt-5 w-full flex justify-center ">
     <div
       class="flex hover:border-gray-300 text-gray-500 shadow-md justify-between sm:w-1/3 w-2/3 border-2 bg-white  px-2 py-1 rounded-md">
-      <input placeholder="Find package artworks in our website" id="findPic"
+      <input placeholder="Find package artworks by username in our website" id="findPic"
         class=" outline-0 bg-white w-full focus:border-0 px-2 " type="text">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="cursor-pointer w-6 h-6">
@@ -105,7 +105,7 @@
       <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textdown  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 items-center rounded-xl bg-white shadow-md py-2 px-4 text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -137,7 +137,7 @@
       <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textup  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 items-center rounded-xl bg-white shadow-md py-2 px-4 text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -167,8 +167,8 @@
       {% for i in tsec %}
 
       <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textdown  package">
-        <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
+        <div class=" rounded-lg overflow-hidden group relative ">
+          <p class="flex gap-2 rounded-xl bg-white shadow-md py-2 px-4 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -199,7 +199,7 @@
       <a href="/profile/generated/{{ i.gen.gen_id }}" class="{{ i.gen.acc_id.name |cut:" " }} textup  package">
 
         <div class=" rounded-lg overflow-hidden group relative">
-          <p class="flex gap-2 items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
+          <p class="flex gap-2 py-2 px-4 rounded-xl bg-white shadow-md items-center text-gray-500 font-bold absolute top-5 left-5 z-[52]"> <svg
               xmlns="http://www.w3.org/2000/svg" id="star" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-8 h-8 text-yellow-500 hover:scale-110 duration-150">
               <path stroke-linecap="round" stroke-linejoin="round"

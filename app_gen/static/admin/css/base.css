@@ -5,7 +5,13 @@
 /* VARIABLE DEFINITIONS */
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;300;400;500;600;700&display=swap');
-
+html[data-theme="dark"],
+:root{
+    --body-bg-c:#192428;
+    h1{
+        color:#fff;
+    }
+}
 html[data-theme="light"],
 :root {
     --primary: #4f46e5;
@@ -849,6 +855,7 @@ a.deletelink:focus, a.deletelink:hover {
     display: flex;
     flex: 1 0 auto;
     background: var(--body-bg-c);
+    /* background: var(--header-bg); */
 }
 
 .main > .content {
