@@ -95,7 +95,7 @@
                             {% if card%}
                             {% for i in card %}
                             <div class="grid" id="creditcard">
-                                <input  type="checkbox" value="{{ i.id }}" id="{{ i.id }}" class="peer hidden">
+                                <input  type="radio" value="{{ i.id }}" id="{{ i.id }}" name="creditcard" class="peer hidden">
                                 <label for="{{ i.id }}"
                                     class="p-2 peer-checked:ring-offset-1 peer-checked:ring-1 border-1 border-gray-400 rounded-md group shadow-lg peer-checked:ring-green-400">
                                     <div class="flex gap-2">

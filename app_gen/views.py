@@ -355,6 +355,7 @@ def product(request):
         counter  += 1
     
     popular = DetailImgGen.objects.filter(gen_isPublic=True,isRemove=False).order_by('-gen_star').first()
+    print(popular)
 
     # print(f"Popular : {popular}")
     # print(f"First : {x[0]}")

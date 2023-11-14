@@ -53,6 +53,8 @@ class MyAdminSite(AdminSite):
         users = User.objects.all()
         trans = Transaction.objects.all()
         design = ImgGen.objects.all()
+       
+        popularp = DetailImgGen.objects.filter(gen_isPublic=True,isRemove=False).order_by('-gen_star')[:5]
 
         revenue = Transaction.objects.aggregate(Sum('total_amount'))['total_amount__sum']
 
@@ -142,7 +144,7 @@ class MyAdminSite(AdminSite):
         print(rdata)
         
 
-        context = {'users':users.count(),'trans':trans.count(),'design':design.count(),'data':data,'tdata':tdata,'pdata':pdata,'range':months,'revenue':revenue,'rdata':rdata}
+        context = {'users':users.count(),'trans':trans.count(),'transvalue':trans,'design':design.count(),'data':data,'tdata':tdata,'pdata':pdata,'range':months,'revenue':revenue,'rdata':rdata,'popular':popularp}
         return super().index(request,context)
 
 

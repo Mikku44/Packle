@@ -97,6 +97,80 @@
         <canvas id="myChart" class="w-[300px] sm:w-full rounded-2xl bg-white text-white p-4 shadow-md"> </canvas>
         <canvas id="myChart_" class="w-[300px] sm:w-full rounded-2xl bg-white p-4 shadow-md hidden"> </canvas>
       </div>
+
+      <div class="sm:flex items-baseline gap-5">
+        <div class="flex gap-2 py-5">
+          <div class="rounded-xl bg-white shadow-md  p-5">
+            <div class="text-xl py-5 font-bold flex items-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+            </svg>
+            Packaging Rank</div>
+            {% for item in popular %}
+            <div class="flex gap-3  items-center w-full">
+              <div class="flex justify-between w-1/2 py-2">
+                <div class="text-4xl">{{ forloop.counter }}</div>
+                {% if forloop.counter == 1%}
+                <div class="rounded-xl overflow-hidden w-[250px] "><img src="{{item.gen.gen_source}}" alt=""></div>
+                {% else %}
+                <div class="rounded-xl overflow-hidden w-[150px] "><img src="{{item.gen.gen_source}}" alt=""></div>
+                {% endif %}
+              </div>
+              <div>
+                <div class="bg-gray-100 mt-2 rounded-md p-2">{{item.gen_star}}</div>
+                <div class="bg-gray-100 mt-2 rounded-md p-2">{{item.gen_message}}</div>
+                <div class="">{{item.gen.acc_id}}</div>
+                <div class="">{{item.gen.gen_CreateAt}}</div>
+              </div>
+            </div>
+            {% endfor %}
+            <!-- <div class="w-full py-5">
+        
+              <div class="flex ">
+                <div class="text-4xl">{{ forloop.counter }}</div>
+                <div class="rounded-xl overflow-hidden w-[98px]  h-[98px]"><img class="object-cover h-full" src="{{item.gen.gen_source}}" alt=""></div>
+                <div>
+                  <div class="bg-gray-100 mt-2 rounded-md p-2">{{item.gen_star}}</div>
+                  <div class="bg-gray-100 mt-2 rounded-md p-2">{{item.gen_message}}</div>
+                  <div class="">{{item.gen.acc_id}}</div>
+                  <div class="">{{item.gen.gen_CreateAt}}</div>
+                </div>
+              </div>
+        
+            </div> -->
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-5">
+          <table class="rounded-xl overflow-hidden p-8 ring ring-gray-100">
+            <div class="text-xl py-5 font-bold flex items-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+            Transactions </div>
+            <thead class="bg-gray-100 rounded-t-lg text-gray-600">
+              <tr>
+                <td>NO.</td>
+                <td>ACC_ID</td>
+                <td>Start_date</td>
+
+                <td>Status</td>
+                <td>Total amount</td>
+              </tr>
+            </thead>
+            {% for item in transvalue %}
+            <tbody>
+             
+              <tr class="">
+                <td>{{forloop.counter}}</td>
+                <td>{{item.acc_id}}</td>
+                <td>{{item.start_date}}</td>
+                <td>{{item.status}}</td>
+                <td>{{item.total_amount}}</td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -160,7 +234,7 @@
               pointRadius: 5,
               pointHoverRadius: 8,
               backgroundColor: '#ffffff',
-              borderColor:"#8E8FFA",
+              borderColor: "#8E8FFA",
               fill: false
             },
 
@@ -232,7 +306,7 @@
             pointRadius: 5,
             pointHoverRadius: 8,
             backgroundColor: '#ffffff',
-            borderColor:"#34c1f9",
+            borderColor: "#34c1f9",
 
             fill: false
           },
@@ -244,7 +318,7 @@
             pointRadius: 5,
             pointHoverRadius: 8,
             backgroundColor: '#ffffff',
-            borderColor:"#8E8FFA",
+            borderColor: "#8E8FFA",
             fill: false
           },
           {
@@ -255,7 +329,7 @@
             pointRadius: 5,
             pointHoverRadius: 8,
             backgroundColor: '#ffffff',
-            borderColor:"#f9db34",
+            borderColor: "#f9db34",
 
 
             fill: false
