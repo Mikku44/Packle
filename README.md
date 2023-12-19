@@ -12,26 +12,27 @@ This is my graduation project about design packaging with Generative A.I. (Use P
 
 ## How to run 
 
-1.Run MySQL server 
+#### 1.Run MySQL server 
 
-2.Run django framework by follow the command below here:
-    2.1 Install "PIPENV Package"
-```bash  pip install pipenv```
+#### 2.Run django framework by follow the command below here:
+
+* ##### 2.1 Install "PIPENV Package"
+```bash 
+pip install pipenv
+```
+* ##### 2.2 ACCESS TO "PIPENV SheLL" because You no need to install required package with yourself
 
 
-    2.2 ACCESS TO "PIPENV SheLL" because You no need to install required package with yourself
-
-    
 ```bash
 
-   pipenv shell
+pipenv shell
 
 ```
 
-  2.3 RUN DJANGO SERVER
+* ##### 2.3 RUN DJANGO SERVER
   
 ```bash
 
-    python main.py runserver
+python main.py runserver
 
 ```
